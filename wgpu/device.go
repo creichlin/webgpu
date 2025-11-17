@@ -181,10 +181,6 @@ import (
 	"unsafe"
 )
 
-type Device struct {
-	ref C.WGPUDevice
-}
-
 type errorCallback func(typ ErrorType, message string)
 
 //export gowebgpu_error_callback_go
@@ -195,8 +191,6 @@ func gowebgpu_error_callback_go(_type C.WGPUErrorType, message C.WGPUStringView,
 		cb(ErrorType(_type), C.GoStringN(message.data, C.int(message.length)))
 	}
 }
-
-func (p *Device) Release() { C.wgpuDeviceRelease(p.ref) }
 
 func (p *Device) CreateBindGroup(descriptor *BindGroupDescriptor) (*BindGroup, error) {
 	var desc C.WGPUBindGroupDescriptor
@@ -263,7 +257,7 @@ func (p *Device) CreateBindGroup(descriptor *BindGroupDescriptor) (*BindGroup, e
 		return nil, err
 	}
 
-	return &BindGroup{ref}, nil
+	return releaseOnGC(&BindGroup{ref: ref}), nil
 }
 
 type BufferBindingLayout struct {
@@ -368,7 +362,7 @@ func (p *Device) CreateBindGroupLayout(descriptor *BindGroupLayoutDescriptor) (*
 		return nil, err
 	}
 
-	return &BindGroupLayout{ref}, nil
+	return releaseOnGC(&BindGroupLayout{ref: ref}), nil
 }
 
 func (p *Device) CreateBuffer(descriptor *BufferDescriptor) (*Buffer, error) {
@@ -405,8 +399,7 @@ func (p *Device) CreateBuffer(descriptor *BufferDescriptor) (*Buffer, error) {
 		return nil, err
 	}
 
-	C.wgpuDeviceAddRef(p.ref)
-	return &Buffer{deviceRef: p.ref, ref: ref}, nil
+	return releaseOnGC(&Buffer{device: p.addRef(), ref: ref}), nil
 }
 
 func (p *Device) CreateCommandEncoder(descriptor *CommandEncoderDescriptor) (*CommandEncoder, error) {
@@ -441,8 +434,7 @@ func (p *Device) CreateCommandEncoder(descriptor *CommandEncoderDescriptor) (*Co
 		return nil, err
 	}
 
-	C.wgpuDeviceAddRef(p.ref)
-	return &CommandEncoder{deviceRef: p.ref, ref: ref}, nil
+	return releaseOnGC(&CommandEncoder{device: p.addRef(), ref: ref}), nil
 }
 
 type ConstantEntry struct {
@@ -503,7 +495,7 @@ func (p *Device) CreateComputePipeline(descriptor *ComputePipelineDescriptor) (*
 		return nil, err
 	}
 
-	return &ComputePipeline{ref}, nil
+	return releaseOnGC(&ComputePipeline{ref: ref}), nil
 }
 
 type PushConstantRange struct {
@@ -592,7 +584,7 @@ func (p *Device) CreatePipelineLayout(descriptor *PipelineLayoutDescriptor) (*Pi
 		return nil, err
 	}
 
-	return &PipelineLayout{ref}, nil
+	return releaseOnGC(&PipelineLayout{ref: ref}), nil
 }
 
 type QuerySetDescriptor struct {
@@ -648,7 +640,7 @@ func (p *Device) CreateQuerySet(descriptor *QuerySetDescriptor) (*QuerySet, erro
 		return nil, err
 	}
 
-	return &QuerySet{ref: ref}, nil
+	return releaseOnGC(&QuerySet{ref: ref}), nil
 }
 
 type RenderBundleEncoderDescriptor struct {
@@ -692,7 +684,7 @@ func (p *Device) CreateRenderBundleEncoder(descriptor *RenderBundleEncoderDescri
 
 	ref := C.wgpuDeviceCreateRenderBundleEncoder(p.ref, &desc)
 
-	return &RenderBundleEncoder{ref}, nil
+	return releaseOnGC(&RenderBundleEncoder{ref: ref}), nil
 }
 
 type BlendComponent struct {
@@ -978,7 +970,7 @@ func (p *Device) CreateRenderPipeline(descriptor *RenderPipelineDescriptor) (*Re
 		return nil, err
 	}
 
-	return &RenderPipeline{ref}, nil
+	return releaseOnGC(&RenderPipeline{ref: ref}), nil
 }
 
 func (p *Device) CreateSampler(descriptor *SamplerDescriptor) (*Sampler, error) {
@@ -1024,7 +1016,7 @@ func (p *Device) CreateSampler(descriptor *SamplerDescriptor) (*Sampler, error) 
 		return nil, err
 	}
 
-	return &Sampler{ref}, nil
+	return releaseOnGC(&Sampler{ref: ref}), nil
 }
 
 type ShaderSourceGLSL struct {
@@ -1162,7 +1154,7 @@ func (p *Device) CreateShaderModule(descriptor *ShaderModuleDescriptor) (*Shader
 		return nil, err
 	}
 
-	return &ShaderModule{ref}, nil
+	return releaseOnGC(&ShaderModule{ref: ref}), nil
 }
 
 func (p *Device) CreateTexture(descriptor *TextureDescriptor) (*Texture, error) {
@@ -1208,8 +1200,7 @@ func (p *Device) CreateTexture(descriptor *TextureDescriptor) (*Texture, error) 
 		return nil, err
 	}
 
-	C.wgpuDeviceAddRef(p.ref)
-	return &Texture{deviceRef: p.ref, ref: ref}, nil
+	return releaseOnGC(&Texture{device: p.addRef(), ref: ref}), nil
 }
 
 func (p *Device) GetFeatures() []FeatureName {
@@ -1274,8 +1265,7 @@ func (p *Device) GetLimits() Limits {
 
 func (p *Device) GetQueue() *Queue {
 	ref := C.wgpuDeviceGetQueue(p.ref)
-	C.wgpuDeviceAddRef(p.ref)
-	return &Queue{deviceRef: p.ref, ref: ref}
+	return releaseOnGC(&Queue{device: p.addRef(), ref: ref})
 }
 
 func (p *Device) HasFeature(feature FeatureName) bool {

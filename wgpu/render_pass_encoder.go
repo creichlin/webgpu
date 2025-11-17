@@ -21,21 +21,18 @@ static inline void gowebgpu_render_pass_encoder_end(WGPURenderPassEncoder render
 	wgpuDevicePopErrorScope(device, err_cb);
 }
 
-static inline void gowebgpu_render_pass_encoder_release(WGPURenderPassEncoder renderPassEncoder, WGPUDevice device) {
-	wgpuDeviceRelease(device);
-	wgpuRenderPassEncoderRelease(renderPassEncoder);
-}
-
 */
 import "C"
 import (
 	"errors"
+	"sync/atomic"
 	"unsafe"
 )
 
 type RenderPassEncoder struct {
-	deviceRef C.WGPUDevice
-	ref       C.WGPURenderPassEncoder
+	device   *Device
+	ref      C.WGPURenderPassEncoder
+	released int32
 }
 
 func (p *RenderPassEncoder) BeginOcclusionQuery(queryIndex uint32) {
@@ -82,7 +79,7 @@ func (p *RenderPassEncoder) End() (err error) {
 
 	C.gowebgpu_render_pass_encoder_end(
 		p.ref,
-		p.deviceRef,
+		p.device.ref,
 		errorCallbackHandle.ToPointer(),
 	)
 	return
@@ -282,5 +279,7 @@ func (p *RenderPassEncoder) MultiDrawIndexedIndirectCount(encoder *RenderPassEnc
 }
 
 func (p *RenderPassEncoder) Release() {
-	C.gowebgpu_render_pass_encoder_release(p.ref, p.deviceRef)
+	if p.ref != nil && atomic.CompareAndSwapInt32(&p.released, 0, 1) {
+		C.wgpuRenderPassEncoderRelease(p.ref)
+	}
 }

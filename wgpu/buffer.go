@@ -35,21 +35,18 @@ static inline void gowebgpu_buffer_unmap(WGPUBuffer buffer, WGPUDevice device, v
 	wgpuDevicePopErrorScope(device, err_cb);
 }
 
-static inline void gowebgpu_buffer_release(WGPUBuffer buffer, WGPUDevice device) {
-	wgpuDeviceRelease(device);
-	wgpuBufferRelease(buffer);
-}
-
 */
 import "C"
 import (
 	"errors"
+	"sync/atomic"
 	"unsafe"
 )
 
 type Buffer struct {
-	deviceRef C.WGPUDevice
-	ref       C.WGPUBuffer
+	device   *Device
+	ref      C.WGPUBuffer
+	released int32
 }
 
 func (p *Buffer) Destroy() {
@@ -98,7 +95,7 @@ func (p *Buffer) MapAsync(mode MapMode, offset uint64, size uint64, callback Buf
 			callback:  C.WGPUBufferMapCallback(C.gowebgpu_buffer_map_callback_c),
 			userdata1: callbackHandle.ToPointer(),
 		},
-		p.deviceRef,
+		p.device.ref,
 		errorCallbackHandle.ToPointer(),
 	)
 	return
@@ -113,12 +110,14 @@ func (p *Buffer) Unmap() (err error) {
 
 	C.gowebgpu_buffer_unmap(
 		p.ref,
-		p.deviceRef,
+		p.device.ref,
 		errorCallbackHandle.ToPointer(),
 	)
 	return
 }
 
 func (p *Buffer) Release() {
-	C.gowebgpu_buffer_release(p.ref, p.deviceRef)
+	if p.ref != nil && atomic.CompareAndSwapInt32(&p.released, 0, 1) {
+		C.wgpuBufferRelease(p.ref)
+	}
 }

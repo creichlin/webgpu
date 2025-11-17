@@ -34,21 +34,18 @@ static inline void gowebgpu_queue_write_texture(WGPUQueue queue, WGPUTexelCopyTe
 	wgpuDevicePopErrorScope(device, err_cb);
 }
 
-static inline void gowebgpu_queue_release(WGPUQueue queue, WGPUDevice device) {
-	wgpuDeviceRelease(device);
-	wgpuQueueRelease(queue);
-}
-
 */
 import "C"
 import (
 	"errors"
+	"sync/atomic"
 	"unsafe"
 )
 
 type Queue struct {
-	deviceRef C.WGPUDevice
-	ref       C.WGPUQueue
+	device   *Device
+	ref      C.WGPUQueue
+	released int32
 }
 
 //export gowebgpu_queue_work_done_callback_go
@@ -109,7 +106,7 @@ func (p *Queue) WriteBuffer(buffer *Buffer, bufferOffset uint64, data []byte) (e
 			C.uint64_t(bufferOffset),
 			nil,
 			0,
-			p.deviceRef,
+			p.device.ref,
 			errorCallbackHandle.ToPointer(),
 		)
 		return
@@ -121,7 +118,7 @@ func (p *Queue) WriteBuffer(buffer *Buffer, bufferOffset uint64, data []byte) (e
 		C.uint64_t(bufferOffset),
 		unsafe.Pointer(&data[0]),
 		C.size_t(size),
-		p.deviceRef,
+		p.device.ref,
 		errorCallbackHandle.ToPointer(),
 	)
 	return
@@ -177,7 +174,7 @@ func (p *Queue) WriteTexture(destination *TexelCopyTextureInfo, data []byte, dat
 			0,
 			&layout,
 			&writeExtent,
-			p.deviceRef,
+			p.device.ref,
 			errorCallbackHandle.ToPointer(),
 		)
 		return
@@ -190,12 +187,14 @@ func (p *Queue) WriteTexture(destination *TexelCopyTextureInfo, data []byte, dat
 		C.size_t(size),
 		&layout,
 		&writeExtent,
-		p.deviceRef,
+		p.device.ref,
 		errorCallbackHandle.ToPointer(),
 	)
 	return
 }
 
 func (p *Queue) Release() {
-	C.gowebgpu_queue_release(p.ref, p.deviceRef)
+	if p.ref != nil && atomic.CompareAndSwapInt32(&p.released, 0, 1) {
+		C.wgpuQueueRelease(p.ref)
+	}
 }

@@ -144,21 +144,18 @@ static inline void gowebgpu_command_encoder_write_timestamp(WGPUCommandEncoder c
 	wgpuDevicePopErrorScope(device, err_cb);
 }
 
-static inline void gowebgpu_command_encoder_release(WGPUCommandEncoder commandEncoder, WGPUDevice device) {
-	wgpuDeviceRelease(device);
-	wgpuCommandEncoderRelease(commandEncoder);
-}
-
 */
 import "C"
 import (
 	"errors"
+	"sync/atomic"
 	"unsafe"
 )
 
 type CommandEncoder struct {
-	deviceRef C.WGPUDevice
-	ref       C.WGPUCommandEncoder
+	device   *Device
+	ref      C.WGPUCommandEncoder
+	released int32
 }
 
 type ComputePassDescriptor struct {
@@ -185,8 +182,7 @@ func (p *CommandEncoder) BeginComputePass(descriptor *ComputePassDescriptor) *Co
 		panic("Failed to acquire ComputePassEncoder")
 	}
 
-	C.wgpuDeviceAddRef(p.deviceRef)
-	return &ComputePassEncoder{deviceRef: p.deviceRef, ref: ref}
+	return releaseOnGC(&ComputePassEncoder{device: p.device.addRef(), ref: ref})
 }
 
 func (p *CommandEncoder) BeginRenderPass(descriptor *RenderPassDescriptor) *RenderPassEncoder {
@@ -255,8 +251,7 @@ func (p *CommandEncoder) BeginRenderPass(descriptor *RenderPassDescriptor) *Rend
 	}
 
 	ref := C.wgpuCommandEncoderBeginRenderPass(p.ref, &desc)
-	C.wgpuDeviceAddRef(p.deviceRef)
-	return &RenderPassEncoder{deviceRef: p.deviceRef, ref: ref}
+	return releaseOnGC(&RenderPassEncoder{device: p.device.addRef(), ref: ref})
 }
 
 func (p *CommandEncoder) ClearBuffer(buffer *Buffer, offset uint64, size uint64) (err error) {
@@ -271,7 +266,7 @@ func (p *CommandEncoder) ClearBuffer(buffer *Buffer, offset uint64, size uint64)
 		buffer.ref,
 		C.uint64_t(offset),
 		C.uint64_t(size),
-		p.deviceRef,
+		p.device.ref,
 		errorCallbackHandle.ToPointer(),
 	)
 	return
@@ -291,7 +286,7 @@ func (p *CommandEncoder) CopyBufferToBuffer(source *Buffer, sourceOffset uint64,
 		destination.ref,
 		C.uint64_t(destinatonOffset),
 		C.uint64_t(size),
-		p.deviceRef,
+		p.device.ref,
 		errorCallbackHandle.ToPointer(),
 	)
 	return
@@ -346,7 +341,7 @@ func (p *CommandEncoder) CopyBufferToTexture(source *TexelCopyBufferInfo, destin
 		&src,
 		&dst,
 		&cpySize,
-		p.deviceRef,
+		p.device.ref,
 		errorCallbackHandle.ToPointer(),
 	)
 	return
@@ -401,7 +396,7 @@ func (p *CommandEncoder) CopyTextureToBuffer(source *TexelCopyTextureInfo, desti
 		&src,
 		&dst,
 		&cpySize,
-		p.deviceRef,
+		p.device.ref,
 		errorCallbackHandle.ToPointer(),
 	)
 	return
@@ -460,7 +455,7 @@ func (p *CommandEncoder) CopyTextureToTexture(source *TexelCopyTextureInfo, dest
 		&src,
 		&dst,
 		&cpySize,
-		p.deviceRef,
+		p.device.ref,
 		errorCallbackHandle.ToPointer(),
 	)
 	return
@@ -488,7 +483,7 @@ func (p *CommandEncoder) Finish(descriptor *CommandBufferDescriptor) (*CommandBu
 	ref := C.gowebgpu_command_encoder_finish(
 		p.ref,
 		desc,
-		p.deviceRef,
+		p.device.ref,
 		errorCallbackHandle.ToPointer(),
 	)
 	if err != nil {
@@ -496,7 +491,7 @@ func (p *CommandEncoder) Finish(descriptor *CommandBufferDescriptor) (*CommandBu
 		return nil, err
 	}
 
-	return &CommandBuffer{ref}, nil
+	return releaseOnGC(&CommandBuffer{ref: ref}), nil
 }
 
 func (p *CommandEncoder) InsertDebugMarker(markerLabel string) (err error) {
@@ -512,7 +507,7 @@ func (p *CommandEncoder) InsertDebugMarker(markerLabel string) (err error) {
 	C.gowebgpu_command_encoder_insert_debug_marker(
 		p.ref,
 		markerLabelStr,
-		p.deviceRef,
+		p.device.ref,
 		errorCallbackHandle.ToPointer(),
 	)
 	return
@@ -527,7 +522,7 @@ func (p *CommandEncoder) PopDebugGroup() (err error) {
 
 	C.gowebgpu_command_encoder_pop_debug_group(
 		p.ref,
-		p.deviceRef,
+		p.device.ref,
 		errorCallbackHandle.ToPointer(),
 	)
 	return
@@ -546,7 +541,7 @@ func (p *CommandEncoder) PushDebugGroup(groupLabel string) (err error) {
 	C.gowebgpu_command_encoder_push_debug_group(
 		p.ref,
 		groupLabelStr,
-		p.deviceRef,
+		p.device.ref,
 		errorCallbackHandle.ToPointer(),
 	)
 	return
@@ -566,7 +561,7 @@ func (p *CommandEncoder) ResolveQuerySet(querySet *QuerySet, firstQuery uint32, 
 		C.uint32_t(queryCount),
 		destination.ref,
 		C.uint64_t(destinationOffset),
-		p.deviceRef,
+		p.device.ref,
 		errorCallbackHandle.ToPointer(),
 	)
 	return
@@ -583,12 +578,14 @@ func (p *CommandEncoder) WriteTimestamp(querySet *QuerySet, queryIndex uint32) (
 		p.ref,
 		querySet.ref,
 		C.uint32_t(queryIndex),
-		p.deviceRef,
+		p.device.ref,
 		errorCallbackHandle.ToPointer(),
 	)
 	return
 }
 
 func (p *CommandEncoder) Release() {
-	C.gowebgpu_command_encoder_release(p.ref, p.deviceRef)
+	if p.ref != nil && atomic.CompareAndSwapInt32(&p.released, 0, 1) {
+		C.wgpuCommandEncoderRelease(p.ref)
+	}
 }

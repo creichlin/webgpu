@@ -11,10 +11,6 @@ package wgpu
 import "C"
 import "unsafe"
 
-type RenderBundleEncoder struct {
-	ref C.WGPURenderBundleEncoder
-}
-
 func (p *RenderBundleEncoder) Draw(vertexCount, instanceCount, firstVertex, firstInstance uint32) {
 	C.wgpuRenderBundleEncoderDraw(
 		p.ref,
@@ -72,7 +68,7 @@ func (p *RenderBundleEncoder) Finish(descriptor *RenderBundleDescriptor) *Render
 	if ref == nil {
 		panic("Failed to accquire RenderBundle")
 	}
-	return &RenderBundle{ref}
+	return releaseOnGC(&RenderBundle{ref: ref})
 }
 
 func (p *RenderBundleEncoder) InsertDebugMarker(markerLabel string) {
@@ -133,8 +129,4 @@ func (p *RenderBundleEncoder) SetVertexBuffer(slot uint32, buffer *Buffer, offse
 		C.uint64_t(offset),
 		C.uint64_t(size),
 	)
-}
-
-func (p *RenderBundleEncoder) Release() {
-	C.wgpuRenderBundleEncoderRelease(p.ref)
 }

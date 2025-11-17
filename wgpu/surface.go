@@ -29,12 +29,14 @@ import "C"
 import (
 	"errors"
 	"runtime"
+	"sync/atomic"
 	"unsafe"
 )
 
 type Surface struct {
-	deviceRef C.WGPUDevice
-	ref       C.WGPUSurface
+	device   *Device
+	ref      C.WGPUSurface
+	released int32
 }
 
 func (p *Surface) GetCapabilities(adapter *Adapter) (ret SurfaceCapabilities) {
@@ -78,8 +80,8 @@ func (p *Surface) GetCapabilities(adapter *Adapter) (ret SurfaceCapabilities) {
 	return
 }
 
-func (p *Surface) Configure(adapter *Adapter, device *Device, config *SurfaceConfiguration) {
-	p.deviceRef = device.ref
+func (p *Surface) Configure(device *Device, config *SurfaceConfiguration) {
+	p.device = device.addRef()
 
 	var pinner runtime.Pinner
 	defer pinner.Unpin()
@@ -100,7 +102,7 @@ func (p *Surface) Configure(adapter *Adapter, device *Device, config *SurfaceCon
 		}
 
 		cfg = &C.WGPUSurfaceConfiguration{
-			device:      p.deviceRef,
+			device:      p.device.ref,
 			format:      C.WGPUTextureFormat(config.Format),
 			usage:       C.WGPUTextureUsage(config.Usage),
 			alphaMode:   C.WGPUCompositeAlphaMode(config.AlphaMode),
@@ -124,6 +126,10 @@ func (p *Surface) Configure(adapter *Adapter, device *Device, config *SurfaceCon
 // NOTE: you should typically not call [Texture.Release] on the returned texture.
 // Instead, you should call [TextureView.Release] on any [TextureView] you create from it.
 func (p *Surface) GetCurrentTexture() (*Texture, error) {
+	if p.device == nil {
+		return nil, errors.New("surface not configured")
+	}
+
 	var err error = nil
 	var cb errorCallback = func(_ ErrorType, message string) {
 		err = errors.New("wgpu.(*Surface).GetCurrentTexture(): " + message)
@@ -133,7 +139,7 @@ func (p *Surface) GetCurrentTexture() (*Texture, error) {
 
 	ref := C.gowebgpu_surface_get_current_texture(
 		p.ref,
-		p.deviceRef,
+		p.device.ref,
 		errorCallbackHandle.ToPointer(),
 	)
 	if err != nil {
@@ -143,7 +149,8 @@ func (p *Surface) GetCurrentTexture() (*Texture, error) {
 		return nil, err
 	}
 
-	return &Texture{p.deviceRef, ref}, nil
+	// setting released to one forces Texture.Release() to be a noop
+	return &Texture{device: p.device.addRef(), ref: ref, released: 0}, nil
 }
 
 func (p *Surface) Present() {
@@ -151,5 +158,7 @@ func (p *Surface) Present() {
 }
 
 func (p *Surface) Release() {
-	C.wgpuSurfaceRelease(p.ref)
+	if p.ref != nil && atomic.CompareAndSwapInt32(&p.released, 0, 1) {
+		C.wgpuSurfaceRelease(p.ref)
+	}
 }

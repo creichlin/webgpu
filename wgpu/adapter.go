@@ -17,10 +17,6 @@ import (
 	"unsafe"
 )
 
-type Adapter struct {
-	ref C.WGPUAdapter
-}
-
 func (p *Adapter) GetFeatures() []FeatureName {
 	var supportedFeatures C.WGPUSupportedFeatures
 	C.wgpuAdapterGetFeatures(p.ref, (*C.WGPUSupportedFeatures)(unsafe.Pointer(&supportedFeatures)))
@@ -113,7 +109,8 @@ func gowebgpu_request_device_callback_go(status C.WGPURequestDeviceStatus, devic
 
 	cb, ok := handle.Value().(requestDeviceCb)
 	if ok {
-		cb(RequestDeviceStatus(status), &Device{ref: device}, C.GoStringN(message.data, C.int(message.length)))
+		device := releaseOnGC(&Device{ref: device})
+		cb(RequestDeviceStatus(status), device, C.GoStringN(message.data, C.int(message.length)))
 	}
 }
 
@@ -248,8 +245,4 @@ func (p *Adapter) RequestDevice(descriptor *DeviceDescriptor) (*Device, error) {
 	}
 
 	return device, nil
-}
-
-func (p *Adapter) Release() {
-	C.wgpuAdapterRelease(p.ref)
 }

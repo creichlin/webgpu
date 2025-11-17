@@ -95,6 +95,10 @@ void logCallback_cgo(WGPULogLevel level, char const *msg) {
 
 */
 import "C"
+import (
+	"runtime"
+	"sync/atomic"
+)
 
 func init() {
 	C.wgpuSetLogCallback(C.WGPULogCallback(C.logCallback_cgo), nil)
@@ -109,26 +113,165 @@ func GetVersion() Version {
 }
 
 type (
-	BindGroup       struct{ ref C.WGPUBindGroup }
-	BindGroupLayout struct{ ref C.WGPUBindGroupLayout }
-	CommandBuffer   struct{ ref C.WGPUCommandBuffer }
-	PipelineLayout  struct{ ref C.WGPUPipelineLayout }
-	QuerySet        struct{ ref C.WGPUQuerySet }
-	RenderBundle    struct{ ref C.WGPURenderBundle }
-	Sampler         struct{ ref C.WGPUSampler }
-	ShaderModule    struct{ ref C.WGPUShaderModule }
-	TextureView     struct{ ref C.WGPUTextureView }
+	Adapter struct {
+		ref      C.WGPUAdapter
+		released int32
+	}
+	BindGroup struct {
+		ref      C.WGPUBindGroup
+		released int32
+	}
+	BindGroupLayout struct {
+		ref      C.WGPUBindGroupLayout
+		released int32
+	}
+	CommandBuffer struct {
+		ref      C.WGPUCommandBuffer
+		released int32
+	}
+	ComputePipeline struct {
+		ref      C.WGPUComputePipeline
+		released int32
+	}
+	Device struct {
+		ref      C.WGPUDevice
+		released int32
+	}
+	Instance struct {
+		ref      C.WGPUInstance
+		released int32
+	}
+	PipelineLayout struct {
+		ref      C.WGPUPipelineLayout
+		released int32
+	}
+	QuerySet struct {
+		ref      C.WGPUQuerySet
+		released int32
+	}
+	RenderBundle struct {
+		ref      C.WGPURenderBundle
+		released int32
+	}
+	RenderBundleEncoder struct {
+		ref      C.WGPURenderBundleEncoder
+		released int32
+	}
+	RenderPipeline struct {
+		ref      C.WGPURenderPipeline
+		released int32
+	}
+	Sampler struct {
+		ref      C.WGPUSampler
+		released int32
+	}
+	ShaderModule struct {
+		ref      C.WGPUShaderModule
+		released int32
+	}
+	TextureView struct {
+		ref      C.WGPUTextureView
+		released int32
+	}
 )
 
-func (p *BindGroup) Release()       { C.wgpuBindGroupRelease(p.ref) }
-func (p *BindGroupLayout) Release() { C.wgpuBindGroupLayoutRelease(p.ref) }
-func (p *CommandBuffer) Release()   { C.wgpuCommandBufferRelease(p.ref) }
-func (p *PipelineLayout) Release()  { C.wgpuPipelineLayoutRelease(p.ref) }
-func (p *QuerySet) Release()        { C.wgpuQuerySetRelease(p.ref) }
-func (p *RenderBundle) Release()    { C.wgpuRenderBundleRelease(p.ref) }
-func (p *Sampler) Release()         { C.wgpuSamplerRelease(p.ref) }
-func (p *ShaderModule) Release()    { C.wgpuShaderModuleRelease(p.ref) }
-func (p *TextureView) Release()     { C.wgpuTextureViewRelease(p.ref) }
+func (p *Adapter) Release() {
+	if p.ref != nil && atomic.CompareAndSwapInt32(&p.released, 0, 1) {
+		C.wgpuAdapterRelease(p.ref)
+	}
+}
+func (p *BindGroup) Release() {
+	if p.ref != nil && atomic.CompareAndSwapInt32(&p.released, 0, 1) {
+		C.wgpuBindGroupRelease(p.ref)
+	}
+}
+func (p *BindGroupLayout) Release() {
+	if p.ref != nil && atomic.CompareAndSwapInt32(&p.released, 0, 1) {
+		C.wgpuBindGroupLayoutRelease(p.ref)
+	}
+}
+func (p *CommandBuffer) Release() {
+	if p.ref != nil && atomic.CompareAndSwapInt32(&p.released, 0, 1) {
+		C.wgpuCommandBufferRelease(p.ref)
+	}
+}
+func (p *ComputePipeline) Release() {
+	if p.ref != nil && atomic.CompareAndSwapInt32(&p.released, 0, 1) {
+		C.wgpuComputePipelineRelease(p.ref)
+	}
+}
+func (p *Device) Release() {
+	if p.ref != nil && atomic.CompareAndSwapInt32(&p.released, 0, 1) {
+		C.wgpuDeviceRelease(p.ref)
+	}
+}
+func (p *Instance) Release() {
+	if p.ref != nil && atomic.CompareAndSwapInt32(&p.released, 0, 1) {
+		C.wgpuInstanceRelease(p.ref)
+	}
+}
+func (p *PipelineLayout) Release() {
+	if p.ref != nil && atomic.CompareAndSwapInt32(&p.released, 0, 1) {
+		C.wgpuPipelineLayoutRelease(p.ref)
+	}
+}
+func (p *QuerySet) Release() {
+	if p.ref != nil && atomic.CompareAndSwapInt32(&p.released, 0, 1) {
+		C.wgpuQuerySetRelease(p.ref)
+	}
+}
+func (p *RenderBundle) Release() {
+	if p.ref != nil && atomic.CompareAndSwapInt32(&p.released, 0, 1) {
+		C.wgpuRenderBundleRelease(p.ref)
+	}
+}
+func (p *RenderBundleEncoder) Release() {
+	if p.ref != nil && atomic.CompareAndSwapInt32(&p.released, 0, 1) {
+		C.wgpuRenderBundleEncoderRelease(p.ref)
+	}
+}
+func (p *RenderPipeline) Release() {
+	if p.ref != nil && atomic.CompareAndSwapInt32(&p.released, 0, 1) {
+		C.wgpuRenderPipelineRelease(p.ref)
+	}
+}
+func (p *Sampler) Release() {
+	if p.ref != nil && atomic.CompareAndSwapInt32(&p.released, 0, 1) {
+		C.wgpuSamplerRelease(p.ref)
+	}
+}
+func (p *ShaderModule) Release() {
+	if p.ref != nil && atomic.CompareAndSwapInt32(&p.released, 0, 1) {
+		C.wgpuShaderModuleRelease(p.ref)
+	}
+}
+func (p *TextureView) Release() {
+	if p.ref != nil && atomic.CompareAndSwapInt32(&p.released, 0, 1) {
+		C.wgpuTextureViewRelease(p.ref)
+	}
+}
+
+func (p *Device) addRef() *Device {
+	if atomic.LoadInt32(&p.released) != 0 {
+		panic("addRef called on a device that was already released")
+	}
+
+	C.wgpuDeviceAddRef(p.ref)
+
+	// return a new object that can be individually garbage collected
+	return releaseOnGC(&Device{ref: p.ref})
+}
+
+type releaser interface{ Release() }
+
+func releaseNow[T releaser](value T) {
+	value.Release()
+}
+
+func releaseOnGC[T releaser](value T) T {
+	runtime.SetFinalizer(value, releaseNow[T])
+	return value
+}
 
 // cBool converts the given Go bool to a C.WGPUBool.
 func cBool(b bool) C.WGPUBool {

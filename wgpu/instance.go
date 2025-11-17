@@ -16,10 +16,6 @@ import (
 	"unsafe"
 )
 
-type Instance struct {
-	ref C.WGPUInstance
-}
-
 func CreateInstance(descriptor *InstanceDescriptor) *Instance {
 	var desc C.WGPUInstanceDescriptor
 
@@ -48,7 +44,7 @@ func CreateInstance(descriptor *InstanceDescriptor) *Instance {
 		panic("Failed to acquire Instance")
 	}
 
-	return &Instance{ref}
+	return releaseOnGC(&Instance{ref: ref})
 }
 
 type SurfaceSourceWindowsHWND struct {
@@ -177,7 +173,7 @@ func (p *Instance) CreateSurface(descriptor *SurfaceDescriptor) *Surface {
 	if ref == nil {
 		panic("Failed to acquire Surface")
 	}
-	return &Surface{ref: ref}
+	return releaseOnGC(&Surface{ref: ref})
 }
 
 type requestAdapterCb func(status RequestAdapterStatus, adapter *Adapter, message string)
@@ -189,7 +185,8 @@ func gowebgpu_request_adapter_callback_go(status C.WGPURequestAdapterStatus, ada
 
 	cb, ok := handle.Value().(requestAdapterCb)
 	if ok {
-		cb(RequestAdapterStatus(status), &Adapter{ref: adapter}, C.GoStringN(message.data, C.int(message.length)))
+		adapter := releaseOnGC(&Adapter{ref: adapter})
+		cb(RequestAdapterStatus(status), adapter, C.GoStringN(message.data, C.int(message.length)))
 	}
 }
 
@@ -244,7 +241,7 @@ func (p *Instance) EnumerateAdapters(options *InstanceEnumerateAdapterOptons) []
 
 	adapters := make([]*Adapter, size)
 	for i, ref := range adapterRefs {
-		adapters[i] = &Adapter{ref}
+		adapters[i] = releaseOnGC(&Adapter{ref: ref})
 	}
 	return adapters
 }
@@ -320,8 +317,4 @@ func (p *Instance) GenerateReport() GlobalReport {
 	}
 
 	return report
-}
-
-func (p *Instance) Release() {
-	C.wgpuInstanceRelease(p.ref)
 }

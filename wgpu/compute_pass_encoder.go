@@ -21,21 +21,18 @@ static inline void gowebgpu_compute_pass_encoder_end(WGPUComputePassEncoder comp
 	wgpuDevicePopErrorScope(device, err_cb);
 }
 
-static inline void gowebgpu_compute_pass_encoder_release(WGPUComputePassEncoder computePassEncoder, WGPUDevice device) {
-	wgpuDeviceRelease(device);
-	wgpuComputePassEncoderRelease(computePassEncoder);
-}
-
 */
 import "C"
 import (
 	"errors"
+	"sync/atomic"
 	"unsafe"
 )
 
 type ComputePassEncoder struct {
-	deviceRef C.WGPUDevice
-	ref       C.WGPUComputePassEncoder
+	device   *Device
+	ref      C.WGPUComputePassEncoder
+	released int32
 }
 
 func (p *ComputePassEncoder) BeginPipelineStatisticsQuery(querySet *QuerySet, queryIndex uint32) {
@@ -57,7 +54,7 @@ func (p *ComputePassEncoder) End() (err error) {
 	errorCallbackHandle := newHandle(cb)
 	defer errorCallbackHandle.Delete()
 
-	C.gowebgpu_compute_pass_encoder_end(p.ref, p.deviceRef, errorCallbackHandle.ToPointer())
+	C.gowebgpu_compute_pass_encoder_end(p.ref, p.device.ref, errorCallbackHandle.ToPointer())
 	return
 }
 
@@ -106,5 +103,7 @@ func (p *ComputePassEncoder) SetPipeline(pipeline *ComputePipeline) {
 }
 
 func (p *ComputePassEncoder) Release() {
-	C.gowebgpu_compute_pass_encoder_release(p.ref, p.deviceRef)
+	if p.ref != nil && atomic.CompareAndSwapInt32(&p.released, 0, 1) {
+		C.wgpuComputePassEncoderRelease(p.ref)
+	}
 }
