@@ -22,6 +22,17 @@ func (g RenderPassEncoder) SetPipeline(pipeline *RenderPipeline) {
 	g.jsValue.Call("setPipeline", pointerToJS(pipeline))
 }
 
+// SetScissorRect as described:
+// https://gpuweb.github.io/gpuweb/#dom-gpurenderpassencoder-setscissorrect
+func (g RenderPassEncoder) SetScissorRect(x, y, width, height uint32) {
+	params := make([]any, 4)
+	params[0] = x
+	params[1] = y
+	params[2] = width
+	params[3] = height
+	g.jsValue.Call("setScissorRect", params...)
+}
+
 // SetVertexBuffer as described:
 // https://gpuweb.github.io/gpuweb/#dom-gpurendercommandsmixin-setvertexbuffer
 func (g RenderPassEncoder) SetVertexBuffer(slot uint32, vertexBuffer *Buffer, offset, size uint64) {
