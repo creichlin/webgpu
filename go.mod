@@ -1,4 +1,4 @@
-module github.com/cogentcore/webgpu
+module github.com/oliverbestmann/webgpu
 
 go 1.24
 
