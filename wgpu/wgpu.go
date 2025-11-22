@@ -2,6 +2,8 @@
 
 package wgpu
 
+import _ "github.com/oliverbestmann/webgpu/linux/v27"
+
 /*
 
 // Android
