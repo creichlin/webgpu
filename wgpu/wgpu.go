@@ -18,6 +18,10 @@ import _ "github.com/oliverbestmann/webgpu/linux/v27"
 
 #cgo android LDFLAGS: -landroid -lm -llog
 
+// Linux
+#cgo linux,!android,amd64 CFLAGS: -I${SRCDIR}/lib/linux/amd64
+#cgo linux,!android,arm64 CFLAGS: -I${SRCDIR}/lib/linux/arm64
+
 // iOS
 #cgo ios,amd64 LDFLAGS: -L${SRCDIR}/lib/ios/amd64 -lwgpu_native
 #cgo ios,amd64 CFLAGS: -I${SRCDIR}/lib/ios/amd64
