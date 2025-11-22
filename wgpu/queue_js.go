@@ -7,7 +7,7 @@ import (
 	"syscall/js"
 	"unsafe"
 
-	"github.com/cogentcore/webgpu/jsx"
+	"github.com/oliverbestmann/webgpu/jsx"
 )
 
 // Queue as described:

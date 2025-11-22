@@ -5,7 +5,7 @@ package wgpu
 import (
 	"syscall/js"
 
-	"github.com/cogentcore/webgpu/jsx"
+	"github.com/oliverbestmann/webgpu/jsx"
 )
 
 // Buffer as described:
