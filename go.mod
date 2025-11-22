@@ -1,10 +1,12 @@
 module github.com/oliverbestmann/webgpu
 
-go 1.24
+go 1.25
 
 require (
+	github.com/cogentcore/webgpu v0.23.0
 	github.com/go-gl/glfw/v3.3/glfw v0.0.0-20240506104042-037f3cc74f2a
 	github.com/iancoleman/strcase v0.3.0
+	github.com/oliverbestmann/webgpu/linux/v27 v27.0.0-20251122191441-5a6ff5a9f2d0
 	modernc.org/cc/v3 v3.41.0
 	mvdan.cc/gofumpt v0.6.0
 )
