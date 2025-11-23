@@ -10,3 +10,5 @@ github.com/oliverbestmann/webgpu/libs-linux v0.0.0-20251123130508-41a15cd9f5d4 h
 github.com/oliverbestmann/webgpu/libs-linux v0.0.0-20251123130508-41a15cd9f5d4/go.mod h1:SOeo2YWe2UxWxOeAHyZtwaSXkBbP78cGnm7I+6lIWV0=
 github.com/oliverbestmann/webgpu/libs-windows v0.0.0-20251123132018-cb7d10ca10ab h1:DdjTmGYcnR2chPI00JdZLetTtL3Ogi56bAdkOBzOPQ8=
 github.com/oliverbestmann/webgpu/libs-windows v0.0.0-20251123132018-cb7d10ca10ab/go.mod h1:58qRJHG2+mjEu/AKJFh026bz3xE1zEHYt41i4TBM8NE=
+github.com/oliverbestmann/webgpu/libs-windows v0.0.0-20251123133245-044a1e879071 h1:atqwQ+4qlrqDByWo8qdUQweACpykpg7FTGj5W3nqLdM=
+github.com/oliverbestmann/webgpu/libs-windows v0.0.0-20251123133245-044a1e879071/go.mod h1:58qRJHG2+mjEu/AKJFh026bz3xE1zEHYt41i4TBM8NE=
