@@ -233,6 +233,51 @@ func (v BufferMapState) String() string {
 	}
 }
 
+type BufferUsage uint64
+
+const (
+	BufferUsageNone         BufferUsage = 0x00000000
+	BufferUsageMapRead      BufferUsage = 0x00000001
+	BufferUsageMapWrite     BufferUsage = 0x00000002
+	BufferUsageCopySrc      BufferUsage = 0x00000004
+	BufferUsageCopyDst      BufferUsage = 0x00000008
+	BufferUsageIndex        BufferUsage = 0x00000010
+	BufferUsageVertex       BufferUsage = 0x00000020
+	BufferUsageUniform      BufferUsage = 0x00000040
+	BufferUsageStorage      BufferUsage = 0x00000080
+	BufferUsageIndirect     BufferUsage = 0x00000100
+	BufferUsageQueryResolve BufferUsage = 0x00000200
+)
+
+func (v BufferUsage) String() string {
+	switch v {
+	case BufferUsageNone:
+		return "none"
+	case BufferUsageMapRead:
+		return "map-read"
+	case BufferUsageMapWrite:
+		return "map-write"
+	case BufferUsageCopySrc:
+		return "copy-src"
+	case BufferUsageCopyDst:
+		return "copy-dst"
+	case BufferUsageIndex:
+		return "index"
+	case BufferUsageVertex:
+		return "vertex"
+	case BufferUsageUniform:
+		return "uniform"
+	case BufferUsageStorage:
+		return "storage"
+	case BufferUsageIndirect:
+		return "indirect"
+	case BufferUsageQueryResolve:
+		return "query-resolve"
+	default:
+		return ""
+	}
+}
+
 type CallbackMode uint32
 
 const (
@@ -249,6 +294,36 @@ func (v CallbackMode) String() string {
 		return "allow-process-events"
 	case CallbackModeAllowSpontaneous:
 		return "allow-spontaneous"
+	default:
+		return ""
+	}
+}
+
+type ColorWriteMask uint64
+
+const (
+	ColorWriteMaskNone  ColorWriteMask = 0x00000000
+	ColorWriteMaskRed   ColorWriteMask = 0x00000001
+	ColorWriteMaskGreen ColorWriteMask = 0x00000002
+	ColorWriteMaskBlue  ColorWriteMask = 0x00000004
+	ColorWriteMaskAlpha ColorWriteMask = 0x00000008
+	ColorWriteMaskAll   ColorWriteMask = 0x0000000F
+)
+
+func (v ColorWriteMask) String() string {
+	switch v {
+	case ColorWriteMaskNone:
+		return "none"
+	case ColorWriteMaskRed:
+		return "red"
+	case ColorWriteMaskGreen:
+		return "green"
+	case ColorWriteMaskBlue:
+		return "blue"
+	case ColorWriteMaskAlpha:
+		return "alpha"
+	case ColorWriteMaskAll:
+		return "all"
 	default:
 		return ""
 	}
@@ -549,7 +624,6 @@ const (
 	FeatureNameDualSourceBlending                                      FeatureName = 0x00000010
 	NativeFeaturePushConstants                                         FeatureName = 0x00030001
 	NativeFeatureTextureAdapterSpecificFormatFeatures                  FeatureName = 0x00030002
-	NativeFeatureMultiDrawIndirect                                     FeatureName = 0x00030003
 	NativeFeatureMultiDrawIndirectCount                                FeatureName = 0x00030004
 	NativeFeatureVertexWritableStorage                                 FeatureName = 0x00030005
 	NativeFeatureTextureBindingArray                                   FeatureName = 0x00030006
@@ -562,10 +636,12 @@ const (
 	NativeFeatureMappablePrimaryBuffers                                FeatureName = 0x0003000E
 	NativeFeatureBufferBindingArray                                    FeatureName = 0x0003000F
 	NativeFeatureUniformBufferAndStorageTextureArrayNonUniformIndexing FeatureName = 0x00030010
+	NativeFeaturePolygonModeLine                                       FeatureName = 0x00030013
+	NativeFeaturePolygonModePoint                                      FeatureName = 0x00030014
+	NativeFeatureConservativeRasterization                             FeatureName = 0x00030015
 	NativeFeatureSpirvShaderPassthrough                                FeatureName = 0x00030017
 	NativeFeatureVertexAttribute64bit                                  FeatureName = 0x00030019
 	NativeFeatureTextureFormatNv12                                     FeatureName = 0x0003001A
-	NativeFeatureRayTracingAccelerationStructure                       FeatureName = 0x0003001B
 	NativeFeatureRayQuery                                              FeatureName = 0x0003001C
 	NativeFeatureShaderF64                                             FeatureName = 0x0003001D
 	NativeFeatureShaderI16                                             FeatureName = 0x0003001E
@@ -576,6 +652,7 @@ const (
 	NativeFeatureSubgroupBarrier                                       FeatureName = 0x00030023
 	NativeFeatureTimestampQueryInsideEncoders                          FeatureName = 0x00030024
 	NativeFeatureTimestampQueryInsidePasses                            FeatureName = 0x00030025
+	NativeFeatureShaderInt64                                           FeatureName = 0x00030026
 )
 
 func (v FeatureName) String() string {
@@ -618,8 +695,6 @@ func (v FeatureName) String() string {
 		return "native-feature-push-constants"
 	case NativeFeatureTextureAdapterSpecificFormatFeatures:
 		return "native-feature-texture-adapter-specific-format-features"
-	case NativeFeatureMultiDrawIndirect:
-		return "native-feature-multi-draw-indirect"
 	case NativeFeatureMultiDrawIndirectCount:
 		return "native-feature-multi-draw-indirect-count"
 	case NativeFeatureVertexWritableStorage:
@@ -644,14 +719,18 @@ func (v FeatureName) String() string {
 		return "native-feature-buffer-binding-array"
 	case NativeFeatureUniformBufferAndStorageTextureArrayNonUniformIndexing:
 		return "native-feature-uniform-buffer-and-storage-texture-array-non-uniform-indexing"
+	case NativeFeaturePolygonModeLine:
+		return "native-feature-polygon-mode-line"
+	case NativeFeaturePolygonModePoint:
+		return "native-feature-polygon-mode-point"
+	case NativeFeatureConservativeRasterization:
+		return "native-feature-conservative-rasterization"
 	case NativeFeatureSpirvShaderPassthrough:
 		return "native-feature-spirv-shader-passthrough"
 	case NativeFeatureVertexAttribute64bit:
 		return "native-feature-vertex-attribute64bit"
 	case NativeFeatureTextureFormatNv12:
 		return "native-feature-texture-format-nv12"
-	case NativeFeatureRayTracingAccelerationStructure:
-		return "native-feature-ray-tracing-acceleration-structure"
 	case NativeFeatureRayQuery:
 		return "native-feature-ray-query"
 	case NativeFeatureShaderF64:
@@ -672,6 +751,8 @@ func (v FeatureName) String() string {
 		return "native-feature-timestamp-query-inside-encoders"
 	case NativeFeatureTimestampQueryInsidePasses:
 		return "native-feature-timestamp-query-inside-passes"
+	case NativeFeatureShaderInt64:
+		return "native-feature-shader-int64"
 	default:
 		return ""
 	}
@@ -719,6 +800,24 @@ func (v FrontFace) String() string {
 	}
 }
 
+type GLFenceBehaviour uint32
+
+const (
+	GLFenceBehaviourNormal     GLFenceBehaviour = 0x00000000
+	GLFenceBehaviourAutoFinish GLFenceBehaviour = 0x00000001
+)
+
+func (v GLFenceBehaviour) String() string {
+	switch v {
+	case GLFenceBehaviourNormal:
+		return "normal"
+	case GLFenceBehaviourAutoFinish:
+		return "auto-finish"
+	default:
+		return ""
+	}
+}
+
 type Gles3MinorVersion uint32
 
 const (
@@ -759,6 +858,32 @@ func (v IndexFormat) String() string {
 		return "uint16"
 	case IndexFormatUint32:
 		return "uint32"
+	default:
+		return ""
+	}
+}
+
+type InstanceBackend uint64
+
+const InstanceBackendAll InstanceBackend = 0x00000000
+
+func (v InstanceBackend) String() string {
+	switch v {
+	case InstanceBackendAll:
+		return "all"
+	default:
+		return ""
+	}
+}
+
+type InstanceFlag uint64
+
+const InstanceFlagDefault InstanceFlag = 0x00000000
+
+func (v InstanceFlag) String() string {
+	switch v {
+	case InstanceFlagDefault:
+		return "default"
 	default:
 		return ""
 	}
@@ -842,6 +967,27 @@ func (v MapAsyncStatus) String() string {
 	}
 }
 
+type MapMode uint64
+
+const (
+	MapModeNone  MapMode = 0x00000000
+	MapModeRead  MapMode = 0x00000001
+	MapModeWrite MapMode = 0x00000002
+)
+
+func (v MapMode) String() string {
+	switch v {
+	case MapModeNone:
+		return "none"
+	case MapModeRead:
+		return "read"
+	case MapModeWrite:
+		return "write"
+	default:
+		return ""
+	}
+}
+
 type MipmapFilterMode uint32
 
 const (
@@ -886,6 +1032,7 @@ const (
 	NativeTextureFormatRgba16Unorm NativeTextureFormat = 0x00030005
 	NativeTextureFormatRgba16Snorm NativeTextureFormat = 0x00030006
 	NativeTextureFormatNV12        NativeTextureFormat = 0x00030007
+	NativeTextureFormatP010        NativeTextureFormat = 0x00030008
 )
 
 func (v NativeTextureFormat) String() string {
@@ -904,6 +1051,8 @@ func (v NativeTextureFormat) String() string {
 		return "rgba16snorm"
 	case NativeTextureFormatNV12:
 		return "nv12"
+	case NativeTextureFormatP010:
+		return "p010"
 	default:
 		return ""
 	}
@@ -1171,6 +1320,30 @@ func (v SamplerBindingType) String() string {
 		return "non-filtering"
 	case SamplerBindingTypeComparison:
 		return "comparison"
+	default:
+		return ""
+	}
+}
+
+type ShaderStage uint64
+
+const (
+	ShaderStageNone     ShaderStage = 0x00000000
+	ShaderStageVertex   ShaderStage = 0x00000001
+	ShaderStageFragment ShaderStage = 0x00000002
+	ShaderStageCompute  ShaderStage = 0x00000004
+)
+
+func (v ShaderStage) String() string {
+	switch v {
+	case ShaderStageNone:
+		return "none"
+	case ShaderStageVertex:
+		return "vertex"
+	case ShaderStageFragment:
+		return "fragment"
+	case ShaderStageCompute:
+		return "compute"
 	default:
 		return ""
 	}
@@ -1698,6 +1871,36 @@ func (v TextureSampleType) String() string {
 	}
 }
 
+type TextureUsage uint64
+
+const (
+	TextureUsageNone             TextureUsage = 0x00000000
+	TextureUsageCopySrc          TextureUsage = 0x00000001
+	TextureUsageCopyDst          TextureUsage = 0x00000002
+	TextureUsageTextureBinding   TextureUsage = 0x00000004
+	TextureUsageStorageBinding   TextureUsage = 0x00000008
+	TextureUsageRenderAttachment TextureUsage = 0x00000010
+)
+
+func (v TextureUsage) String() string {
+	switch v {
+	case TextureUsageNone:
+		return "none"
+	case TextureUsageCopySrc:
+		return "copy-src"
+	case TextureUsageCopyDst:
+		return "copy-dst"
+	case TextureUsageTextureBinding:
+		return "texture-binding"
+	case TextureUsageStorageBinding:
+		return "storage-binding"
+	case TextureUsageRenderAttachment:
+		return "render-attachment"
+	default:
+		return ""
+	}
+}
+
 type TextureViewDimension uint32
 
 const (
@@ -1773,7 +1976,6 @@ const (
 	VertexFormatSint32x2     VertexFormat = 0x00000025
 	VertexFormatSint32x3     VertexFormat = 0x00000026
 	VertexFormatSint32x4     VertexFormat = 0x00000027
-	VertexFormatUnorm1010102 VertexFormat = 0x00000028
 	VertexFormatUnorm8x4BGRA VertexFormat = 0x00000029
 )
 
@@ -1857,8 +2059,6 @@ func (v VertexFormat) String() string {
 		return "sint32x3"
 	case VertexFormatSint32x4:
 		return "sint32x4"
-	case VertexFormatUnorm1010102:
-		return "unorm1010102"
 	case VertexFormatUnorm8x4BGRA:
 		return "unorm8x4bgra"
 	default:
@@ -1940,76 +2140,3 @@ func (v WaitStatus) String() string {
 		return ""
 	}
 }
-
-type BufferUsage uint64
-const (
-	BufferUsageNone         BufferUsage = 0x0000000000000000
-	BufferUsageMapRead      BufferUsage = 0x0000000000000001
-	BufferUsageMapWrite     BufferUsage = 0x0000000000000002
-	BufferUsageCopySrc      BufferUsage = 0x0000000000000004
-	BufferUsageCopyDst      BufferUsage = 0x0000000000000008
-	BufferUsageIndex        BufferUsage = 0x0000000000000010
-	BufferUsageVertex       BufferUsage = 0x0000000000000020
-	BufferUsageUniform      BufferUsage = 0x0000000000000040
-	BufferUsageStorage      BufferUsage = 0x0000000000000080
-	BufferUsageIndirect     BufferUsage = 0x0000000000000100
-	BufferUsageQueryResolve BufferUsage = 0x0000000000000200
-)
-
-type ColorWriteMask uint64
-const (
-	ColorWriteMaskNone  ColorWriteMask = 0x0000000000000000
-	ColorWriteMaskRed   ColorWriteMask = 0x0000000000000001
-	ColorWriteMaskGreen ColorWriteMask = 0x0000000000000002
-	ColorWriteMaskBlue  ColorWriteMask = 0x0000000000000004
-	ColorWriteMaskAlpha ColorWriteMask = 0x0000000000000008
-	ColorWriteMaskAll   ColorWriteMask = 0x000000000000000F /* Red | Green | Blue | Alpha */
-)
-
-type MapMode uint64
-const (
-	MapModeNone  MapMode = 0x0000000000000000
-	MapModeRead  MapMode = 0x0000000000000001
-	MapModeWrite MapMode = 0x0000000000000002
-)
-
-type ShaderStage uint64
-const (
-	ShaderStageNone     ShaderStage = 0x0000000000000000
-	ShaderStageVertex   ShaderStage = 0x0000000000000001
-	ShaderStageFragment ShaderStage = 0x0000000000000002
-	ShaderStageCompute  ShaderStage = 0x0000000000000004
-)
-
-type TextureUsage uint64
-const (
-	TextureUsageNone            TextureUsage = 0x0000000000000000
-	TextureUsageCopySrc         TextureUsage = 0x0000000000000001
-	TextureUsageCopyDst         TextureUsage = 0x0000000000000002
-	TextureUsageTextureBinding  TextureUsage = 0x0000000000000004
-	TextureUsageStorageBinding  TextureUsage = 0x0000000000000008
-	TextureUsageRenderAttachment TextureUsage = 0x0000000000000010
-)
-
-type InstanceBackend uint32
-const (
-	WGPUInstanceBackend_All InstanceBackend = 0x00000000
-	WGPUInstanceBackend_Vulkan InstanceBackend = 1 << 0
-	WGPUInstanceBackend_GL InstanceBackend = 1 << 1
-	WGPUInstanceBackend_Metal InstanceBackend = 1 << 2
-	WGPUInstanceBackend_DX12 InstanceBackend = 1 << 3
-	WGPUInstanceBackend_DX11 InstanceBackend = 1 << 4
-	WGPUInstanceBackend_BrowserWebGPU InstanceBackend = 1 << 5
-	WGPUInstanceBackend_Primary InstanceBackend = (1 << 0) | (1 << 2) | (1 << 3) | (1 << 5)
-	WGPUInstanceBackend_Secondary InstanceBackend = (1 << 1) | (1 << 4)
-	WGPUInstanceBackend_Force32 InstanceBackend = 0x7FFFFFFF
-)
-
-type InstanceFlag uint32
-const (
-	WGPUInstanceFlag_Default InstanceFlag = 0x00000000
-	WGPUInstanceFlag_Debug InstanceFlag = 1 << 0
-	WGPUInstanceFlag_Validation InstanceFlag = 1 << 1
-	WGPUInstanceFlag_DiscardHalLabels InstanceFlag = 1 << 2
-	WGPUInstanceFlag_Force32 InstanceFlag = 0x7FFFFFFF
-)

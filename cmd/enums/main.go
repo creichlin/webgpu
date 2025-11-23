@@ -1,7 +1,7 @@
 package main
 
 //go:generate go build
-//go:generate ./enums -i ../../wgpu/lib/wgpu.h -o ../../wgpu/enums.go -pkg wgpu
+//go:generate ./enums -i ../../wgpu/lib/linux/arm64/ -o ../../wgpu/enums.go -pkg wgpu
 
 import (
 	"bytes"
@@ -12,25 +12,25 @@ import (
 	"os"
 	"os/exec"
 	"path/filepath"
-	"runtime"
+	"regexp"
+	"strconv"
 	"strings"
 	"unicode"
 
 	"slices"
 
 	"github.com/iancoleman/strcase"
-	"modernc.org/cc/v3"
 	gofumpt "mvdan.cc/gofumpt/format"
 )
 
 var (
-	inputFile   string
+	inputPath   string
 	outputFile  string
 	packageName string
 )
 
 func init() {
-	flag.StringVar(&inputFile, "i", "", "")
+	flag.StringVar(&inputPath, "i", "", "")
 	flag.StringVar(&outputFile, "o", "", "")
 	flag.StringVar(&packageName, "pkg", "", "")
 }
@@ -41,13 +41,14 @@ type Pair struct {
 }
 
 type TypedefEnum struct {
-	Name  string
-	Enums []Pair
+	Name   string
+	GoType string
+	Enums  []Pair
 }
 
 type Enums []TypedefEnum
 
-func (e Enums) Add(t string, enum string, value int64) Enums {
+func (e Enums) Add(goType, t string, enum string, value int64) Enums {
 	found := false
 	for i, v := range e {
 		if v.Name == t {
@@ -62,7 +63,8 @@ func (e Enums) Add(t string, enum string, value int64) Enums {
 
 	if !found {
 		e = append(e, TypedefEnum{
-			Name: t,
+			Name:   t,
+			GoType: goType,
 			Enums: []Pair{{
 				Enum:  enum,
 				Value: value,
@@ -75,71 +77,38 @@ func (e Enums) Add(t string, enum string, value int64) Enums {
 func main() {
 	flag.Parse()
 
-	in := mustv(os.ReadFile(inputFile))
+	var in string
 
-	abi := mustv(cc.NewABI(runtime.GOOS, runtime.GOARCH))
-	config := &cc.Config{
-		ABI:     abi,
-		Config3: cc.Config3{},
+	files := mustv(filepath.Glob(inputPath + "/*.h"))
+	for _, file := range files {
+		fmt.Println("reading", file)
+		in += string(mustv(os.ReadFile(file)))
 	}
-
-	sources := []cc.Source{
-		{
-			Name:  "defaults.h",
-			Value: string(mustv(exec.Command("sh", "-c", "cc -dM -E - < /dev/null").Output())),
-		},
-		{
-			Name:  filepath.Base(inputFile),
-			Value: string(in),
-		},
-	}
-
-	_, includePath, sysIncludePaths, err := cc.HostConfig("cpp")
-	must(err)
-
-	inputDir, err := filepath.Abs(filepath.Dir(inputFile))
-	must(err)
-	includePath = append(includePath, inputDir)
-	includePath = append(includePath, sysIncludePaths...)
-
-	ast := mustv(cc.Parse(config, includePath, sysIncludePaths, sources))
-	must(ast.Typecheck())
 
 	var enums = Enums{}
 
-	skipTypes := []string{
-		"SType",
-		"NativeSType",
-	}
+	re := regexp.MustCompile("(?m)^(static const .*)?\\s*WGPU([A-Za-z0-9]+)_([A-Za-z0-9]+) = 0x([0-9A-F]+)")
 
-	mergeTypes := map[string]string{
-		"NativeFeature": "FeatureName",
-	}
-
-loop:
-	for k, v := range ast.Enums {
-		key := strings.TrimPrefix(k.String(), "WGPU")
-		keyS := strings.Split(key, "_")
-		typ := keyS[0]
-		value := int64(v.Value().(cc.Int64Value))
-
-		for _, v := range skipTypes {
-			if typ == v {
-				continue loop
-			}
+	for _, match := range re.FindAllStringSubmatch(in, -1) {
+		goType := "uint32"
+		if match[1] != "" {
+			goType = "uint64"
 		}
 
-		if strings.HasSuffix(key, "_Force32") {
+		typ := match[2]
+		name := match[3]
+		fullname := typ + name
+		value, _ := strconv.ParseInt(match[4], 16, 64)
+
+		if typ == "NativeFeature" {
+			typ = "FeatureName"
+		}
+
+		if name == "Force32" || typ == "SType" {
 			continue
 		}
 
-		inTyp, ok := mergeTypes[typ]
-		key = strings.ReplaceAll(key, "_", "")
-		if ok {
-			enums = enums.Add(inTyp, key, value)
-		} else {
-			enums = enums.Add(typ, key, value)
-		}
+		enums = enums.Add(goType, typ, fullname, value)
 	}
 
 	slices.SortStableFunc(enums, func(a, b TypedefEnum) int {
@@ -156,7 +125,7 @@ loop:
 			return cmp.Compare(a.Value, b.Value)
 		})
 
-		fmt.Fprintf(w, "type %s uint32\n\n", e.Name)
+		fmt.Fprintf(w, "type %s %s\n\n", e.Name, e.GoType)
 		for _, v := range e.Enums {
 			enum := v.Enum
 			value := v.Value

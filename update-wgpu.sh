@@ -37,21 +37,28 @@ pushd release
   popd
 popd
 
+rm -rf libs
+for SYSTEM in android darwin ios linux windows ; do
+   mkdir libs/$SYSTEM
+   pushd libs/$SYSTEM
+      git init .
+      git remote add origin https://github.com/oliverbestmann/webgpu
+      git fetch origin $SYSTEM-v27 || true
+      git switch -c $SYSTEM-v2
+   popd
+done
+
 function copy-to-target() {
     local ZIP="$1"
     local TARGET="$2"
     local ARCH="$3"
     local LIB="$4"
 
-    local DEST="wgpu/lib/$TARGET/$ARCH"
-    mkdir -p $DEST
+    mkdir -p libs/$TARGET/$ARCH
+    mkdir -p wgpu/libs/$TARGET/$ARCH
 
-    # TODO do we really need this?
-    echo "package vendor" > $DEST/vendor.go
-    echo "package vendor" > wgpu/lib/vendor.go
-
-    cp release/zips/$ZIP/lib/$LIB $DEST
-    cp release/zips/$ZIP/include/webgpu/*.h $DEST
+    cp release/zips/$ZIP/lib/$LIB libs/$TARGET/$ARCH
+    cp release/zips/$ZIP/include/webgpu/*.h wgpu/libs/$TARGET/$ARCH
 }
 
 copy-to-target "macos-aarch64"    "darwin"    "arm64"   libwgpu_native.a
@@ -67,6 +74,14 @@ copy-to-target "android-aarch64"  "android"   "arm64"   libwgpu_native.a
 copy-to-target "android-x86_64"   "android"   "amd64"   libwgpu_native.a
 copy-to-target "android-armv7"    "android"   "arm"     libwgpu_native.a
 copy-to-target "android-i686"     "android"   "386"     libwgpu_native.a
+
+for SYSTEM in android darwin ios linux windows ; do
+   mkdir libs/$SYSTEM
+   pushd libs/$SYSTEM
+      git add .
+      git commit -m "update libs"
+   popd
+done
 
 rm -rf release
 

@@ -8,10 +8,10 @@ import (
 	"strings"
 	"unsafe"
 
+	"github.com/go-gl/glfw/v3.3/glfw"
 	"github.com/oliverbestmann/webgpu/examples/internal/glm"
 	"github.com/oliverbestmann/webgpu/wgpu"
 	"github.com/oliverbestmann/webgpu/wgpuglfw"
-	"github.com/go-gl/glfw/v3.3/glfw"
 
 	_ "embed"
 )
@@ -195,7 +195,7 @@ func InitState(window *glfw.Window) (s *State, err error) {
 		AlphaMode:   caps.AlphaModes[0],
 	}
 
-	s.surface.Configure(s.adapter, s.device, s.config)
+	s.surface.Configure(s.device, s.config)
 
 	s.vertexBuf, err = s.device.CreateBufferInit(&wgpu.BufferInitDescriptor{
 		Label:    "Vertex Buffer",
@@ -336,7 +336,7 @@ func (s *State) Resize(width, height int) {
 		mxTotal := generateMatrix(float32(width) / float32(height))
 		s.queue.WriteBuffer(s.uniformBuf, 0, wgpu.ToBytes(mxTotal[:]))
 
-		s.surface.Configure(s.adapter, s.device, s.config)
+		s.surface.Configure(s.device, s.config)
 	}
 }
 

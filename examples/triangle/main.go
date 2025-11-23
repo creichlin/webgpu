@@ -92,7 +92,7 @@ func InitState[T interface{ GetSize() (int, int) }](window T, sd *wgpu.SurfaceDe
 		AlphaMode:   caps.AlphaModes[0],
 	}
 
-	s.surface.Configure(s.adapter, s.device, s.config)
+	s.surface.Configure(s.device, s.config)
 
 	s.pipeline, err = s.device.CreateRenderPipeline(&wgpu.RenderPipelineDescriptor{
 		Label: "Render Pipeline",
@@ -135,7 +135,7 @@ func (s *State) Resize(width, height int) {
 		s.config.Width = uint32(width)
 		s.config.Height = uint32(height)
 
-		s.surface.Configure(s.adapter, s.device, s.config)
+		s.surface.Configure(s.device, s.config)
 	}
 }
 

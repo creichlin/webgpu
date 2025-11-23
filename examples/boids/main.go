@@ -9,9 +9,9 @@ import (
 	"strconv"
 	"strings"
 
+	"github.com/go-gl/glfw/v3.3/glfw"
 	"github.com/oliverbestmann/webgpu/wgpu"
 	"github.com/oliverbestmann/webgpu/wgpuglfw"
-	"github.com/go-gl/glfw/v3.3/glfw"
 
 	_ "embed"
 )
@@ -106,7 +106,7 @@ func InitState(window *glfw.Window) (s *State, err error) {
 		AlphaMode:   caps.AlphaModes[0],
 	}
 
-	s.surface.Configure(s.adapter, s.device, s.config)
+	s.surface.Configure(s.device, s.config)
 
 	computeShader, err := s.device.CreateShaderModule(&wgpu.ShaderModuleDescriptor{
 		Label: "compute.wgsl",
@@ -297,7 +297,7 @@ func (s *State) Resize(width, height int) {
 		s.config.Width = uint32(width)
 		s.config.Height = uint32(height)
 
-		s.surface.Configure(s.adapter, s.device, s.config)
+		s.surface.Configure(s.device, s.config)
 	}
 }
 
