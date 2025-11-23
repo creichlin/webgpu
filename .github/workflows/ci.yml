@@ -62,5 +62,29 @@ jobs:
           go run ./examples/adapters
           go run ./examples/compute
           go run ./examples/capture
+          
+          go build ./examples/triangle
+          go build ./examples/boids
+          go build ./examples/cube
 
         shell: bash
+
+
+  test-build-js:
+    runs-on: ubuntu-latest
+    env:
+      GOOS: js
+      GOARCH: wasm
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: "stable"
+
+      - name: Build a wasm file
+        run: |
+          go build ./examples/triangle
