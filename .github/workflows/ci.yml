@@ -22,7 +22,8 @@ jobs:
             run_examples: true
             setup_env: |
               sudo apt-get update
-              sudo apt-get install -f -y libegl1-mesa-dev mesa-vulkan-drivers 
+              sudo apt-get install -f -y libegl1-mesa-dev mesa-vulkan-drivers \
+                libasound2-dev libxcursor-dev libxi-dev libxinerama-dev libxrandr-dev libxxf86vm-dev
 
           - os: macos-latest
             name: Darwin
