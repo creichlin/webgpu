@@ -2,12 +2,11 @@ module github.com/oliverbestmann/webgpu
 
 go 1.25
 
-require github.com/go-gl/glfw/v3.3/glfw v0.0.0-20250301202403-da16c1255728
-
 require (
-	github.com/oliverbestmann/webgpu/libs-android v0.0.0-20251123130330-255708779f8b // indirect
-	github.com/oliverbestmann/webgpu/libs-darwin v0.0.0-20251123130615-bce73357dc8d // indirect
-	github.com/oliverbestmann/webgpu/libs-ios v0.0.0-20251123130710-78131685b429 // indirect
-	github.com/oliverbestmann/webgpu/libs-linux v0.0.0-20251123130508-41a15cd9f5d4 // indirect
-	github.com/oliverbestmann/webgpu/libs-windows v0.0.0-20251123130754-3c5a9ebb05fc // indirect
+	github.com/go-gl/glfw/v3.3/glfw v0.0.0-20250301202403-da16c1255728
+	github.com/oliverbestmann/webgpu/libs-android v0.0.0-20251123130330-255708779f8b
+	github.com/oliverbestmann/webgpu/libs-darwin v0.0.0-20251123130615-bce73357dc8d
+	github.com/oliverbestmann/webgpu/libs-ios v0.0.0-20251123130710-78131685b429
+	github.com/oliverbestmann/webgpu/libs-linux v0.0.0-20251123130508-41a15cd9f5d4
+	github.com/oliverbestmann/webgpu/libs-windows v0.0.0-20251123132018-cb7d10ca10ab
 )
