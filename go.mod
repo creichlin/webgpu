@@ -8,5 +8,5 @@ require (
 	github.com/oliverbestmann/webgpu/libs-darwin v0.0.0-20251123130615-bce73357dc8d
 	github.com/oliverbestmann/webgpu/libs-ios v0.0.0-20251123130710-78131685b429
 	github.com/oliverbestmann/webgpu/libs-linux v0.0.0-20251123130508-41a15cd9f5d4
-	github.com/oliverbestmann/webgpu/libs-windows v0.0.0-20251123133245-044a1e879071
+	github.com/oliverbestmann/webgpu/libs-windows v0.0.0-20251123134324-0b4e31ddbbf9
 )
