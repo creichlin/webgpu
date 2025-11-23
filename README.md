@@ -18,6 +18,18 @@ For more information, see:
 
 The included static libraries downloaded from the wgpu-native project.
 
+## Prebuild libraries
+
+This repository uses prebuild libraries provided by `wgpu-native`.
+All libraries combined are more than 512mb in size, which is more than `go get` allows
+in a single library. THis is an "opinionated limited" which is not configurable.
+
+To work around that, libraries for the different systems are split into branches.
+An example is here: https://github.com/oliverbestmann/webgpu/tree/libs-linux/libs-linux
+
+The `update-wgpu.sh` script updates all those branches and updates the go.mod file to
+pull the prebuild libraries as dependencies in.
+
 ## Examples
 
 You can find some examples in the examples directory:
