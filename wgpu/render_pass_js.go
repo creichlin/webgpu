@@ -33,6 +33,12 @@ func (g RenderPassEncoder) SetScissorRect(x, y, width, height uint32) {
 	g.jsValue.Call("setScissorRect", params...)
 }
 
+// SetStencilReference as described:
+// https://gpuweb.github.io/gpuweb/#dom-gpurenderpassencoder-setstencilreference
+func (g RenderPassEncoder) SetStencilReference(ref uint32) {
+	g.jsValue.Call("setStencilReference", ref)
+}
+
 // SetVertexBuffer as described:
 // https://gpuweb.github.io/gpuweb/#dom-gpurendercommandsmixin-setvertexbuffer
 func (g RenderPassEncoder) SetVertexBuffer(slot uint32, vertexBuffer *Buffer, offset, size uint64) {
