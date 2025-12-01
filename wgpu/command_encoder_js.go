@@ -73,4 +73,28 @@ func (g *CommandEncoder) TryFinish(descriptor *CommandBufferDescriptor) (*Comman
 	}, nil
 }
 
-func (g *CommandEncoder) Release() {} // no-op
+func (g *CommandEncoder) Release() {}
+
+func (g *CommandEncoder) TryClearBuffer(buffer *Buffer, offset uint64, size uint64) error {
+	panic("unimplemented")
+}
+
+func (g *CommandEncoder) TryInsertDebugMarker(label string) error {
+	g.jsValue.Call("insertDebugMarker", label)
+	return nil
+}
+
+func (g *CommandEncoder) TryPopDebugGroup() error {
+	g.jsValue.Call("popDebugGroup")
+	return nil
+}
+
+func (g *CommandEncoder) TryPushDebugGroup(label string) error {
+	g.jsValue.Call("pushDebugGroup", label)
+	return nil
+}
+
+func (g *CommandEncoder) TryResolveQuerySet(querySet *QuerySet, query uint32, count uint32, destination *Buffer, offset uint64) error {
+	g.jsValue.Call("resolveQuerySet", querySet.toJS(), query, count, destination.toJS(), offset)
+	return nil
+}

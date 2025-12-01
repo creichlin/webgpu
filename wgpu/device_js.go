@@ -33,6 +33,11 @@ func (g *Device) GetQueue() *Queue {
 	}
 }
 
+func (g *Device) TryCreateQuerySet(descriptor *QuerySetDescriptor) (*QuerySet, error) {
+	jsQuerySet := g.jsValue.Call("createQuerySet", pointerToJS(descriptor))
+	return &QuerySet{jsQuerySet}, nil
+}
+
 // TryCreateCommandEncoder as described:
 // https://gpuweb.github.io/gpuweb/#dom-gpudevice-createcommandencoder
 func (g *Device) TryCreateCommandEncoder(descriptor *CommandEncoderDescriptor) (*CommandEncoder, error) {
@@ -131,4 +136,9 @@ func (g *Device) Poll(wait bool, wrappedSubmissionIndex *uint64) (queueEmpty boo
 	return false // no-op
 }
 
-func (g *Device) Release() {} // no-op
+func (g *Device) Release() {}
+
+func (p *Device) TryCreateRenderBundleEncoder(descriptor *RenderBundleEncoderDescriptor) (*RenderBundleEncoder, error) {
+	// TODO implement this
+	panic("unimplemented")
+}

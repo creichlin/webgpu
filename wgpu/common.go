@@ -2,6 +2,9 @@ package wgpu
 
 import "strconv"
 
+//go:generate go run ../cmd/enums -i lib/linux/arm64/ -o enums.go -pkg wgpu
+//go:generate sh -c "cd .. && go run ./cmd/wrappers"
+
 // This file contains common types and constants
 
 const (
@@ -173,6 +176,13 @@ type BufferMapCallback func(MapAsyncStatus)
 
 type QueueWorkDoneCallback func(QueueWorkDoneStatus)
 
+type QuerySetDescriptor struct {
+	Label              string
+	Type               QueryType
+	Count              uint32
+	PipelineStatistics []PipelineStatisticName
+}
+
 // RenderPassDescriptor as described:
 // https://gpuweb.github.io/gpuweb/#dictdef-gpurenderpassdescriptor
 type RenderPassDescriptor struct {
@@ -217,6 +227,15 @@ type RenderPipelineDescriptor struct {
 	DepthStencil *DepthStencilState
 	Multisample  MultisampleState
 	Fragment     *FragmentState
+}
+
+type RenderBundleEncoderDescriptor struct {
+	Label              string
+	ColorFormats       []TextureFormat
+	DepthStencilFormat TextureFormat
+	SampleCount        uint32
+	DepthReadOnly      bool
+	StencilReadOnly    bool
 }
 
 type CommandEncoderDescriptor struct {

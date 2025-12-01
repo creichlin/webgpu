@@ -38,7 +38,7 @@ func (p *Device) TryCreateBufferInit(descriptor *BufferInitDescriptor) (*Buffer,
 	js.CopyBytesToJS(array, descriptor.Contents)
 
 	if err := buffer.TryUnmap(); err != nil {
-		return err
+		return nil, err
 	}
 
 	return buffer, nil

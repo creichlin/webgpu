@@ -20,19 +20,19 @@ type ComputePassEncoder struct {
 	jsValue js.Value
 }
 
-func (g ComputePassEncoder) toJS() any {
+func (g *ComputePassEncoder) toJS() any {
 	return g.jsValue
 }
 
 // SetPipeline as described:
 // https://gpuweb.github.io/gpuweb/#dom-gpucomputepassencoder-setpipeline
-func (g ComputePassEncoder) SetPipeline(pipeline *ComputePipeline) {
+func (g *ComputePassEncoder) SetPipeline(pipeline *ComputePipeline) {
 	g.jsValue.Call("setPipeline", pointerToJS(pipeline))
 }
 
 // SetBindGroup as described:
 // https://gpuweb.github.io/gpuweb/#dom-gpubindingcommandsmixin-setbindgroup
-func (g ComputePassEncoder) SetBindGroup(index uint32, bindGroup *BindGroup, dynamicOffsets []uint32) {
+func (g *ComputePassEncoder) SetBindGroup(index uint32, bindGroup *BindGroup, dynamicOffsets []uint32) {
 	params := make([]any, 3)
 	params[0] = index
 	params[1] = pointerToJS(bindGroup)
@@ -44,7 +44,7 @@ func (g ComputePassEncoder) SetBindGroup(index uint32, bindGroup *BindGroup, dyn
 
 // DispatchWorkgroups as described:
 // https://gpuweb.github.io/gpuweb/#dom-gpucomputepassencoder-dispatchworkgroups
-func (g ComputePassEncoder) DispatchWorkgroups(workgroupCountX, workgroupCountY, workgroupCountZ uint32) {
+func (g *ComputePassEncoder) DispatchWorkgroups(workgroupCountX, workgroupCountY, workgroupCountZ uint32) {
 	params := make([]any, 3)
 	params[0] = workgroupCountX
 	if workgroupCountY > 0 {
@@ -62,9 +62,9 @@ func (g ComputePassEncoder) DispatchWorkgroups(workgroupCountX, workgroupCountY,
 
 // TryEnd as described:
 // https://gpuweb.github.io/gpuweb/#dom-gpucomputepassencoder-end
-func (g ComputePassEncoder) End() error {
+func (g *ComputePassEncoder) TryEnd() error {
 	g.jsValue.Call("end")
 	return nil
 }
 
-func (g ComputePassEncoder) Release() {} // no-op
+func (g *ComputePassEncoder) Release() {} // no-op

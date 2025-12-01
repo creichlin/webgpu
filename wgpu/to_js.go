@@ -119,7 +119,7 @@ func (g *CommandBufferDescriptor) toJS() any {
 	return map[string]any{"label": g.Label}
 }
 
-func (g BufferDescriptor) toJS() any {
+func (g *BufferDescriptor) toJS() any {
 	return map[string]any{
 		"label":            g.Label,
 		"size":             g.Size,
@@ -221,6 +221,14 @@ func (g *ProgrammableStageDescriptor) toJS() any {
 	return map[string]any{
 		"module":     pointerToJS(g.Module),
 		"entryPoint": g.EntryPoint,
+	}
+}
+
+func (g *QuerySetDescriptor) toJS() any {
+	return map[string]any{
+		"label": g.Label,
+		"type":  enumToJS(g.Type),
+		"count": g.Count,
 	}
 }
 

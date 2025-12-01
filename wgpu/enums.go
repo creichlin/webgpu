@@ -4,12 +4,10 @@ package wgpu
 
 type AdapterType uint32
 
-const (
-	AdapterTypeDiscreteGPU   AdapterType = 0x00000001
-	AdapterTypeIntegratedGPU AdapterType = 0x00000002
-	AdapterTypeCPU           AdapterType = 0x00000003
-	AdapterTypeUnknown       AdapterType = 0x00000004
-)
+const AdapterTypeDiscreteGPU AdapterType = 0x00000001
+const AdapterTypeIntegratedGPU AdapterType = 0x00000002
+const AdapterTypeCPU AdapterType = 0x00000003
+const AdapterTypeUnknown AdapterType = 0x00000004
 
 func (v AdapterType) String() string {
 	switch v {
@@ -28,12 +26,10 @@ func (v AdapterType) String() string {
 
 type AddressMode uint32
 
-const (
-	AddressModeUndefined    AddressMode = 0x00000000
-	AddressModeClampToEdge  AddressMode = 0x00000001
-	AddressModeRepeat       AddressMode = 0x00000002
-	AddressModeMirrorRepeat AddressMode = 0x00000003
-)
+const AddressModeUndefined AddressMode = 0x00000000
+const AddressModeClampToEdge AddressMode = 0x00000001
+const AddressModeRepeat AddressMode = 0x00000002
+const AddressModeMirrorRepeat AddressMode = 0x00000003
 
 func (v AddressMode) String() string {
 	switch v {
@@ -52,17 +48,15 @@ func (v AddressMode) String() string {
 
 type BackendType uint32
 
-const (
-	BackendTypeUndefined BackendType = 0x00000000
-	BackendTypeNull      BackendType = 0x00000001
-	BackendTypeWebGPU    BackendType = 0x00000002
-	BackendTypeD3D11     BackendType = 0x00000003
-	BackendTypeD3D12     BackendType = 0x00000004
-	BackendTypeMetal     BackendType = 0x00000005
-	BackendTypeVulkan    BackendType = 0x00000006
-	BackendTypeOpenGL    BackendType = 0x00000007
-	BackendTypeOpenGLES  BackendType = 0x00000008
-)
+const BackendTypeUndefined BackendType = 0x00000000
+const BackendTypeNull BackendType = 0x00000001
+const BackendTypeWebGPU BackendType = 0x00000002
+const BackendTypeD3D11 BackendType = 0x00000003
+const BackendTypeD3D12 BackendType = 0x00000004
+const BackendTypeMetal BackendType = 0x00000005
+const BackendTypeVulkan BackendType = 0x00000006
+const BackendTypeOpenGL BackendType = 0x00000007
+const BackendTypeOpenGLES BackendType = 0x00000008
 
 func (v BackendType) String() string {
 	switch v {
@@ -91,26 +85,24 @@ func (v BackendType) String() string {
 
 type BlendFactor uint32
 
-const (
-	BlendFactorUndefined         BlendFactor = 0x00000000
-	BlendFactorZero              BlendFactor = 0x00000001
-	BlendFactorOne               BlendFactor = 0x00000002
-	BlendFactorSrc               BlendFactor = 0x00000003
-	BlendFactorOneMinusSrc       BlendFactor = 0x00000004
-	BlendFactorSrcAlpha          BlendFactor = 0x00000005
-	BlendFactorOneMinusSrcAlpha  BlendFactor = 0x00000006
-	BlendFactorDst               BlendFactor = 0x00000007
-	BlendFactorOneMinusDst       BlendFactor = 0x00000008
-	BlendFactorDstAlpha          BlendFactor = 0x00000009
-	BlendFactorOneMinusDstAlpha  BlendFactor = 0x0000000A
-	BlendFactorSrcAlphaSaturated BlendFactor = 0x0000000B
-	BlendFactorConstant          BlendFactor = 0x0000000C
-	BlendFactorOneMinusConstant  BlendFactor = 0x0000000D
-	BlendFactorSrc1              BlendFactor = 0x0000000E
-	BlendFactorOneMinusSrc1      BlendFactor = 0x0000000F
-	BlendFactorSrc1Alpha         BlendFactor = 0x00000010
-	BlendFactorOneMinusSrc1Alpha BlendFactor = 0x00000011
-)
+const BlendFactorUndefined BlendFactor = 0x00000000
+const BlendFactorZero BlendFactor = 0x00000001
+const BlendFactorOne BlendFactor = 0x00000002
+const BlendFactorSrc BlendFactor = 0x00000003
+const BlendFactorOneMinusSrc BlendFactor = 0x00000004
+const BlendFactorSrcAlpha BlendFactor = 0x00000005
+const BlendFactorOneMinusSrcAlpha BlendFactor = 0x00000006
+const BlendFactorDst BlendFactor = 0x00000007
+const BlendFactorOneMinusDst BlendFactor = 0x00000008
+const BlendFactorDstAlpha BlendFactor = 0x00000009
+const BlendFactorOneMinusDstAlpha BlendFactor = 0x0000000A
+const BlendFactorSrcAlphaSaturated BlendFactor = 0x0000000B
+const BlendFactorConstant BlendFactor = 0x0000000C
+const BlendFactorOneMinusConstant BlendFactor = 0x0000000D
+const BlendFactorSrc1 BlendFactor = 0x0000000E
+const BlendFactorOneMinusSrc1 BlendFactor = 0x0000000F
+const BlendFactorSrc1Alpha BlendFactor = 0x00000010
+const BlendFactorOneMinusSrc1Alpha BlendFactor = 0x00000011
 
 func (v BlendFactor) String() string {
 	switch v {
@@ -157,14 +149,12 @@ func (v BlendFactor) String() string {
 
 type BlendOperation uint32
 
-const (
-	BlendOperationUndefined       BlendOperation = 0x00000000
-	BlendOperationAdd             BlendOperation = 0x00000001
-	BlendOperationSubtract        BlendOperation = 0x00000002
-	BlendOperationReverseSubtract BlendOperation = 0x00000003
-	BlendOperationMin             BlendOperation = 0x00000004
-	BlendOperationMax             BlendOperation = 0x00000005
-)
+const BlendOperationUndefined BlendOperation = 0x00000000
+const BlendOperationAdd BlendOperation = 0x00000001
+const BlendOperationSubtract BlendOperation = 0x00000002
+const BlendOperationReverseSubtract BlendOperation = 0x00000003
+const BlendOperationMin BlendOperation = 0x00000004
+const BlendOperationMax BlendOperation = 0x00000005
 
 func (v BlendOperation) String() string {
 	switch v {
@@ -187,13 +177,11 @@ func (v BlendOperation) String() string {
 
 type BufferBindingType uint32
 
-const (
-	BufferBindingTypeBindingNotUsed  BufferBindingType = 0x00000000
-	BufferBindingTypeUndefined       BufferBindingType = 0x00000001
-	BufferBindingTypeUniform         BufferBindingType = 0x00000002
-	BufferBindingTypeStorage         BufferBindingType = 0x00000003
-	BufferBindingTypeReadOnlyStorage BufferBindingType = 0x00000004
-)
+const BufferBindingTypeBindingNotUsed BufferBindingType = 0x00000000
+const BufferBindingTypeUndefined BufferBindingType = 0x00000001
+const BufferBindingTypeUniform BufferBindingType = 0x00000002
+const BufferBindingTypeStorage BufferBindingType = 0x00000003
+const BufferBindingTypeReadOnlyStorage BufferBindingType = 0x00000004
 
 func (v BufferBindingType) String() string {
 	switch v {
@@ -214,11 +202,9 @@ func (v BufferBindingType) String() string {
 
 type BufferMapState uint32
 
-const (
-	BufferMapStateUnmapped BufferMapState = 0x00000001
-	BufferMapStatePending  BufferMapState = 0x00000002
-	BufferMapStateMapped   BufferMapState = 0x00000003
-)
+const BufferMapStateUnmapped BufferMapState = 0x00000001
+const BufferMapStatePending BufferMapState = 0x00000002
+const BufferMapStateMapped BufferMapState = 0x00000003
 
 func (v BufferMapState) String() string {
 	switch v {
@@ -235,19 +221,17 @@ func (v BufferMapState) String() string {
 
 type BufferUsage uint64
 
-const (
-	BufferUsageNone         BufferUsage = 0x00000000
-	BufferUsageMapRead      BufferUsage = 0x00000001
-	BufferUsageMapWrite     BufferUsage = 0x00000002
-	BufferUsageCopySrc      BufferUsage = 0x00000004
-	BufferUsageCopyDst      BufferUsage = 0x00000008
-	BufferUsageIndex        BufferUsage = 0x00000010
-	BufferUsageVertex       BufferUsage = 0x00000020
-	BufferUsageUniform      BufferUsage = 0x00000040
-	BufferUsageStorage      BufferUsage = 0x00000080
-	BufferUsageIndirect     BufferUsage = 0x00000100
-	BufferUsageQueryResolve BufferUsage = 0x00000200
-)
+const BufferUsageNone BufferUsage = 0x00000000
+const BufferUsageMapRead BufferUsage = 0x00000001
+const BufferUsageMapWrite BufferUsage = 0x00000002
+const BufferUsageCopySrc BufferUsage = 0x00000004
+const BufferUsageCopyDst BufferUsage = 0x00000008
+const BufferUsageIndex BufferUsage = 0x00000010
+const BufferUsageVertex BufferUsage = 0x00000020
+const BufferUsageUniform BufferUsage = 0x00000040
+const BufferUsageStorage BufferUsage = 0x00000080
+const BufferUsageIndirect BufferUsage = 0x00000100
+const BufferUsageQueryResolve BufferUsage = 0x00000200
 
 func (v BufferUsage) String() string {
 	switch v {
@@ -280,11 +264,9 @@ func (v BufferUsage) String() string {
 
 type CallbackMode uint32
 
-const (
-	CallbackModeWaitAnyOnly        CallbackMode = 0x00000001
-	CallbackModeAllowProcessEvents CallbackMode = 0x00000002
-	CallbackModeAllowSpontaneous   CallbackMode = 0x00000003
-)
+const CallbackModeWaitAnyOnly CallbackMode = 0x00000001
+const CallbackModeAllowProcessEvents CallbackMode = 0x00000002
+const CallbackModeAllowSpontaneous CallbackMode = 0x00000003
 
 func (v CallbackMode) String() string {
 	switch v {
@@ -301,14 +283,12 @@ func (v CallbackMode) String() string {
 
 type ColorWriteMask uint64
 
-const (
-	ColorWriteMaskNone  ColorWriteMask = 0x00000000
-	ColorWriteMaskRed   ColorWriteMask = 0x00000001
-	ColorWriteMaskGreen ColorWriteMask = 0x00000002
-	ColorWriteMaskBlue  ColorWriteMask = 0x00000004
-	ColorWriteMaskAlpha ColorWriteMask = 0x00000008
-	ColorWriteMaskAll   ColorWriteMask = 0x0000000F
-)
+const ColorWriteMaskNone ColorWriteMask = 0x00000000
+const ColorWriteMaskRed ColorWriteMask = 0x00000001
+const ColorWriteMaskGreen ColorWriteMask = 0x00000002
+const ColorWriteMaskBlue ColorWriteMask = 0x00000004
+const ColorWriteMaskAlpha ColorWriteMask = 0x00000008
+const ColorWriteMaskAll ColorWriteMask = 0x0000000F
 
 func (v ColorWriteMask) String() string {
 	switch v {
@@ -331,17 +311,15 @@ func (v ColorWriteMask) String() string {
 
 type CompareFunction uint32
 
-const (
-	CompareFunctionUndefined    CompareFunction = 0x00000000
-	CompareFunctionNever        CompareFunction = 0x00000001
-	CompareFunctionLess         CompareFunction = 0x00000002
-	CompareFunctionEqual        CompareFunction = 0x00000003
-	CompareFunctionLessEqual    CompareFunction = 0x00000004
-	CompareFunctionGreater      CompareFunction = 0x00000005
-	CompareFunctionNotEqual     CompareFunction = 0x00000006
-	CompareFunctionGreaterEqual CompareFunction = 0x00000007
-	CompareFunctionAlways       CompareFunction = 0x00000008
-)
+const CompareFunctionUndefined CompareFunction = 0x00000000
+const CompareFunctionNever CompareFunction = 0x00000001
+const CompareFunctionLess CompareFunction = 0x00000002
+const CompareFunctionEqual CompareFunction = 0x00000003
+const CompareFunctionLessEqual CompareFunction = 0x00000004
+const CompareFunctionGreater CompareFunction = 0x00000005
+const CompareFunctionNotEqual CompareFunction = 0x00000006
+const CompareFunctionGreaterEqual CompareFunction = 0x00000007
+const CompareFunctionAlways CompareFunction = 0x00000008
 
 func (v CompareFunction) String() string {
 	switch v {
@@ -370,12 +348,10 @@ func (v CompareFunction) String() string {
 
 type CompilationInfoRequestStatus uint32
 
-const (
-	CompilationInfoRequestStatusSuccess         CompilationInfoRequestStatus = 0x00000001
-	CompilationInfoRequestStatusInstanceDropped CompilationInfoRequestStatus = 0x00000002
-	CompilationInfoRequestStatusError           CompilationInfoRequestStatus = 0x00000003
-	CompilationInfoRequestStatusUnknown         CompilationInfoRequestStatus = 0x00000004
-)
+const CompilationInfoRequestStatusSuccess CompilationInfoRequestStatus = 0x00000001
+const CompilationInfoRequestStatusInstanceDropped CompilationInfoRequestStatus = 0x00000002
+const CompilationInfoRequestStatusError CompilationInfoRequestStatus = 0x00000003
+const CompilationInfoRequestStatusUnknown CompilationInfoRequestStatus = 0x00000004
 
 func (v CompilationInfoRequestStatus) String() string {
 	switch v {
@@ -394,11 +370,9 @@ func (v CompilationInfoRequestStatus) String() string {
 
 type CompilationMessageType uint32
 
-const (
-	CompilationMessageTypeError   CompilationMessageType = 0x00000001
-	CompilationMessageTypeWarning CompilationMessageType = 0x00000002
-	CompilationMessageTypeInfo    CompilationMessageType = 0x00000003
-)
+const CompilationMessageTypeError CompilationMessageType = 0x00000001
+const CompilationMessageTypeWarning CompilationMessageType = 0x00000002
+const CompilationMessageTypeInfo CompilationMessageType = 0x00000003
 
 func (v CompilationMessageType) String() string {
 	switch v {
@@ -415,13 +389,11 @@ func (v CompilationMessageType) String() string {
 
 type CompositeAlphaMode uint32
 
-const (
-	CompositeAlphaModeAuto            CompositeAlphaMode = 0x00000000
-	CompositeAlphaModeOpaque          CompositeAlphaMode = 0x00000001
-	CompositeAlphaModePremultiplied   CompositeAlphaMode = 0x00000002
-	CompositeAlphaModeUnpremultiplied CompositeAlphaMode = 0x00000003
-	CompositeAlphaModeInherit         CompositeAlphaMode = 0x00000004
-)
+const CompositeAlphaModeAuto CompositeAlphaMode = 0x00000000
+const CompositeAlphaModeOpaque CompositeAlphaMode = 0x00000001
+const CompositeAlphaModePremultiplied CompositeAlphaMode = 0x00000002
+const CompositeAlphaModeUnpremultiplied CompositeAlphaMode = 0x00000003
+const CompositeAlphaModeInherit CompositeAlphaMode = 0x00000004
 
 func (v CompositeAlphaMode) String() string {
 	switch v {
@@ -442,13 +414,11 @@ func (v CompositeAlphaMode) String() string {
 
 type CreatePipelineAsyncStatus uint32
 
-const (
-	CreatePipelineAsyncStatusSuccess         CreatePipelineAsyncStatus = 0x00000001
-	CreatePipelineAsyncStatusInstanceDropped CreatePipelineAsyncStatus = 0x00000002
-	CreatePipelineAsyncStatusValidationError CreatePipelineAsyncStatus = 0x00000003
-	CreatePipelineAsyncStatusInternalError   CreatePipelineAsyncStatus = 0x00000004
-	CreatePipelineAsyncStatusUnknown         CreatePipelineAsyncStatus = 0x00000005
-)
+const CreatePipelineAsyncStatusSuccess CreatePipelineAsyncStatus = 0x00000001
+const CreatePipelineAsyncStatusInstanceDropped CreatePipelineAsyncStatus = 0x00000002
+const CreatePipelineAsyncStatusValidationError CreatePipelineAsyncStatus = 0x00000003
+const CreatePipelineAsyncStatusInternalError CreatePipelineAsyncStatus = 0x00000004
+const CreatePipelineAsyncStatusUnknown CreatePipelineAsyncStatus = 0x00000005
 
 func (v CreatePipelineAsyncStatus) String() string {
 	switch v {
@@ -469,12 +439,10 @@ func (v CreatePipelineAsyncStatus) String() string {
 
 type CullMode uint32
 
-const (
-	CullModeUndefined CullMode = 0x00000000
-	CullModeNone      CullMode = 0x00000001
-	CullModeFront     CullMode = 0x00000002
-	CullModeBack      CullMode = 0x00000003
-)
+const CullModeUndefined CullMode = 0x00000000
+const CullModeNone CullMode = 0x00000001
+const CullModeFront CullMode = 0x00000002
+const CullModeBack CullMode = 0x00000003
 
 func (v CullMode) String() string {
 	switch v {
@@ -493,12 +461,10 @@ func (v CullMode) String() string {
 
 type DeviceLostReason uint32
 
-const (
-	DeviceLostReasonUnknown         DeviceLostReason = 0x00000001
-	DeviceLostReasonDestroyed       DeviceLostReason = 0x00000002
-	DeviceLostReasonInstanceDropped DeviceLostReason = 0x00000003
-	DeviceLostReasonFailedCreation  DeviceLostReason = 0x00000004
-)
+const DeviceLostReasonUnknown DeviceLostReason = 0x00000001
+const DeviceLostReasonDestroyed DeviceLostReason = 0x00000002
+const DeviceLostReasonInstanceDropped DeviceLostReason = 0x00000003
+const DeviceLostReasonFailedCreation DeviceLostReason = 0x00000004
 
 func (v DeviceLostReason) String() string {
 	switch v {
@@ -517,11 +483,9 @@ func (v DeviceLostReason) String() string {
 
 type Dx12Compiler uint32
 
-const (
-	Dx12CompilerUndefined Dx12Compiler = 0x00000000
-	Dx12CompilerFxc       Dx12Compiler = 0x00000001
-	Dx12CompilerDxc       Dx12Compiler = 0x00000002
-)
+const Dx12CompilerUndefined Dx12Compiler = 0x00000000
+const Dx12CompilerFxc Dx12Compiler = 0x00000001
+const Dx12CompilerDxc Dx12Compiler = 0x00000002
 
 func (v Dx12Compiler) String() string {
 	switch v {
@@ -538,11 +502,9 @@ func (v Dx12Compiler) String() string {
 
 type ErrorFilter uint32
 
-const (
-	ErrorFilterValidation  ErrorFilter = 0x00000001
-	ErrorFilterOutOfMemory ErrorFilter = 0x00000002
-	ErrorFilterInternal    ErrorFilter = 0x00000003
-)
+const ErrorFilterValidation ErrorFilter = 0x00000001
+const ErrorFilterOutOfMemory ErrorFilter = 0x00000002
+const ErrorFilterInternal ErrorFilter = 0x00000003
 
 func (v ErrorFilter) String() string {
 	switch v {
@@ -559,13 +521,11 @@ func (v ErrorFilter) String() string {
 
 type ErrorType uint32
 
-const (
-	ErrorTypeNoError     ErrorType = 0x00000001
-	ErrorTypeValidation  ErrorType = 0x00000002
-	ErrorTypeOutOfMemory ErrorType = 0x00000003
-	ErrorTypeInternal    ErrorType = 0x00000004
-	ErrorTypeUnknown     ErrorType = 0x00000005
-)
+const ErrorTypeNoError ErrorType = 0x00000001
+const ErrorTypeValidation ErrorType = 0x00000002
+const ErrorTypeOutOfMemory ErrorType = 0x00000003
+const ErrorTypeInternal ErrorType = 0x00000004
+const ErrorTypeUnknown ErrorType = 0x00000005
 
 func (v ErrorType) String() string {
 	switch v {
@@ -586,10 +546,8 @@ func (v ErrorType) String() string {
 
 type FeatureLevel uint32
 
-const (
-	FeatureLevelCompatibility FeatureLevel = 0x00000001
-	FeatureLevelCore          FeatureLevel = 0x00000002
-)
+const FeatureLevelCompatibility FeatureLevel = 0x00000001
+const FeatureLevelCore FeatureLevel = 0x00000002
 
 func (v FeatureLevel) String() string {
 	switch v {
@@ -604,56 +562,54 @@ func (v FeatureLevel) String() string {
 
 type FeatureName uint32
 
-const (
-	FeatureNameUndefined                                               FeatureName = 0x00000000
-	FeatureNameDepthClipControl                                        FeatureName = 0x00000001
-	FeatureNameDepth32FloatStencil8                                    FeatureName = 0x00000002
-	FeatureNameTimestampQuery                                          FeatureName = 0x00000003
-	FeatureNameTextureCompressionBC                                    FeatureName = 0x00000004
-	FeatureNameTextureCompressionBCSliced3D                            FeatureName = 0x00000005
-	FeatureNameTextureCompressionETC2                                  FeatureName = 0x00000006
-	FeatureNameTextureCompressionASTC                                  FeatureName = 0x00000007
-	FeatureNameTextureCompressionASTCSliced3D                          FeatureName = 0x00000008
-	FeatureNameIndirectFirstInstance                                   FeatureName = 0x00000009
-	FeatureNameShaderF16                                               FeatureName = 0x0000000A
-	FeatureNameRG11B10UfloatRenderable                                 FeatureName = 0x0000000B
-	FeatureNameBGRA8UnormStorage                                       FeatureName = 0x0000000C
-	FeatureNameFloat32Filterable                                       FeatureName = 0x0000000D
-	FeatureNameFloat32Blendable                                        FeatureName = 0x0000000E
-	FeatureNameClipDistances                                           FeatureName = 0x0000000F
-	FeatureNameDualSourceBlending                                      FeatureName = 0x00000010
-	NativeFeaturePushConstants                                         FeatureName = 0x00030001
-	NativeFeatureTextureAdapterSpecificFormatFeatures                  FeatureName = 0x00030002
-	NativeFeatureMultiDrawIndirectCount                                FeatureName = 0x00030004
-	NativeFeatureVertexWritableStorage                                 FeatureName = 0x00030005
-	NativeFeatureTextureBindingArray                                   FeatureName = 0x00030006
-	NativeFeatureSampledTextureAndStorageBufferArrayNonUniformIndexing FeatureName = 0x00030007
-	NativeFeaturePipelineStatisticsQuery                               FeatureName = 0x00030008
-	NativeFeatureStorageResourceBindingArray                           FeatureName = 0x00030009
-	NativeFeaturePartiallyBoundBindingArray                            FeatureName = 0x0003000A
-	NativeFeatureTextureFormat16bitNorm                                FeatureName = 0x0003000B
-	NativeFeatureTextureCompressionAstcHdr                             FeatureName = 0x0003000C
-	NativeFeatureMappablePrimaryBuffers                                FeatureName = 0x0003000E
-	NativeFeatureBufferBindingArray                                    FeatureName = 0x0003000F
-	NativeFeatureUniformBufferAndStorageTextureArrayNonUniformIndexing FeatureName = 0x00030010
-	NativeFeaturePolygonModeLine                                       FeatureName = 0x00030013
-	NativeFeaturePolygonModePoint                                      FeatureName = 0x00030014
-	NativeFeatureConservativeRasterization                             FeatureName = 0x00030015
-	NativeFeatureSpirvShaderPassthrough                                FeatureName = 0x00030017
-	NativeFeatureVertexAttribute64bit                                  FeatureName = 0x00030019
-	NativeFeatureTextureFormatNv12                                     FeatureName = 0x0003001A
-	NativeFeatureRayQuery                                              FeatureName = 0x0003001C
-	NativeFeatureShaderF64                                             FeatureName = 0x0003001D
-	NativeFeatureShaderI16                                             FeatureName = 0x0003001E
-	NativeFeatureShaderPrimitiveIndex                                  FeatureName = 0x0003001F
-	NativeFeatureShaderEarlyDepthTest                                  FeatureName = 0x00030020
-	NativeFeatureSubgroup                                              FeatureName = 0x00030021
-	NativeFeatureSubgroupVertex                                        FeatureName = 0x00030022
-	NativeFeatureSubgroupBarrier                                       FeatureName = 0x00030023
-	NativeFeatureTimestampQueryInsideEncoders                          FeatureName = 0x00030024
-	NativeFeatureTimestampQueryInsidePasses                            FeatureName = 0x00030025
-	NativeFeatureShaderInt64                                           FeatureName = 0x00030026
-)
+const FeatureNameUndefined FeatureName = 0x00000000
+const FeatureNameDepthClipControl FeatureName = 0x00000001
+const FeatureNameDepth32FloatStencil8 FeatureName = 0x00000002
+const FeatureNameTimestampQuery FeatureName = 0x00000003
+const FeatureNameTextureCompressionBC FeatureName = 0x00000004
+const FeatureNameTextureCompressionBCSliced3D FeatureName = 0x00000005
+const FeatureNameTextureCompressionETC2 FeatureName = 0x00000006
+const FeatureNameTextureCompressionASTC FeatureName = 0x00000007
+const FeatureNameTextureCompressionASTCSliced3D FeatureName = 0x00000008
+const FeatureNameIndirectFirstInstance FeatureName = 0x00000009
+const FeatureNameShaderF16 FeatureName = 0x0000000A
+const FeatureNameRG11B10UfloatRenderable FeatureName = 0x0000000B
+const FeatureNameBGRA8UnormStorage FeatureName = 0x0000000C
+const FeatureNameFloat32Filterable FeatureName = 0x0000000D
+const FeatureNameFloat32Blendable FeatureName = 0x0000000E
+const FeatureNameClipDistances FeatureName = 0x0000000F
+const FeatureNameDualSourceBlending FeatureName = 0x00000010
+const NativeFeaturePushConstants FeatureName = 0x00030001
+const NativeFeatureTextureAdapterSpecificFormatFeatures FeatureName = 0x00030002
+const NativeFeatureMultiDrawIndirectCount FeatureName = 0x00030004
+const NativeFeatureVertexWritableStorage FeatureName = 0x00030005
+const NativeFeatureTextureBindingArray FeatureName = 0x00030006
+const NativeFeatureSampledTextureAndStorageBufferArrayNonUniformIndexing FeatureName = 0x00030007
+const NativeFeaturePipelineStatisticsQuery FeatureName = 0x00030008
+const NativeFeatureStorageResourceBindingArray FeatureName = 0x00030009
+const NativeFeaturePartiallyBoundBindingArray FeatureName = 0x0003000A
+const NativeFeatureTextureFormat16bitNorm FeatureName = 0x0003000B
+const NativeFeatureTextureCompressionAstcHdr FeatureName = 0x0003000C
+const NativeFeatureMappablePrimaryBuffers FeatureName = 0x0003000E
+const NativeFeatureBufferBindingArray FeatureName = 0x0003000F
+const NativeFeatureUniformBufferAndStorageTextureArrayNonUniformIndexing FeatureName = 0x00030010
+const NativeFeaturePolygonModeLine FeatureName = 0x00030013
+const NativeFeaturePolygonModePoint FeatureName = 0x00030014
+const NativeFeatureConservativeRasterization FeatureName = 0x00030015
+const NativeFeatureSpirvShaderPassthrough FeatureName = 0x00030017
+const NativeFeatureVertexAttribute64bit FeatureName = 0x00030019
+const NativeFeatureTextureFormatNv12 FeatureName = 0x0003001A
+const NativeFeatureRayQuery FeatureName = 0x0003001C
+const NativeFeatureShaderF64 FeatureName = 0x0003001D
+const NativeFeatureShaderI16 FeatureName = 0x0003001E
+const NativeFeatureShaderPrimitiveIndex FeatureName = 0x0003001F
+const NativeFeatureShaderEarlyDepthTest FeatureName = 0x00030020
+const NativeFeatureSubgroup FeatureName = 0x00030021
+const NativeFeatureSubgroupVertex FeatureName = 0x00030022
+const NativeFeatureSubgroupBarrier FeatureName = 0x00030023
+const NativeFeatureTimestampQueryInsideEncoders FeatureName = 0x00030024
+const NativeFeatureTimestampQueryInsidePasses FeatureName = 0x00030025
+const NativeFeatureShaderInt64 FeatureName = 0x00030026
 
 func (v FeatureName) String() string {
 	switch v {
@@ -760,11 +716,9 @@ func (v FeatureName) String() string {
 
 type FilterMode uint32
 
-const (
-	FilterModeUndefined FilterMode = 0x00000000
-	FilterModeNearest   FilterMode = 0x00000001
-	FilterModeLinear    FilterMode = 0x00000002
-)
+const FilterModeUndefined FilterMode = 0x00000000
+const FilterModeNearest FilterMode = 0x00000001
+const FilterModeLinear FilterMode = 0x00000002
 
 func (v FilterMode) String() string {
 	switch v {
@@ -781,11 +735,9 @@ func (v FilterMode) String() string {
 
 type FrontFace uint32
 
-const (
-	FrontFaceUndefined FrontFace = 0x00000000
-	FrontFaceCCW       FrontFace = 0x00000001
-	FrontFaceCW        FrontFace = 0x00000002
-)
+const FrontFaceUndefined FrontFace = 0x00000000
+const FrontFaceCCW FrontFace = 0x00000001
+const FrontFaceCW FrontFace = 0x00000002
 
 func (v FrontFace) String() string {
 	switch v {
@@ -802,10 +754,8 @@ func (v FrontFace) String() string {
 
 type GLFenceBehaviour uint32
 
-const (
-	GLFenceBehaviourNormal     GLFenceBehaviour = 0x00000000
-	GLFenceBehaviourAutoFinish GLFenceBehaviour = 0x00000001
-)
+const GLFenceBehaviourNormal GLFenceBehaviour = 0x00000000
+const GLFenceBehaviourAutoFinish GLFenceBehaviour = 0x00000001
 
 func (v GLFenceBehaviour) String() string {
 	switch v {
@@ -820,12 +770,10 @@ func (v GLFenceBehaviour) String() string {
 
 type Gles3MinorVersion uint32
 
-const (
-	Gles3MinorVersionAutomatic Gles3MinorVersion = 0x00000000
-	Gles3MinorVersionVersion0  Gles3MinorVersion = 0x00000001
-	Gles3MinorVersionVersion1  Gles3MinorVersion = 0x00000002
-	Gles3MinorVersionVersion2  Gles3MinorVersion = 0x00000003
-)
+const Gles3MinorVersionAutomatic Gles3MinorVersion = 0x00000000
+const Gles3MinorVersionVersion0 Gles3MinorVersion = 0x00000001
+const Gles3MinorVersionVersion1 Gles3MinorVersion = 0x00000002
+const Gles3MinorVersionVersion2 Gles3MinorVersion = 0x00000003
 
 func (v Gles3MinorVersion) String() string {
 	switch v {
@@ -844,11 +792,9 @@ func (v Gles3MinorVersion) String() string {
 
 type IndexFormat uint32
 
-const (
-	IndexFormatUndefined IndexFormat = 0x00000000
-	IndexFormatUint16    IndexFormat = 0x00000001
-	IndexFormatUint32    IndexFormat = 0x00000002
-)
+const IndexFormatUndefined IndexFormat = 0x00000000
+const IndexFormatUint16 IndexFormat = 0x00000001
+const IndexFormatUint32 IndexFormat = 0x00000002
 
 func (v IndexFormat) String() string {
 	switch v {
@@ -891,11 +837,9 @@ func (v InstanceFlag) String() string {
 
 type LoadOp uint32
 
-const (
-	LoadOpUndefined LoadOp = 0x00000000
-	LoadOpLoad      LoadOp = 0x00000001
-	LoadOpClear     LoadOp = 0x00000002
-)
+const LoadOpUndefined LoadOp = 0x00000000
+const LoadOpLoad LoadOp = 0x00000001
+const LoadOpClear LoadOp = 0x00000002
 
 func (v LoadOp) String() string {
 	switch v {
@@ -912,14 +856,12 @@ func (v LoadOp) String() string {
 
 type LogLevel uint32
 
-const (
-	LogLevelOff   LogLevel = 0x00000000
-	LogLevelError LogLevel = 0x00000001
-	LogLevelWarn  LogLevel = 0x00000002
-	LogLevelInfo  LogLevel = 0x00000003
-	LogLevelDebug LogLevel = 0x00000004
-	LogLevelTrace LogLevel = 0x00000005
-)
+const LogLevelOff LogLevel = 0x00000000
+const LogLevelError LogLevel = 0x00000001
+const LogLevelWarn LogLevel = 0x00000002
+const LogLevelInfo LogLevel = 0x00000003
+const LogLevelDebug LogLevel = 0x00000004
+const LogLevelTrace LogLevel = 0x00000005
 
 func (v LogLevel) String() string {
 	switch v {
@@ -942,13 +884,11 @@ func (v LogLevel) String() string {
 
 type MapAsyncStatus uint32
 
-const (
-	MapAsyncStatusSuccess         MapAsyncStatus = 0x00000001
-	MapAsyncStatusInstanceDropped MapAsyncStatus = 0x00000002
-	MapAsyncStatusError           MapAsyncStatus = 0x00000003
-	MapAsyncStatusAborted         MapAsyncStatus = 0x00000004
-	MapAsyncStatusUnknown         MapAsyncStatus = 0x00000005
-)
+const MapAsyncStatusSuccess MapAsyncStatus = 0x00000001
+const MapAsyncStatusInstanceDropped MapAsyncStatus = 0x00000002
+const MapAsyncStatusError MapAsyncStatus = 0x00000003
+const MapAsyncStatusAborted MapAsyncStatus = 0x00000004
+const MapAsyncStatusUnknown MapAsyncStatus = 0x00000005
 
 func (v MapAsyncStatus) String() string {
 	switch v {
@@ -969,11 +909,9 @@ func (v MapAsyncStatus) String() string {
 
 type MapMode uint64
 
-const (
-	MapModeNone  MapMode = 0x00000000
-	MapModeRead  MapMode = 0x00000001
-	MapModeWrite MapMode = 0x00000002
-)
+const MapModeNone MapMode = 0x00000000
+const MapModeRead MapMode = 0x00000001
+const MapModeWrite MapMode = 0x00000002
 
 func (v MapMode) String() string {
 	switch v {
@@ -990,11 +928,9 @@ func (v MapMode) String() string {
 
 type MipmapFilterMode uint32
 
-const (
-	MipmapFilterModeUndefined MipmapFilterMode = 0x00000000
-	MipmapFilterModeNearest   MipmapFilterMode = 0x00000001
-	MipmapFilterModeLinear    MipmapFilterMode = 0x00000002
-)
+const MipmapFilterModeUndefined MipmapFilterMode = 0x00000000
+const MipmapFilterModeNearest MipmapFilterMode = 0x00000001
+const MipmapFilterModeLinear MipmapFilterMode = 0x00000002
 
 func (v MipmapFilterMode) String() string {
 	switch v {
@@ -1024,16 +960,14 @@ func (v NativeQueryType) String() string {
 
 type NativeTextureFormat uint32
 
-const (
-	NativeTextureFormatR16Unorm    NativeTextureFormat = 0x00030001
-	NativeTextureFormatR16Snorm    NativeTextureFormat = 0x00030002
-	NativeTextureFormatRg16Unorm   NativeTextureFormat = 0x00030003
-	NativeTextureFormatRg16Snorm   NativeTextureFormat = 0x00030004
-	NativeTextureFormatRgba16Unorm NativeTextureFormat = 0x00030005
-	NativeTextureFormatRgba16Snorm NativeTextureFormat = 0x00030006
-	NativeTextureFormatNV12        NativeTextureFormat = 0x00030007
-	NativeTextureFormatP010        NativeTextureFormat = 0x00030008
-)
+const NativeTextureFormatR16Unorm NativeTextureFormat = 0x00030001
+const NativeTextureFormatR16Snorm NativeTextureFormat = 0x00030002
+const NativeTextureFormatRg16Unorm NativeTextureFormat = 0x00030003
+const NativeTextureFormatRg16Snorm NativeTextureFormat = 0x00030004
+const NativeTextureFormatRgba16Unorm NativeTextureFormat = 0x00030005
+const NativeTextureFormatRgba16Snorm NativeTextureFormat = 0x00030006
+const NativeTextureFormatNV12 NativeTextureFormat = 0x00030007
+const NativeTextureFormatP010 NativeTextureFormat = 0x00030008
 
 func (v NativeTextureFormat) String() string {
 	switch v {
@@ -1060,11 +994,9 @@ func (v NativeTextureFormat) String() string {
 
 type OptionalBool uint32
 
-const (
-	OptionalBoolFalse     OptionalBool = 0x00000000
-	OptionalBoolTrue      OptionalBool = 0x00000001
-	OptionalBoolUndefined OptionalBool = 0x00000002
-)
+const OptionalBoolFalse OptionalBool = 0x00000000
+const OptionalBoolTrue OptionalBool = 0x00000001
+const OptionalBoolUndefined OptionalBool = 0x00000002
 
 func (v OptionalBool) String() string {
 	switch v {
@@ -1081,13 +1013,11 @@ func (v OptionalBool) String() string {
 
 type PipelineStatisticName uint32
 
-const (
-	PipelineStatisticNameVertexShaderInvocations   PipelineStatisticName = 0x00000000
-	PipelineStatisticNameClipperInvocations        PipelineStatisticName = 0x00000001
-	PipelineStatisticNameClipperPrimitivesOut      PipelineStatisticName = 0x00000002
-	PipelineStatisticNameFragmentShaderInvocations PipelineStatisticName = 0x00000003
-	PipelineStatisticNameComputeShaderInvocations  PipelineStatisticName = 0x00000004
-)
+const PipelineStatisticNameVertexShaderInvocations PipelineStatisticName = 0x00000000
+const PipelineStatisticNameClipperInvocations PipelineStatisticName = 0x00000001
+const PipelineStatisticNameClipperPrimitivesOut PipelineStatisticName = 0x00000002
+const PipelineStatisticNameFragmentShaderInvocations PipelineStatisticName = 0x00000003
+const PipelineStatisticNameComputeShaderInvocations PipelineStatisticName = 0x00000004
 
 func (v PipelineStatisticName) String() string {
 	switch v {
@@ -1108,11 +1038,9 @@ func (v PipelineStatisticName) String() string {
 
 type PopErrorScopeStatus uint32
 
-const (
-	PopErrorScopeStatusSuccess         PopErrorScopeStatus = 0x00000001
-	PopErrorScopeStatusInstanceDropped PopErrorScopeStatus = 0x00000002
-	PopErrorScopeStatusEmptyStack      PopErrorScopeStatus = 0x00000003
-)
+const PopErrorScopeStatusSuccess PopErrorScopeStatus = 0x00000001
+const PopErrorScopeStatusInstanceDropped PopErrorScopeStatus = 0x00000002
+const PopErrorScopeStatusEmptyStack PopErrorScopeStatus = 0x00000003
 
 func (v PopErrorScopeStatus) String() string {
 	switch v {
@@ -1129,11 +1057,9 @@ func (v PopErrorScopeStatus) String() string {
 
 type PowerPreference uint32
 
-const (
-	PowerPreferenceUndefined       PowerPreference = 0x00000000
-	PowerPreferenceLowPower        PowerPreference = 0x00000001
-	PowerPreferenceHighPerformance PowerPreference = 0x00000002
-)
+const PowerPreferenceUndefined PowerPreference = 0x00000000
+const PowerPreferenceLowPower PowerPreference = 0x00000001
+const PowerPreferenceHighPerformance PowerPreference = 0x00000002
 
 func (v PowerPreference) String() string {
 	switch v {
@@ -1150,13 +1076,11 @@ func (v PowerPreference) String() string {
 
 type PresentMode uint32
 
-const (
-	PresentModeUndefined   PresentMode = 0x00000000
-	PresentModeFifo        PresentMode = 0x00000001
-	PresentModeFifoRelaxed PresentMode = 0x00000002
-	PresentModeImmediate   PresentMode = 0x00000003
-	PresentModeMailbox     PresentMode = 0x00000004
-)
+const PresentModeUndefined PresentMode = 0x00000000
+const PresentModeFifo PresentMode = 0x00000001
+const PresentModeFifoRelaxed PresentMode = 0x00000002
+const PresentModeImmediate PresentMode = 0x00000003
+const PresentModeMailbox PresentMode = 0x00000004
 
 func (v PresentMode) String() string {
 	switch v {
@@ -1177,14 +1101,12 @@ func (v PresentMode) String() string {
 
 type PrimitiveTopology uint32
 
-const (
-	PrimitiveTopologyUndefined     PrimitiveTopology = 0x00000000
-	PrimitiveTopologyPointList     PrimitiveTopology = 0x00000001
-	PrimitiveTopologyLineList      PrimitiveTopology = 0x00000002
-	PrimitiveTopologyLineStrip     PrimitiveTopology = 0x00000003
-	PrimitiveTopologyTriangleList  PrimitiveTopology = 0x00000004
-	PrimitiveTopologyTriangleStrip PrimitiveTopology = 0x00000005
-)
+const PrimitiveTopologyUndefined PrimitiveTopology = 0x00000000
+const PrimitiveTopologyPointList PrimitiveTopology = 0x00000001
+const PrimitiveTopologyLineList PrimitiveTopology = 0x00000002
+const PrimitiveTopologyLineStrip PrimitiveTopology = 0x00000003
+const PrimitiveTopologyTriangleList PrimitiveTopology = 0x00000004
+const PrimitiveTopologyTriangleStrip PrimitiveTopology = 0x00000005
 
 func (v PrimitiveTopology) String() string {
 	switch v {
@@ -1207,10 +1129,8 @@ func (v PrimitiveTopology) String() string {
 
 type QueryType uint32
 
-const (
-	QueryTypeOcclusion QueryType = 0x00000001
-	QueryTypeTimestamp QueryType = 0x00000002
-)
+const QueryTypeOcclusion QueryType = 0x00000001
+const QueryTypeTimestamp QueryType = 0x00000002
 
 func (v QueryType) String() string {
 	switch v {
@@ -1225,12 +1145,10 @@ func (v QueryType) String() string {
 
 type QueueWorkDoneStatus uint32
 
-const (
-	QueueWorkDoneStatusSuccess         QueueWorkDoneStatus = 0x00000001
-	QueueWorkDoneStatusInstanceDropped QueueWorkDoneStatus = 0x00000002
-	QueueWorkDoneStatusError           QueueWorkDoneStatus = 0x00000003
-	QueueWorkDoneStatusUnknown         QueueWorkDoneStatus = 0x00000004
-)
+const QueueWorkDoneStatusSuccess QueueWorkDoneStatus = 0x00000001
+const QueueWorkDoneStatusInstanceDropped QueueWorkDoneStatus = 0x00000002
+const QueueWorkDoneStatusError QueueWorkDoneStatus = 0x00000003
+const QueueWorkDoneStatusUnknown QueueWorkDoneStatus = 0x00000004
 
 func (v QueueWorkDoneStatus) String() string {
 	switch v {
@@ -1249,13 +1167,11 @@ func (v QueueWorkDoneStatus) String() string {
 
 type RequestAdapterStatus uint32
 
-const (
-	RequestAdapterStatusSuccess         RequestAdapterStatus = 0x00000001
-	RequestAdapterStatusInstanceDropped RequestAdapterStatus = 0x00000002
-	RequestAdapterStatusUnavailable     RequestAdapterStatus = 0x00000003
-	RequestAdapterStatusError           RequestAdapterStatus = 0x00000004
-	RequestAdapterStatusUnknown         RequestAdapterStatus = 0x00000005
-)
+const RequestAdapterStatusSuccess RequestAdapterStatus = 0x00000001
+const RequestAdapterStatusInstanceDropped RequestAdapterStatus = 0x00000002
+const RequestAdapterStatusUnavailable RequestAdapterStatus = 0x00000003
+const RequestAdapterStatusError RequestAdapterStatus = 0x00000004
+const RequestAdapterStatusUnknown RequestAdapterStatus = 0x00000005
 
 func (v RequestAdapterStatus) String() string {
 	switch v {
@@ -1276,12 +1192,10 @@ func (v RequestAdapterStatus) String() string {
 
 type RequestDeviceStatus uint32
 
-const (
-	RequestDeviceStatusSuccess         RequestDeviceStatus = 0x00000001
-	RequestDeviceStatusInstanceDropped RequestDeviceStatus = 0x00000002
-	RequestDeviceStatusError           RequestDeviceStatus = 0x00000003
-	RequestDeviceStatusUnknown         RequestDeviceStatus = 0x00000004
-)
+const RequestDeviceStatusSuccess RequestDeviceStatus = 0x00000001
+const RequestDeviceStatusInstanceDropped RequestDeviceStatus = 0x00000002
+const RequestDeviceStatusError RequestDeviceStatus = 0x00000003
+const RequestDeviceStatusUnknown RequestDeviceStatus = 0x00000004
 
 func (v RequestDeviceStatus) String() string {
 	switch v {
@@ -1300,13 +1214,11 @@ func (v RequestDeviceStatus) String() string {
 
 type SamplerBindingType uint32
 
-const (
-	SamplerBindingTypeBindingNotUsed SamplerBindingType = 0x00000000
-	SamplerBindingTypeUndefined      SamplerBindingType = 0x00000001
-	SamplerBindingTypeFiltering      SamplerBindingType = 0x00000002
-	SamplerBindingTypeNonFiltering   SamplerBindingType = 0x00000003
-	SamplerBindingTypeComparison     SamplerBindingType = 0x00000004
-)
+const SamplerBindingTypeBindingNotUsed SamplerBindingType = 0x00000000
+const SamplerBindingTypeUndefined SamplerBindingType = 0x00000001
+const SamplerBindingTypeFiltering SamplerBindingType = 0x00000002
+const SamplerBindingTypeNonFiltering SamplerBindingType = 0x00000003
+const SamplerBindingTypeComparison SamplerBindingType = 0x00000004
 
 func (v SamplerBindingType) String() string {
 	switch v {
@@ -1327,12 +1239,10 @@ func (v SamplerBindingType) String() string {
 
 type ShaderStage uint64
 
-const (
-	ShaderStageNone     ShaderStage = 0x00000000
-	ShaderStageVertex   ShaderStage = 0x00000001
-	ShaderStageFragment ShaderStage = 0x00000002
-	ShaderStageCompute  ShaderStage = 0x00000004
-)
+const ShaderStageNone ShaderStage = 0x00000000
+const ShaderStageVertex ShaderStage = 0x00000001
+const ShaderStageFragment ShaderStage = 0x00000002
+const ShaderStageCompute ShaderStage = 0x00000004
 
 func (v ShaderStage) String() string {
 	switch v {
@@ -1351,10 +1261,8 @@ func (v ShaderStage) String() string {
 
 type Status uint32
 
-const (
-	StatusSuccess Status = 0x00000001
-	StatusError   Status = 0x00000002
-)
+const StatusSuccess Status = 0x00000001
+const StatusError Status = 0x00000002
 
 func (v Status) String() string {
 	switch v {
@@ -1369,17 +1277,15 @@ func (v Status) String() string {
 
 type StencilOperation uint32
 
-const (
-	StencilOperationUndefined      StencilOperation = 0x00000000
-	StencilOperationKeep           StencilOperation = 0x00000001
-	StencilOperationZero           StencilOperation = 0x00000002
-	StencilOperationReplace        StencilOperation = 0x00000003
-	StencilOperationInvert         StencilOperation = 0x00000004
-	StencilOperationIncrementClamp StencilOperation = 0x00000005
-	StencilOperationDecrementClamp StencilOperation = 0x00000006
-	StencilOperationIncrementWrap  StencilOperation = 0x00000007
-	StencilOperationDecrementWrap  StencilOperation = 0x00000008
-)
+const StencilOperationUndefined StencilOperation = 0x00000000
+const StencilOperationKeep StencilOperation = 0x00000001
+const StencilOperationZero StencilOperation = 0x00000002
+const StencilOperationReplace StencilOperation = 0x00000003
+const StencilOperationInvert StencilOperation = 0x00000004
+const StencilOperationIncrementClamp StencilOperation = 0x00000005
+const StencilOperationDecrementClamp StencilOperation = 0x00000006
+const StencilOperationIncrementWrap StencilOperation = 0x00000007
+const StencilOperationDecrementWrap StencilOperation = 0x00000008
 
 func (v StencilOperation) String() string {
 	switch v {
@@ -1408,13 +1314,11 @@ func (v StencilOperation) String() string {
 
 type StorageTextureAccess uint32
 
-const (
-	StorageTextureAccessBindingNotUsed StorageTextureAccess = 0x00000000
-	StorageTextureAccessUndefined      StorageTextureAccess = 0x00000001
-	StorageTextureAccessWriteOnly      StorageTextureAccess = 0x00000002
-	StorageTextureAccessReadOnly       StorageTextureAccess = 0x00000003
-	StorageTextureAccessReadWrite      StorageTextureAccess = 0x00000004
-)
+const StorageTextureAccessBindingNotUsed StorageTextureAccess = 0x00000000
+const StorageTextureAccessUndefined StorageTextureAccess = 0x00000001
+const StorageTextureAccessWriteOnly StorageTextureAccess = 0x00000002
+const StorageTextureAccessReadOnly StorageTextureAccess = 0x00000003
+const StorageTextureAccessReadWrite StorageTextureAccess = 0x00000004
 
 func (v StorageTextureAccess) String() string {
 	switch v {
@@ -1435,11 +1339,9 @@ func (v StorageTextureAccess) String() string {
 
 type StoreOp uint32
 
-const (
-	StoreOpUndefined StoreOp = 0x00000000
-	StoreOpStore     StoreOp = 0x00000001
-	StoreOpDiscard   StoreOp = 0x00000002
-)
+const StoreOpUndefined StoreOp = 0x00000000
+const StoreOpStore StoreOp = 0x00000001
+const StoreOpDiscard StoreOp = 0x00000002
 
 func (v StoreOp) String() string {
 	switch v {
@@ -1456,16 +1358,14 @@ func (v StoreOp) String() string {
 
 type SurfaceGetCurrentTextureStatus uint32
 
-const (
-	SurfaceGetCurrentTextureStatusSuccessOptimal    SurfaceGetCurrentTextureStatus = 0x00000001
-	SurfaceGetCurrentTextureStatusSuccessSuboptimal SurfaceGetCurrentTextureStatus = 0x00000002
-	SurfaceGetCurrentTextureStatusTimeout           SurfaceGetCurrentTextureStatus = 0x00000003
-	SurfaceGetCurrentTextureStatusOutdated          SurfaceGetCurrentTextureStatus = 0x00000004
-	SurfaceGetCurrentTextureStatusLost              SurfaceGetCurrentTextureStatus = 0x00000005
-	SurfaceGetCurrentTextureStatusOutOfMemory       SurfaceGetCurrentTextureStatus = 0x00000006
-	SurfaceGetCurrentTextureStatusDeviceLost        SurfaceGetCurrentTextureStatus = 0x00000007
-	SurfaceGetCurrentTextureStatusError             SurfaceGetCurrentTextureStatus = 0x00000008
-)
+const SurfaceGetCurrentTextureStatusSuccessOptimal SurfaceGetCurrentTextureStatus = 0x00000001
+const SurfaceGetCurrentTextureStatusSuccessSuboptimal SurfaceGetCurrentTextureStatus = 0x00000002
+const SurfaceGetCurrentTextureStatusTimeout SurfaceGetCurrentTextureStatus = 0x00000003
+const SurfaceGetCurrentTextureStatusOutdated SurfaceGetCurrentTextureStatus = 0x00000004
+const SurfaceGetCurrentTextureStatusLost SurfaceGetCurrentTextureStatus = 0x00000005
+const SurfaceGetCurrentTextureStatusOutOfMemory SurfaceGetCurrentTextureStatus = 0x00000006
+const SurfaceGetCurrentTextureStatusDeviceLost SurfaceGetCurrentTextureStatus = 0x00000007
+const SurfaceGetCurrentTextureStatusError SurfaceGetCurrentTextureStatus = 0x00000008
 
 func (v SurfaceGetCurrentTextureStatus) String() string {
 	switch v {
@@ -1492,12 +1392,10 @@ func (v SurfaceGetCurrentTextureStatus) String() string {
 
 type TextureAspect uint32
 
-const (
-	TextureAspectUndefined   TextureAspect = 0x00000000
-	TextureAspectAll         TextureAspect = 0x00000001
-	TextureAspectStencilOnly TextureAspect = 0x00000002
-	TextureAspectDepthOnly   TextureAspect = 0x00000003
-)
+const TextureAspectUndefined TextureAspect = 0x00000000
+const TextureAspectAll TextureAspect = 0x00000001
+const TextureAspectStencilOnly TextureAspect = 0x00000002
+const TextureAspectDepthOnly TextureAspect = 0x00000003
 
 func (v TextureAspect) String() string {
 	switch v {
@@ -1516,12 +1414,10 @@ func (v TextureAspect) String() string {
 
 type TextureDimension uint32
 
-const (
-	TextureDimensionUndefined TextureDimension = 0x00000000
-	TextureDimension1D        TextureDimension = 0x00000001
-	TextureDimension2D        TextureDimension = 0x00000002
-	TextureDimension3D        TextureDimension = 0x00000003
-)
+const TextureDimensionUndefined TextureDimension = 0x00000000
+const TextureDimension1D TextureDimension = 0x00000001
+const TextureDimension2D TextureDimension = 0x00000002
+const TextureDimension3D TextureDimension = 0x00000003
 
 func (v TextureDimension) String() string {
 	switch v {
@@ -1540,104 +1436,102 @@ func (v TextureDimension) String() string {
 
 type TextureFormat uint32
 
-const (
-	TextureFormatUndefined            TextureFormat = 0x00000000
-	TextureFormatR8Unorm              TextureFormat = 0x00000001
-	TextureFormatR8Snorm              TextureFormat = 0x00000002
-	TextureFormatR8Uint               TextureFormat = 0x00000003
-	TextureFormatR8Sint               TextureFormat = 0x00000004
-	TextureFormatR16Uint              TextureFormat = 0x00000005
-	TextureFormatR16Sint              TextureFormat = 0x00000006
-	TextureFormatR16Float             TextureFormat = 0x00000007
-	TextureFormatRG8Unorm             TextureFormat = 0x00000008
-	TextureFormatRG8Snorm             TextureFormat = 0x00000009
-	TextureFormatRG8Uint              TextureFormat = 0x0000000A
-	TextureFormatRG8Sint              TextureFormat = 0x0000000B
-	TextureFormatR32Float             TextureFormat = 0x0000000C
-	TextureFormatR32Uint              TextureFormat = 0x0000000D
-	TextureFormatR32Sint              TextureFormat = 0x0000000E
-	TextureFormatRG16Uint             TextureFormat = 0x0000000F
-	TextureFormatRG16Sint             TextureFormat = 0x00000010
-	TextureFormatRG16Float            TextureFormat = 0x00000011
-	TextureFormatRGBA8Unorm           TextureFormat = 0x00000012
-	TextureFormatRGBA8UnormSrgb       TextureFormat = 0x00000013
-	TextureFormatRGBA8Snorm           TextureFormat = 0x00000014
-	TextureFormatRGBA8Uint            TextureFormat = 0x00000015
-	TextureFormatRGBA8Sint            TextureFormat = 0x00000016
-	TextureFormatBGRA8Unorm           TextureFormat = 0x00000017
-	TextureFormatBGRA8UnormSrgb       TextureFormat = 0x00000018
-	TextureFormatRGB10A2Uint          TextureFormat = 0x00000019
-	TextureFormatRGB10A2Unorm         TextureFormat = 0x0000001A
-	TextureFormatRG11B10Ufloat        TextureFormat = 0x0000001B
-	TextureFormatRGB9E5Ufloat         TextureFormat = 0x0000001C
-	TextureFormatRG32Float            TextureFormat = 0x0000001D
-	TextureFormatRG32Uint             TextureFormat = 0x0000001E
-	TextureFormatRG32Sint             TextureFormat = 0x0000001F
-	TextureFormatRGBA16Uint           TextureFormat = 0x00000020
-	TextureFormatRGBA16Sint           TextureFormat = 0x00000021
-	TextureFormatRGBA16Float          TextureFormat = 0x00000022
-	TextureFormatRGBA32Float          TextureFormat = 0x00000023
-	TextureFormatRGBA32Uint           TextureFormat = 0x00000024
-	TextureFormatRGBA32Sint           TextureFormat = 0x00000025
-	TextureFormatStencil8             TextureFormat = 0x00000026
-	TextureFormatDepth16Unorm         TextureFormat = 0x00000027
-	TextureFormatDepth24Plus          TextureFormat = 0x00000028
-	TextureFormatDepth24PlusStencil8  TextureFormat = 0x00000029
-	TextureFormatDepth32Float         TextureFormat = 0x0000002A
-	TextureFormatDepth32FloatStencil8 TextureFormat = 0x0000002B
-	TextureFormatBC1RGBAUnorm         TextureFormat = 0x0000002C
-	TextureFormatBC1RGBAUnormSrgb     TextureFormat = 0x0000002D
-	TextureFormatBC2RGBAUnorm         TextureFormat = 0x0000002E
-	TextureFormatBC2RGBAUnormSrgb     TextureFormat = 0x0000002F
-	TextureFormatBC3RGBAUnorm         TextureFormat = 0x00000030
-	TextureFormatBC3RGBAUnormSrgb     TextureFormat = 0x00000031
-	TextureFormatBC4RUnorm            TextureFormat = 0x00000032
-	TextureFormatBC4RSnorm            TextureFormat = 0x00000033
-	TextureFormatBC5RGUnorm           TextureFormat = 0x00000034
-	TextureFormatBC5RGSnorm           TextureFormat = 0x00000035
-	TextureFormatBC6HRGBUfloat        TextureFormat = 0x00000036
-	TextureFormatBC6HRGBFloat         TextureFormat = 0x00000037
-	TextureFormatBC7RGBAUnorm         TextureFormat = 0x00000038
-	TextureFormatBC7RGBAUnormSrgb     TextureFormat = 0x00000039
-	TextureFormatETC2RGB8Unorm        TextureFormat = 0x0000003A
-	TextureFormatETC2RGB8UnormSrgb    TextureFormat = 0x0000003B
-	TextureFormatETC2RGB8A1Unorm      TextureFormat = 0x0000003C
-	TextureFormatETC2RGB8A1UnormSrgb  TextureFormat = 0x0000003D
-	TextureFormatETC2RGBA8Unorm       TextureFormat = 0x0000003E
-	TextureFormatETC2RGBA8UnormSrgb   TextureFormat = 0x0000003F
-	TextureFormatEACR11Unorm          TextureFormat = 0x00000040
-	TextureFormatEACR11Snorm          TextureFormat = 0x00000041
-	TextureFormatEACRG11Unorm         TextureFormat = 0x00000042
-	TextureFormatEACRG11Snorm         TextureFormat = 0x00000043
-	TextureFormatASTC4x4Unorm         TextureFormat = 0x00000044
-	TextureFormatASTC4x4UnormSrgb     TextureFormat = 0x00000045
-	TextureFormatASTC5x4Unorm         TextureFormat = 0x00000046
-	TextureFormatASTC5x4UnormSrgb     TextureFormat = 0x00000047
-	TextureFormatASTC5x5Unorm         TextureFormat = 0x00000048
-	TextureFormatASTC5x5UnormSrgb     TextureFormat = 0x00000049
-	TextureFormatASTC6x5Unorm         TextureFormat = 0x0000004A
-	TextureFormatASTC6x5UnormSrgb     TextureFormat = 0x0000004B
-	TextureFormatASTC6x6Unorm         TextureFormat = 0x0000004C
-	TextureFormatASTC6x6UnormSrgb     TextureFormat = 0x0000004D
-	TextureFormatASTC8x5Unorm         TextureFormat = 0x0000004E
-	TextureFormatASTC8x5UnormSrgb     TextureFormat = 0x0000004F
-	TextureFormatASTC8x6Unorm         TextureFormat = 0x00000050
-	TextureFormatASTC8x6UnormSrgb     TextureFormat = 0x00000051
-	TextureFormatASTC8x8Unorm         TextureFormat = 0x00000052
-	TextureFormatASTC8x8UnormSrgb     TextureFormat = 0x00000053
-	TextureFormatASTC10x5Unorm        TextureFormat = 0x00000054
-	TextureFormatASTC10x5UnormSrgb    TextureFormat = 0x00000055
-	TextureFormatASTC10x6Unorm        TextureFormat = 0x00000056
-	TextureFormatASTC10x6UnormSrgb    TextureFormat = 0x00000057
-	TextureFormatASTC10x8Unorm        TextureFormat = 0x00000058
-	TextureFormatASTC10x8UnormSrgb    TextureFormat = 0x00000059
-	TextureFormatASTC10x10Unorm       TextureFormat = 0x0000005A
-	TextureFormatASTC10x10UnormSrgb   TextureFormat = 0x0000005B
-	TextureFormatASTC12x10Unorm       TextureFormat = 0x0000005C
-	TextureFormatASTC12x10UnormSrgb   TextureFormat = 0x0000005D
-	TextureFormatASTC12x12Unorm       TextureFormat = 0x0000005E
-	TextureFormatASTC12x12UnormSrgb   TextureFormat = 0x0000005F
-)
+const TextureFormatUndefined TextureFormat = 0x00000000
+const TextureFormatR8Unorm TextureFormat = 0x00000001
+const TextureFormatR8Snorm TextureFormat = 0x00000002
+const TextureFormatR8Uint TextureFormat = 0x00000003
+const TextureFormatR8Sint TextureFormat = 0x00000004
+const TextureFormatR16Uint TextureFormat = 0x00000005
+const TextureFormatR16Sint TextureFormat = 0x00000006
+const TextureFormatR16Float TextureFormat = 0x00000007
+const TextureFormatRG8Unorm TextureFormat = 0x00000008
+const TextureFormatRG8Snorm TextureFormat = 0x00000009
+const TextureFormatRG8Uint TextureFormat = 0x0000000A
+const TextureFormatRG8Sint TextureFormat = 0x0000000B
+const TextureFormatR32Float TextureFormat = 0x0000000C
+const TextureFormatR32Uint TextureFormat = 0x0000000D
+const TextureFormatR32Sint TextureFormat = 0x0000000E
+const TextureFormatRG16Uint TextureFormat = 0x0000000F
+const TextureFormatRG16Sint TextureFormat = 0x00000010
+const TextureFormatRG16Float TextureFormat = 0x00000011
+const TextureFormatRGBA8Unorm TextureFormat = 0x00000012
+const TextureFormatRGBA8UnormSrgb TextureFormat = 0x00000013
+const TextureFormatRGBA8Snorm TextureFormat = 0x00000014
+const TextureFormatRGBA8Uint TextureFormat = 0x00000015
+const TextureFormatRGBA8Sint TextureFormat = 0x00000016
+const TextureFormatBGRA8Unorm TextureFormat = 0x00000017
+const TextureFormatBGRA8UnormSrgb TextureFormat = 0x00000018
+const TextureFormatRGB10A2Uint TextureFormat = 0x00000019
+const TextureFormatRGB10A2Unorm TextureFormat = 0x0000001A
+const TextureFormatRG11B10Ufloat TextureFormat = 0x0000001B
+const TextureFormatRGB9E5Ufloat TextureFormat = 0x0000001C
+const TextureFormatRG32Float TextureFormat = 0x0000001D
+const TextureFormatRG32Uint TextureFormat = 0x0000001E
+const TextureFormatRG32Sint TextureFormat = 0x0000001F
+const TextureFormatRGBA16Uint TextureFormat = 0x00000020
+const TextureFormatRGBA16Sint TextureFormat = 0x00000021
+const TextureFormatRGBA16Float TextureFormat = 0x00000022
+const TextureFormatRGBA32Float TextureFormat = 0x00000023
+const TextureFormatRGBA32Uint TextureFormat = 0x00000024
+const TextureFormatRGBA32Sint TextureFormat = 0x00000025
+const TextureFormatStencil8 TextureFormat = 0x00000026
+const TextureFormatDepth16Unorm TextureFormat = 0x00000027
+const TextureFormatDepth24Plus TextureFormat = 0x00000028
+const TextureFormatDepth24PlusStencil8 TextureFormat = 0x00000029
+const TextureFormatDepth32Float TextureFormat = 0x0000002A
+const TextureFormatDepth32FloatStencil8 TextureFormat = 0x0000002B
+const TextureFormatBC1RGBAUnorm TextureFormat = 0x0000002C
+const TextureFormatBC1RGBAUnormSrgb TextureFormat = 0x0000002D
+const TextureFormatBC2RGBAUnorm TextureFormat = 0x0000002E
+const TextureFormatBC2RGBAUnormSrgb TextureFormat = 0x0000002F
+const TextureFormatBC3RGBAUnorm TextureFormat = 0x00000030
+const TextureFormatBC3RGBAUnormSrgb TextureFormat = 0x00000031
+const TextureFormatBC4RUnorm TextureFormat = 0x00000032
+const TextureFormatBC4RSnorm TextureFormat = 0x00000033
+const TextureFormatBC5RGUnorm TextureFormat = 0x00000034
+const TextureFormatBC5RGSnorm TextureFormat = 0x00000035
+const TextureFormatBC6HRGBUfloat TextureFormat = 0x00000036
+const TextureFormatBC6HRGBFloat TextureFormat = 0x00000037
+const TextureFormatBC7RGBAUnorm TextureFormat = 0x00000038
+const TextureFormatBC7RGBAUnormSrgb TextureFormat = 0x00000039
+const TextureFormatETC2RGB8Unorm TextureFormat = 0x0000003A
+const TextureFormatETC2RGB8UnormSrgb TextureFormat = 0x0000003B
+const TextureFormatETC2RGB8A1Unorm TextureFormat = 0x0000003C
+const TextureFormatETC2RGB8A1UnormSrgb TextureFormat = 0x0000003D
+const TextureFormatETC2RGBA8Unorm TextureFormat = 0x0000003E
+const TextureFormatETC2RGBA8UnormSrgb TextureFormat = 0x0000003F
+const TextureFormatEACR11Unorm TextureFormat = 0x00000040
+const TextureFormatEACR11Snorm TextureFormat = 0x00000041
+const TextureFormatEACRG11Unorm TextureFormat = 0x00000042
+const TextureFormatEACRG11Snorm TextureFormat = 0x00000043
+const TextureFormatASTC4x4Unorm TextureFormat = 0x00000044
+const TextureFormatASTC4x4UnormSrgb TextureFormat = 0x00000045
+const TextureFormatASTC5x4Unorm TextureFormat = 0x00000046
+const TextureFormatASTC5x4UnormSrgb TextureFormat = 0x00000047
+const TextureFormatASTC5x5Unorm TextureFormat = 0x00000048
+const TextureFormatASTC5x5UnormSrgb TextureFormat = 0x00000049
+const TextureFormatASTC6x5Unorm TextureFormat = 0x0000004A
+const TextureFormatASTC6x5UnormSrgb TextureFormat = 0x0000004B
+const TextureFormatASTC6x6Unorm TextureFormat = 0x0000004C
+const TextureFormatASTC6x6UnormSrgb TextureFormat = 0x0000004D
+const TextureFormatASTC8x5Unorm TextureFormat = 0x0000004E
+const TextureFormatASTC8x5UnormSrgb TextureFormat = 0x0000004F
+const TextureFormatASTC8x6Unorm TextureFormat = 0x00000050
+const TextureFormatASTC8x6UnormSrgb TextureFormat = 0x00000051
+const TextureFormatASTC8x8Unorm TextureFormat = 0x00000052
+const TextureFormatASTC8x8UnormSrgb TextureFormat = 0x00000053
+const TextureFormatASTC10x5Unorm TextureFormat = 0x00000054
+const TextureFormatASTC10x5UnormSrgb TextureFormat = 0x00000055
+const TextureFormatASTC10x6Unorm TextureFormat = 0x00000056
+const TextureFormatASTC10x6UnormSrgb TextureFormat = 0x00000057
+const TextureFormatASTC10x8Unorm TextureFormat = 0x00000058
+const TextureFormatASTC10x8UnormSrgb TextureFormat = 0x00000059
+const TextureFormatASTC10x10Unorm TextureFormat = 0x0000005A
+const TextureFormatASTC10x10UnormSrgb TextureFormat = 0x0000005B
+const TextureFormatASTC12x10Unorm TextureFormat = 0x0000005C
+const TextureFormatASTC12x10UnormSrgb TextureFormat = 0x0000005D
+const TextureFormatASTC12x12Unorm TextureFormat = 0x0000005E
+const TextureFormatASTC12x12UnormSrgb TextureFormat = 0x0000005F
 
 func (v TextureFormat) String() string {
 	switch v {
@@ -1840,15 +1734,13 @@ func (v TextureFormat) String() string {
 
 type TextureSampleType uint32
 
-const (
-	TextureSampleTypeBindingNotUsed    TextureSampleType = 0x00000000
-	TextureSampleTypeUndefined         TextureSampleType = 0x00000001
-	TextureSampleTypeFloat             TextureSampleType = 0x00000002
-	TextureSampleTypeUnfilterableFloat TextureSampleType = 0x00000003
-	TextureSampleTypeDepth             TextureSampleType = 0x00000004
-	TextureSampleTypeSint              TextureSampleType = 0x00000005
-	TextureSampleTypeUint              TextureSampleType = 0x00000006
-)
+const TextureSampleTypeBindingNotUsed TextureSampleType = 0x00000000
+const TextureSampleTypeUndefined TextureSampleType = 0x00000001
+const TextureSampleTypeFloat TextureSampleType = 0x00000002
+const TextureSampleTypeUnfilterableFloat TextureSampleType = 0x00000003
+const TextureSampleTypeDepth TextureSampleType = 0x00000004
+const TextureSampleTypeSint TextureSampleType = 0x00000005
+const TextureSampleTypeUint TextureSampleType = 0x00000006
 
 func (v TextureSampleType) String() string {
 	switch v {
@@ -1873,14 +1765,12 @@ func (v TextureSampleType) String() string {
 
 type TextureUsage uint64
 
-const (
-	TextureUsageNone             TextureUsage = 0x00000000
-	TextureUsageCopySrc          TextureUsage = 0x00000001
-	TextureUsageCopyDst          TextureUsage = 0x00000002
-	TextureUsageTextureBinding   TextureUsage = 0x00000004
-	TextureUsageStorageBinding   TextureUsage = 0x00000008
-	TextureUsageRenderAttachment TextureUsage = 0x00000010
-)
+const TextureUsageNone TextureUsage = 0x00000000
+const TextureUsageCopySrc TextureUsage = 0x00000001
+const TextureUsageCopyDst TextureUsage = 0x00000002
+const TextureUsageTextureBinding TextureUsage = 0x00000004
+const TextureUsageStorageBinding TextureUsage = 0x00000008
+const TextureUsageRenderAttachment TextureUsage = 0x00000010
 
 func (v TextureUsage) String() string {
 	switch v {
@@ -1903,15 +1793,13 @@ func (v TextureUsage) String() string {
 
 type TextureViewDimension uint32
 
-const (
-	TextureViewDimensionUndefined TextureViewDimension = 0x00000000
-	TextureViewDimension1D        TextureViewDimension = 0x00000001
-	TextureViewDimension2D        TextureViewDimension = 0x00000002
-	TextureViewDimension2DArray   TextureViewDimension = 0x00000003
-	TextureViewDimensionCube      TextureViewDimension = 0x00000004
-	TextureViewDimensionCubeArray TextureViewDimension = 0x00000005
-	TextureViewDimension3D        TextureViewDimension = 0x00000006
-)
+const TextureViewDimensionUndefined TextureViewDimension = 0x00000000
+const TextureViewDimension1D TextureViewDimension = 0x00000001
+const TextureViewDimension2D TextureViewDimension = 0x00000002
+const TextureViewDimension2DArray TextureViewDimension = 0x00000003
+const TextureViewDimensionCube TextureViewDimension = 0x00000004
+const TextureViewDimensionCubeArray TextureViewDimension = 0x00000005
+const TextureViewDimension3D TextureViewDimension = 0x00000006
 
 func (v TextureViewDimension) String() string {
 	switch v {
@@ -1936,48 +1824,46 @@ func (v TextureViewDimension) String() string {
 
 type VertexFormat uint32
 
-const (
-	VertexFormatUint8        VertexFormat = 0x00000001
-	VertexFormatUint8x2      VertexFormat = 0x00000002
-	VertexFormatUint8x4      VertexFormat = 0x00000003
-	VertexFormatSint8        VertexFormat = 0x00000004
-	VertexFormatSint8x2      VertexFormat = 0x00000005
-	VertexFormatSint8x4      VertexFormat = 0x00000006
-	VertexFormatUnorm8       VertexFormat = 0x00000007
-	VertexFormatUnorm8x2     VertexFormat = 0x00000008
-	VertexFormatUnorm8x4     VertexFormat = 0x00000009
-	VertexFormatSnorm8       VertexFormat = 0x0000000A
-	VertexFormatSnorm8x2     VertexFormat = 0x0000000B
-	VertexFormatSnorm8x4     VertexFormat = 0x0000000C
-	VertexFormatUint16       VertexFormat = 0x0000000D
-	VertexFormatUint16x2     VertexFormat = 0x0000000E
-	VertexFormatUint16x4     VertexFormat = 0x0000000F
-	VertexFormatSint16       VertexFormat = 0x00000010
-	VertexFormatSint16x2     VertexFormat = 0x00000011
-	VertexFormatSint16x4     VertexFormat = 0x00000012
-	VertexFormatUnorm16      VertexFormat = 0x00000013
-	VertexFormatUnorm16x2    VertexFormat = 0x00000014
-	VertexFormatUnorm16x4    VertexFormat = 0x00000015
-	VertexFormatSnorm16      VertexFormat = 0x00000016
-	VertexFormatSnorm16x2    VertexFormat = 0x00000017
-	VertexFormatSnorm16x4    VertexFormat = 0x00000018
-	VertexFormatFloat16      VertexFormat = 0x00000019
-	VertexFormatFloat16x2    VertexFormat = 0x0000001A
-	VertexFormatFloat16x4    VertexFormat = 0x0000001B
-	VertexFormatFloat32      VertexFormat = 0x0000001C
-	VertexFormatFloat32x2    VertexFormat = 0x0000001D
-	VertexFormatFloat32x3    VertexFormat = 0x0000001E
-	VertexFormatFloat32x4    VertexFormat = 0x0000001F
-	VertexFormatUint32       VertexFormat = 0x00000020
-	VertexFormatUint32x2     VertexFormat = 0x00000021
-	VertexFormatUint32x3     VertexFormat = 0x00000022
-	VertexFormatUint32x4     VertexFormat = 0x00000023
-	VertexFormatSint32       VertexFormat = 0x00000024
-	VertexFormatSint32x2     VertexFormat = 0x00000025
-	VertexFormatSint32x3     VertexFormat = 0x00000026
-	VertexFormatSint32x4     VertexFormat = 0x00000027
-	VertexFormatUnorm8x4BGRA VertexFormat = 0x00000029
-)
+const VertexFormatUint8 VertexFormat = 0x00000001
+const VertexFormatUint8x2 VertexFormat = 0x00000002
+const VertexFormatUint8x4 VertexFormat = 0x00000003
+const VertexFormatSint8 VertexFormat = 0x00000004
+const VertexFormatSint8x2 VertexFormat = 0x00000005
+const VertexFormatSint8x4 VertexFormat = 0x00000006
+const VertexFormatUnorm8 VertexFormat = 0x00000007
+const VertexFormatUnorm8x2 VertexFormat = 0x00000008
+const VertexFormatUnorm8x4 VertexFormat = 0x00000009
+const VertexFormatSnorm8 VertexFormat = 0x0000000A
+const VertexFormatSnorm8x2 VertexFormat = 0x0000000B
+const VertexFormatSnorm8x4 VertexFormat = 0x0000000C
+const VertexFormatUint16 VertexFormat = 0x0000000D
+const VertexFormatUint16x2 VertexFormat = 0x0000000E
+const VertexFormatUint16x4 VertexFormat = 0x0000000F
+const VertexFormatSint16 VertexFormat = 0x00000010
+const VertexFormatSint16x2 VertexFormat = 0x00000011
+const VertexFormatSint16x4 VertexFormat = 0x00000012
+const VertexFormatUnorm16 VertexFormat = 0x00000013
+const VertexFormatUnorm16x2 VertexFormat = 0x00000014
+const VertexFormatUnorm16x4 VertexFormat = 0x00000015
+const VertexFormatSnorm16 VertexFormat = 0x00000016
+const VertexFormatSnorm16x2 VertexFormat = 0x00000017
+const VertexFormatSnorm16x4 VertexFormat = 0x00000018
+const VertexFormatFloat16 VertexFormat = 0x00000019
+const VertexFormatFloat16x2 VertexFormat = 0x0000001A
+const VertexFormatFloat16x4 VertexFormat = 0x0000001B
+const VertexFormatFloat32 VertexFormat = 0x0000001C
+const VertexFormatFloat32x2 VertexFormat = 0x0000001D
+const VertexFormatFloat32x3 VertexFormat = 0x0000001E
+const VertexFormatFloat32x4 VertexFormat = 0x0000001F
+const VertexFormatUint32 VertexFormat = 0x00000020
+const VertexFormatUint32x2 VertexFormat = 0x00000021
+const VertexFormatUint32x3 VertexFormat = 0x00000022
+const VertexFormatUint32x4 VertexFormat = 0x00000023
+const VertexFormatSint32 VertexFormat = 0x00000024
+const VertexFormatSint32x2 VertexFormat = 0x00000025
+const VertexFormatSint32x3 VertexFormat = 0x00000026
+const VertexFormatSint32x4 VertexFormat = 0x00000027
+const VertexFormatUnorm8x4BGRA VertexFormat = 0x00000029
 
 func (v VertexFormat) String() string {
 	switch v {
@@ -2068,12 +1954,10 @@ func (v VertexFormat) String() string {
 
 type VertexStepMode uint32
 
-const (
-	VertexStepModeVertexBufferNotUsed VertexStepMode = 0x00000000
-	VertexStepModeUndefined           VertexStepMode = 0x00000001
-	VertexStepModeVertex              VertexStepMode = 0x00000002
-	VertexStepModeInstance            VertexStepMode = 0x00000003
-)
+const VertexStepModeVertexBufferNotUsed VertexStepMode = 0x00000000
+const VertexStepModeUndefined VertexStepMode = 0x00000001
+const VertexStepModeVertex VertexStepMode = 0x00000002
+const VertexStepModeInstance VertexStepMode = 0x00000003
 
 func (v VertexStepMode) String() string {
 	switch v {
@@ -2092,12 +1976,10 @@ func (v VertexStepMode) String() string {
 
 type WGSLLanguageFeatureName uint32
 
-const (
-	WGSLLanguageFeatureNameReadonlyAndReadwriteStorageTextures WGSLLanguageFeatureName = 0x00000001
-	WGSLLanguageFeatureNamePacked4x8IntegerDotProduct          WGSLLanguageFeatureName = 0x00000002
-	WGSLLanguageFeatureNameUnrestrictedPointerParameters       WGSLLanguageFeatureName = 0x00000003
-	WGSLLanguageFeatureNamePointerCompositeAccess              WGSLLanguageFeatureName = 0x00000004
-)
+const WGSLLanguageFeatureNameReadonlyAndReadwriteStorageTextures WGSLLanguageFeatureName = 0x00000001
+const WGSLLanguageFeatureNamePacked4x8IntegerDotProduct WGSLLanguageFeatureName = 0x00000002
+const WGSLLanguageFeatureNameUnrestrictedPointerParameters WGSLLanguageFeatureName = 0x00000003
+const WGSLLanguageFeatureNamePointerCompositeAccess WGSLLanguageFeatureName = 0x00000004
 
 func (v WGSLLanguageFeatureName) String() string {
 	switch v {
@@ -2116,13 +1998,11 @@ func (v WGSLLanguageFeatureName) String() string {
 
 type WaitStatus uint32
 
-const (
-	WaitStatusSuccess                 WaitStatus = 0x00000001
-	WaitStatusTimedOut                WaitStatus = 0x00000002
-	WaitStatusUnsupportedTimeout      WaitStatus = 0x00000003
-	WaitStatusUnsupportedCount        WaitStatus = 0x00000004
-	WaitStatusUnsupportedMixedSources WaitStatus = 0x00000005
-)
+const WaitStatusSuccess WaitStatus = 0x00000001
+const WaitStatusTimedOut WaitStatus = 0x00000002
+const WaitStatusUnsupportedTimeout WaitStatus = 0x00000003
+const WaitStatusUnsupportedCount WaitStatus = 0x00000004
+const WaitStatusUnsupportedMixedSources WaitStatus = 0x00000005
 
 func (v WaitStatus) String() string {
 	switch v {

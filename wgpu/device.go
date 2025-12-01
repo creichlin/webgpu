@@ -596,13 +596,6 @@ func (p *Device) TryCreatePipelineLayout(descriptor *PipelineLayoutDescriptor) (
 	return releaseOnGC(&PipelineLayout{ref: ref}), nil
 }
 
-type QuerySetDescriptor struct {
-	Label              string
-	Type               QueryType
-	Count              uint32
-	PipelineStatistics []PipelineStatisticName
-}
-
 func (p *Device) TryCreateQuerySet(descriptor *QuerySetDescriptor) (*QuerySet, error) {
 	var desc C.WGPUQuerySetDescriptor
 
@@ -648,15 +641,6 @@ func (p *Device) TryCreateQuerySet(descriptor *QuerySetDescriptor) (*QuerySet, e
 	}
 
 	return releaseOnGC(&QuerySet{ref: ref}), nil
-}
-
-type RenderBundleEncoderDescriptor struct {
-	Label              string
-	ColorFormats       []TextureFormat
-	DepthStencilFormat TextureFormat
-	SampleCount        uint32
-	DepthReadOnly      bool
-	StencilReadOnly    bool
 }
 
 func (p *Device) TryCreateRenderBundleEncoder(descriptor *RenderBundleEncoderDescriptor) (*RenderBundleEncoder, error) {

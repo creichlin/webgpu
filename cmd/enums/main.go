@@ -1,16 +1,13 @@
 package main
 
-//go:generate go build
-//go:generate ./enums -i ../../wgpu/lib/linux/arm64/ -o ../../wgpu/enums.go -pkg wgpu
-
 import (
 	"bytes"
 	"cmp"
 	"flag"
 	"fmt"
+	"go/format"
 	"log"
 	"os"
-	"os/exec"
 	"path/filepath"
 	"regexp"
 	"strconv"
@@ -20,7 +17,6 @@ import (
 	"slices"
 
 	"github.com/iancoleman/strcase"
-	gofumpt "mvdan.cc/gofumpt/format"
 )
 
 var (
@@ -173,17 +169,7 @@ func main() {
 }
 
 func fmtFile(b []byte) []byte {
-	langVersion := ""
-	out, err := exec.Command("go", "list", "-m", "-f", "{{.GoVersion}}").Output()
-	outSlice := bytes.Split(out, []byte("\n"))
-	out = outSlice[0]
-	out = bytes.TrimSpace(out)
-	if err == nil && len(out) > 0 {
-		langVersion = string(out)
-	}
-
-	// Run gofumpt
-	b, err = gofumpt.Source(b, gofumpt.Options{LangVersion: langVersion, ExtraRules: true})
+	b, err := format.Source(b)
 	if err != nil {
 		log.Fatalf("cannot run gofumpt on file: %v", err)
 	}

@@ -543,20 +543,6 @@ func (p *CommandEncoder) TryResolveQuerySet(querySet *QuerySet, firstQuery uint3
 	return
 }
 
-func (p *CommandEncoder) TryWriteTimestamp(querySet *QuerySet, queryIndex uint32) (err error) {
-	errorCallbackHandle := makeErrorCallback(&err)
-	defer errorCallbackHandle.Delete()
-
-	C.gowebgpu_command_encoder_write_timestamp(
-		p.ref,
-		querySet.ref,
-		C.uint32_t(queryIndex),
-		p.device.ref,
-		errorCallbackHandle.ToPointer(),
-	)
-	return
-}
-
 func (p *CommandEncoder) Release() {
 	if p.ref != nil && atomic.CompareAndSwapInt32(&p.released, 0, 1) {
 		C.wgpuCommandEncoderRelease(p.ref)

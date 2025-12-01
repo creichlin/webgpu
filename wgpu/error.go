@@ -19,7 +19,7 @@ func (v Error) Unwrap() error {
 	return v.Wrapped
 }
 
-func panicIf(err error) {
+func panicIf(err error, context string) {
 	if err != nil {
 		panic(err)
 	}
