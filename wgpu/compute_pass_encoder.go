@@ -24,7 +24,6 @@ static inline void gowebgpu_compute_pass_encoder_end(WGPUComputePassEncoder comp
 */
 import "C"
 import (
-	"errors"
 	"sync/atomic"
 	"unsafe"
 )
@@ -47,11 +46,8 @@ func (p *ComputePassEncoder) DispatchWorkgroupsIndirect(indirectBuffer *Buffer, 
 	C.wgpuComputePassEncoderDispatchWorkgroupsIndirect(p.ref, indirectBuffer.ref, C.uint64_t(indirectOffset))
 }
 
-func (p *ComputePassEncoder) End() (err error) {
-	var cb errorCallback = func(_ ErrorType, message string) {
-		err = errors.New("wgpu.(*ComputePassEncoder).End(): " + message)
-	}
-	errorCallbackHandle := newHandle(cb)
+func (p *ComputePassEncoder) TryEnd() (err error) {
+	errorCallbackHandle := makeErrorCallback(&err)
 	defer errorCallbackHandle.Delete()
 
 	C.gowebgpu_compute_pass_encoder_end(p.ref, p.device.ref, errorCallbackHandle.ToPointer())

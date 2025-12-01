@@ -108,7 +108,7 @@ func InitState(window *glfw.Window) (s *State, err error) {
 
 	s.surface.Configure(s.device, s.config)
 
-	computeShader, err := s.device.CreateShaderModule(&wgpu.ShaderModuleDescriptor{
+	computeShader, err := s.device.TryCreateShaderModule(&wgpu.ShaderModuleDescriptor{
 		Label: "compute.wgsl",
 		WGSLSource: &wgpu.ShaderSourceWGSL{
 			Code: compute,
@@ -119,7 +119,7 @@ func InitState(window *glfw.Window) (s *State, err error) {
 	}
 	defer computeShader.Release()
 
-	drawShader, err := s.device.CreateShaderModule(&wgpu.ShaderModuleDescriptor{
+	drawShader, err := s.device.TryCreateShaderModule(&wgpu.ShaderModuleDescriptor{
 		Label: "draw.wgsl",
 		WGSLSource: &wgpu.ShaderSourceWGSL{
 			Code: draw,
@@ -140,7 +140,7 @@ func InitState(window *glfw.Window) (s *State, err error) {
 		0.005, // rule3Scale
 	}
 
-	simParamBuffer, err := s.device.CreateBufferInit(&wgpu.BufferInitDescriptor{
+	simParamBuffer, err := s.device.TryCreateBufferInit(&wgpu.BufferInitDescriptor{
 		Label:    "Simulation Param Buffer",
 		Contents: wgpu.ToBytes(simParamData[:]),
 		Usage:    wgpu.BufferUsageUniform | wgpu.BufferUsageCopyDst,
@@ -150,7 +150,7 @@ func InitState(window *glfw.Window) (s *State, err error) {
 	}
 	defer simParamBuffer.Release()
 
-	s.renderPipeline, err = s.device.CreateRenderPipeline(&wgpu.RenderPipelineDescriptor{
+	s.renderPipeline, err = s.device.TryCreateRenderPipeline(&wgpu.RenderPipelineDescriptor{
 		Vertex: wgpu.VertexState{
 			Module:     drawShader,
 			EntryPoint: "main_vs",
@@ -209,7 +209,7 @@ func InitState(window *glfw.Window) (s *State, err error) {
 		return s, err
 	}
 
-	s.computePipeline, err = s.device.CreateComputePipeline(&wgpu.ComputePipelineDescriptor{
+	s.computePipeline, err = s.device.TryCreateComputePipeline(&wgpu.ComputePipelineDescriptor{
 		Label: "Compute pipeline",
 		Compute: wgpu.ProgrammableStageDescriptor{
 			Module:     computeShader,
@@ -221,7 +221,7 @@ func InitState(window *glfw.Window) (s *State, err error) {
 	}
 
 	vertexBufferData := [...]float32{-0.01, -0.02, 0.01, -0.02, 0.00, 0.02}
-	s.vertexBuffer, err = s.device.CreateBufferInit(&wgpu.BufferInitDescriptor{
+	s.vertexBuffer, err = s.device.TryCreateBufferInit(&wgpu.BufferInitDescriptor{
 		Label:    "Vertex Buffer",
 		Contents: wgpu.ToBytes(vertexBufferData[:]),
 		Usage:    wgpu.BufferUsageVertex | wgpu.BufferUsageCopyDst,
@@ -241,7 +241,7 @@ func InitState(window *glfw.Window) (s *State, err error) {
 	}
 
 	for i := 0; i < 2; i++ {
-		particleBuffer, err := s.device.CreateBufferInit(&wgpu.BufferInitDescriptor{
+		particleBuffer, err := s.device.TryCreateBufferInit(&wgpu.BufferInitDescriptor{
 			Label:    "Particle Buffer " + strconv.Itoa(i),
 			Contents: wgpu.ToBytes(initialParticleData[:]),
 			Usage: wgpu.BufferUsageVertex |
@@ -259,7 +259,7 @@ func InitState(window *glfw.Window) (s *State, err error) {
 	defer computeBindGroupLayout.Release()
 
 	for i := 0; i < 2; i++ {
-		particleBindGroup, err := s.device.CreateBindGroup(&wgpu.BindGroupDescriptor{
+		particleBindGroup, err := s.device.TryCreateBindGroup(&wgpu.BindGroupDescriptor{
 			Layout: computeBindGroupLayout,
 			Entries: []wgpu.BindGroupEntry{
 				{
@@ -302,17 +302,17 @@ func (s *State) Resize(width, height int) {
 }
 
 func (s *State) Render() error {
-	nextTexture, err := s.surface.GetCurrentTexture()
+	nextTexture, err := s.surface.TryGetCurrentTexture()
 	if err != nil {
 		return err
 	}
-	view, err := nextTexture.CreateView(nil)
+	view, err := nextTexture.TryCreateView(nil)
 	if err != nil {
 		return err
 	}
 	defer view.Release()
 
-	commandEncoder, err := s.device.CreateCommandEncoder(nil)
+	commandEncoder, err := s.device.TryCreateCommandEncoder(nil)
 	if err != nil {
 		return err
 	}
@@ -322,7 +322,7 @@ func (s *State) Render() error {
 	computePass.SetPipeline(s.computePipeline)
 	computePass.SetBindGroup(0, s.particleBindGroups[s.frameNum%2], nil)
 	computePass.DispatchWorkgroups(s.workGroupCount, 1, 1)
-	computePass.End()
+	computePass.TryEnd()
 	computePass.Release() // must release immediately
 
 	renderPass := commandEncoder.BeginRenderPass(&wgpu.RenderPassDescriptor{
@@ -338,12 +338,12 @@ func (s *State) Render() error {
 	renderPass.SetVertexBuffer(0, s.particleBuffers[(s.frameNum+1)%2], 0, wgpu.WholeSize)
 	renderPass.SetVertexBuffer(1, s.vertexBuffer, 0, wgpu.WholeSize)
 	renderPass.Draw(3, NumParticles, 0, 0)
-	renderPass.End()
+	renderPass.TryEnd()
 	renderPass.Release() // must release
 
 	s.frameNum += 1
 
-	cmdBuffer, err := commandEncoder.Finish(nil)
+	cmdBuffer, err := commandEncoder.TryFinish(nil)
 	if err != nil {
 		return err
 	}

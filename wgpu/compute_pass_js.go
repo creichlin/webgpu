@@ -60,7 +60,7 @@ func (g ComputePassEncoder) DispatchWorkgroups(workgroupCountX, workgroupCountY,
 	g.jsValue.Call("dispatchWorkgroups", params...)
 }
 
-// End as described:
+// TryEnd as described:
 // https://gpuweb.github.io/gpuweb/#dom-gpucomputepassencoder-end
 func (g ComputePassEncoder) End() error {
 	g.jsValue.Call("end")

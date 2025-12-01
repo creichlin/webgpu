@@ -125,16 +125,14 @@ func (p *Surface) Configure(device *Device, config *SurfaceConfiguration) {
 
 // NOTE: you should typically not call [Texture.Release] on the returned texture.
 // Instead, you should call [TextureView.Release] on any [TextureView] you create from it.
-func (p *Surface) GetCurrentTexture() (*Texture, error) {
+func (p *Surface) TryGetCurrentTexture() (*Texture, error) {
 	if p.device == nil {
 		return nil, errors.New("surface not configured")
 	}
 
 	var err error = nil
-	var cb errorCallback = func(_ ErrorType, message string) {
-		err = errors.New("wgpu.(*Surface).GetCurrentTexture(): " + message)
-	}
-	errorCallbackHandle := newHandle(cb)
+
+	errorCallbackHandle := makeErrorCallback(&err)
 	defer errorCallbackHandle.Delete()
 
 	ref := C.gowebgpu_surface_get_current_texture(

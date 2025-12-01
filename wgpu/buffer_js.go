@@ -14,20 +14,20 @@ type Buffer struct {
 	jsValue js.Value
 }
 
-func (g Buffer) toJS() any {
+func (g *Buffer) toJS() any {
 	return g.jsValue
 }
 
 // Destroy as described:
 // https://gpuweb.github.io/gpuweb/#dom-gpubuffer-destroy
-func (g Buffer) Destroy() {
+func (g *Buffer) Destroy() {
 	g.jsValue.Call("destroy")
 }
 
-func (g Buffer) GetMappedRange(offset, size uint) []byte {
-	// TODO(kai): this does not work because it does not get
-	// the actual pointer to the byte data; this is only really
-	// possible with GopherJS.
+func (g *Buffer) GetMappedRange(offset, size uint) []byte {
+	// TODO(kai): this does not work for writing because it does not get
+	//  the actual pointer to the byte data; this is only really
+	//  possible with GopherJS.
 	buf := g.jsValue.Call("getMappedRange", offset, size)
 	src := js.Global().Get("Uint8ClampedArray").New(buf)
 	dst := make([]byte, src.Length())
@@ -35,7 +35,7 @@ func (g Buffer) GetMappedRange(offset, size uint) []byte {
 	return dst
 }
 
-func (g Buffer) MapAsync(mode MapMode, offset uint64, size uint64, callback BufferMapCallback) (err error) {
+func (g *Buffer) TryMapAsync(mode MapMode, offset uint64, size uint64, callback BufferMapCallback) (err error) {
 	_, ok := jsx.Await(g.jsValue.Call("mapAsync", uint32(mode), offset, size))
 	if !ok {
 		callback(MapAsyncStatusError)
@@ -46,9 +46,9 @@ func (g Buffer) MapAsync(mode MapMode, offset uint64, size uint64, callback Buff
 	return
 }
 
-func (g Buffer) Unmap() (err error) {
+func (g *Buffer) TryUnmap() (err error) {
 	g.jsValue.Call("unmap")
 	return
 }
 
-func (g Buffer) Release() {} // no-op
+func (g *Buffer) Release() {} // no-op

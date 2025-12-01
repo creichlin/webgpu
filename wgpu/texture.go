@@ -27,7 +27,6 @@ static inline WGPUTextureView gowebgpu_texture_create_view(WGPUTexture texture, 
 */
 import "C"
 import (
-	"errors"
 	"sync/atomic"
 	"unsafe"
 )
@@ -38,7 +37,7 @@ type Texture struct {
 	released int32
 }
 
-func (p *Texture) CreateView(descriptor *TextureViewDescriptor) (*TextureView, error) {
+func (p *Texture) TryCreateView(descriptor *TextureViewDescriptor) (*TextureView, error) {
 	var desc *C.WGPUTextureViewDescriptor
 
 	if descriptor != nil {
@@ -62,10 +61,8 @@ func (p *Texture) CreateView(descriptor *TextureViewDescriptor) (*TextureView, e
 	}
 
 	var err error = nil
-	var cb errorCallback = func(_ ErrorType, message string) {
-		err = errors.New("wgpu.(*Texture).CreateView(): " + message)
-	}
-	errorCallbackHandle := newHandle(cb)
+
+	errorCallbackHandle := makeErrorCallback(&err)
 	defer errorCallbackHandle.Delete()
 
 	ref := C.gowebgpu_texture_create_view(

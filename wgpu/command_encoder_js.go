@@ -12,13 +12,13 @@ type CommandEncoder struct {
 	jsValue js.Value
 }
 
-func (g CommandEncoder) toJS() any {
+func (g *CommandEncoder) toJS() any {
 	return g.jsValue
 }
 
 // BeginRenderPass as described:
 // https://gpuweb.github.io/gpuweb/#dom-gpucommandencoder-beginrenderpass
-func (g CommandEncoder) BeginRenderPass(descriptor *RenderPassDescriptor) *RenderPassEncoder {
+func (g *CommandEncoder) BeginRenderPass(descriptor *RenderPassDescriptor) *RenderPassEncoder {
 	jsRenderPass := g.jsValue.Call("beginRenderPass", pointerToJS(descriptor))
 	return &RenderPassEncoder{
 		jsValue: jsRenderPass,
@@ -27,7 +27,7 @@ func (g CommandEncoder) BeginRenderPass(descriptor *RenderPassDescriptor) *Rende
 
 // BeginComputePass as described:
 // https://gpuweb.github.io/gpuweb/#dom-gpucommandencoder-begincomputepass
-func (g CommandEncoder) BeginComputePass(descriptor *ComputePassDescriptor) *ComputePassEncoder {
+func (g *CommandEncoder) BeginComputePass(descriptor *ComputePassDescriptor) *ComputePassEncoder {
 	params := make([]any, 1)
 	params[0] = pointerToJS(descriptor)
 	jsComputePass := g.jsValue.Call("beginComputePass", params...)
@@ -36,41 +36,41 @@ func (g CommandEncoder) BeginComputePass(descriptor *ComputePassDescriptor) *Com
 	}
 }
 
-// CopyBufferToBuffer as described:
+// TryCopyBufferToBuffer as described:
 // https://gpuweb.github.io/gpuweb/#dom-gpucommandencoder-copybuffertobuffer
-func (g CommandEncoder) CopyBufferToBuffer(source *Buffer, sourceOffset uint64, destination *Buffer, destinationOffset uint64, size uint64) (err error) {
+func (g *CommandEncoder) TryCopyBufferToBuffer(source *Buffer, sourceOffset uint64, destination *Buffer, destinationOffset uint64, size uint64) (err error) {
 	g.jsValue.Call("copyBufferToBuffer", pointerToJS(source), sourceOffset, pointerToJS(destination), destinationOffset, size)
 	return nil
 }
 
-// CopyBufferToTexture as described:
+// TryCopyBufferToTexture as described:
 // https://gpuweb.github.io/gpuweb/#dom-gpucommandencoder-copybuffertotexture
-func (g CommandEncoder) CopyBufferToTexture(source *TexelCopyBufferInfo, destination *TexelCopyTextureInfo, copySize *Extent3D) (err error) {
+func (g *CommandEncoder) TryCopyBufferToTexture(source *TexelCopyBufferInfo, destination *TexelCopyTextureInfo, copySize *Extent3D) (err error) {
 	g.jsValue.Call("copyBufferToTexture", pointerToJS(source), pointerToJS(destination), pointerToJS(copySize))
 	return nil
 }
 
-// CopyTextureToBuffer as described:
+// TryCopyTextureToBuffer as described:
 // https://gpuweb.github.io/gpuweb/#dom-gpucommandencoder-copytexturetobuffer
-func (g CommandEncoder) CopyTextureToBuffer(source *TexelCopyTextureInfo, destination *TexelCopyBufferInfo, copySize *Extent3D) (err error) {
+func (g *CommandEncoder) TryCopyTextureToBuffer(source *TexelCopyTextureInfo, destination *TexelCopyBufferInfo, copySize *Extent3D) (err error) {
 	g.jsValue.Call("copyTextureToBuffer", pointerToJS(source), pointerToJS(destination), pointerToJS(copySize))
 	return nil
 }
 
-// CopyTextureToTexture as described:
+// TryCopyTextureToTexture as described:
 // https://gpuweb.github.io/gpuweb/#dom-gpucommandencoder-copytexturetotexture
-func (g CommandEncoder) CopyTextureToTexture(source *TexelCopyTextureInfo, destination *TexelCopyTextureInfo, copySize *Extent3D) (err error) {
+func (g *CommandEncoder) TryCopyTextureToTexture(source *TexelCopyTextureInfo, destination *TexelCopyTextureInfo, copySize *Extent3D) (err error) {
 	g.jsValue.Call("copyTextureToTexture", pointerToJS(source), pointerToJS(destination), pointerToJS(copySize))
 	return nil
 }
 
-// Finish as described:
+// TryFinish as described:
 // https://gpuweb.github.io/gpuweb/#dom-gpucommandencoder-finish
-func (g CommandEncoder) Finish(descriptor *CommandBufferDescriptor) (*CommandBuffer, error) {
+func (g *CommandEncoder) TryFinish(descriptor *CommandBufferDescriptor) (*CommandBuffer, error) {
 	jsBuffer := g.jsValue.Call("finish", pointerToJS(descriptor))
 	return &CommandBuffer{
 		jsValue: jsBuffer,
 	}, nil
 }
 
-func (g CommandEncoder) Release() {} // no-op
+func (g *CommandEncoder) Release() {} // no-op

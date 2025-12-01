@@ -37,7 +37,6 @@ static inline void gowebgpu_queue_write_texture(WGPUQueue queue, WGPUTexelCopyTe
 */
 import "C"
 import (
-	"errors"
 	"sync/atomic"
 	"unsafe"
 )
@@ -91,11 +90,8 @@ func (p *Queue) Submit(commands ...*CommandBuffer) (submissionIndex SubmissionIn
 	return SubmissionIndex(r)
 }
 
-func (p *Queue) WriteBuffer(buffer *Buffer, bufferOffset uint64, data []byte) (err error) {
-	var cb errorCallback = func(_ ErrorType, message string) {
-		err = errors.New("wgpu.(*Queue).WriteBuffer(): " + message)
-	}
-	errorCallbackHandle := newHandle(cb)
+func (p *Queue) TryWriteBuffer(buffer *Buffer, bufferOffset uint64, data []byte) (err error) {
+	errorCallbackHandle := makeErrorCallback(&err)
 	defer errorCallbackHandle.Delete()
 
 	size := len(data)
@@ -124,7 +120,7 @@ func (p *Queue) WriteBuffer(buffer *Buffer, bufferOffset uint64, data []byte) (e
 	return
 }
 
-func (p *Queue) WriteTexture(destination *TexelCopyTextureInfo, data []byte, dataLayout *TexelCopyBufferLayout, writeSize *Extent3D) (err error) {
+func (p *Queue) TryWriteTexture(destination *TexelCopyTextureInfo, data []byte, dataLayout *TexelCopyBufferLayout, writeSize *Extent3D) (err error) {
 	var dst C.WGPUTexelCopyTextureInfo
 	if destination != nil {
 		dst = C.WGPUTexelCopyTextureInfo{
@@ -159,10 +155,7 @@ func (p *Queue) WriteTexture(destination *TexelCopyTextureInfo, data []byte, dat
 		}
 	}
 
-	var cb errorCallback = func(_ ErrorType, message string) {
-		err = errors.New("wgpu.(*Queue).WriteTexture(): " + message)
-	}
-	errorCallbackHandle := newHandle(cb)
+	errorCallbackHandle := makeErrorCallback(&err)
 	defer errorCallbackHandle.Delete()
 
 	size := len(data)

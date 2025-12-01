@@ -179,7 +179,8 @@ func (p *CommandEncoder) BeginComputePass(descriptor *ComputePassDescriptor) *Co
 
 	ref := C.wgpuCommandEncoderBeginComputePass(p.ref, desc)
 	if ref == nil {
-		panic("Failed to acquire ComputePassEncoder")
+		err := errors.New("failed to acquire ComputePassEncoder")
+		panic(wrap(err, ""))
 	}
 
 	return releaseOnGC(&ComputePassEncoder{device: p.device.addRef(), ref: ref})
@@ -251,14 +252,15 @@ func (p *CommandEncoder) BeginRenderPass(descriptor *RenderPassDescriptor) *Rend
 	}
 
 	ref := C.wgpuCommandEncoderBeginRenderPass(p.ref, &desc)
+	if ref == nil {
+		err := errors.New("failed to acquire RenderPassEncoder")
+		panic(wrap(err, ""))
+	}
 	return releaseOnGC(&RenderPassEncoder{device: p.device.addRef(), ref: ref})
 }
 
-func (p *CommandEncoder) ClearBuffer(buffer *Buffer, offset uint64, size uint64) (err error) {
-	var cb errorCallback = func(_ ErrorType, message string) {
-		err = errors.New("wgpu.(*CommandEncoder).ClearBuffer(): " + message)
-	}
-	errorCallbackHandle := newHandle(cb)
+func (p *CommandEncoder) TryClearBuffer(buffer *Buffer, offset uint64, size uint64) (err error) {
+	errorCallbackHandle := makeErrorCallback(&err)
 	defer errorCallbackHandle.Delete()
 
 	C.gowebgpu_command_encoder_clear_buffer(
@@ -272,11 +274,8 @@ func (p *CommandEncoder) ClearBuffer(buffer *Buffer, offset uint64, size uint64)
 	return
 }
 
-func (p *CommandEncoder) CopyBufferToBuffer(source *Buffer, sourceOffset uint64, destination *Buffer, destinatonOffset uint64, size uint64) (err error) {
-	var cb errorCallback = func(_ ErrorType, message string) {
-		err = errors.New("wgpu.(*CommandEncoder).CopyBufferToBuffer(): " + message)
-	}
-	errorCallbackHandle := newHandle(cb)
+func (p *CommandEncoder) TryCopyBufferToBuffer(source *Buffer, sourceOffset uint64, destination *Buffer, destinationOffset uint64, size uint64) (err error) {
+	errorCallbackHandle := makeErrorCallback(&err)
 	defer errorCallbackHandle.Delete()
 
 	C.gowebgpu_command_encoder_copy_buffer_to_buffer(
@@ -284,7 +283,7 @@ func (p *CommandEncoder) CopyBufferToBuffer(source *Buffer, sourceOffset uint64,
 		source.ref,
 		C.uint64_t(sourceOffset),
 		destination.ref,
-		C.uint64_t(destinatonOffset),
+		C.uint64_t(destinationOffset),
 		C.uint64_t(size),
 		p.device.ref,
 		errorCallbackHandle.ToPointer(),
@@ -292,7 +291,7 @@ func (p *CommandEncoder) CopyBufferToBuffer(source *Buffer, sourceOffset uint64,
 	return
 }
 
-func (p *CommandEncoder) CopyBufferToTexture(source *TexelCopyBufferInfo, destination *TexelCopyTextureInfo, copySize *Extent3D) (err error) {
+func (p *CommandEncoder) TryCopyBufferToTexture(source *TexelCopyBufferInfo, destination *TexelCopyTextureInfo, copySize *Extent3D) (err error) {
 	var src C.WGPUTexelCopyBufferInfo
 	if source != nil {
 		if source.Buffer != nil {
@@ -330,10 +329,7 @@ func (p *CommandEncoder) CopyBufferToTexture(source *TexelCopyBufferInfo, destin
 		}
 	}
 
-	var cb errorCallback = func(_ ErrorType, message string) {
-		err = errors.New("wgpu.(*CommandEncoder).CopyBufferToTexture(): " + message)
-	}
-	errorCallbackHandle := newHandle(cb)
+	errorCallbackHandle := makeErrorCallback(&err)
 	defer errorCallbackHandle.Delete()
 
 	C.gowebgpu_command_encoder_copy_buffer_to_texture(
@@ -347,7 +343,7 @@ func (p *CommandEncoder) CopyBufferToTexture(source *TexelCopyBufferInfo, destin
 	return
 }
 
-func (p *CommandEncoder) CopyTextureToBuffer(source *TexelCopyTextureInfo, destination *TexelCopyBufferInfo, copySize *Extent3D) (err error) {
+func (p *CommandEncoder) TryCopyTextureToBuffer(source *TexelCopyTextureInfo, destination *TexelCopyBufferInfo, copySize *Extent3D) (err error) {
 	var src C.WGPUTexelCopyTextureInfo
 	if source != nil {
 		src = C.WGPUTexelCopyTextureInfo{
@@ -385,10 +381,7 @@ func (p *CommandEncoder) CopyTextureToBuffer(source *TexelCopyTextureInfo, desti
 		}
 	}
 
-	var cb errorCallback = func(_ ErrorType, message string) {
-		err = errors.New("wgpu.(*CommandEncoder).CopyTextureToBuffer(): " + message)
-	}
-	errorCallbackHandle := newHandle(cb)
+	errorCallbackHandle := makeErrorCallback(&err)
 	defer errorCallbackHandle.Delete()
 
 	C.gowebgpu_command_encoder_copy_texture_to_buffer(
@@ -402,7 +395,7 @@ func (p *CommandEncoder) CopyTextureToBuffer(source *TexelCopyTextureInfo, desti
 	return
 }
 
-func (p *CommandEncoder) CopyTextureToTexture(source *TexelCopyTextureInfo, destination *TexelCopyTextureInfo, copySize *Extent3D) (err error) {
+func (p *CommandEncoder) TryCopyTextureToTexture(source *TexelCopyTextureInfo, destination *TexelCopyTextureInfo, copySize *Extent3D) (err error) {
 	var src C.WGPUTexelCopyTextureInfo
 	if source != nil {
 		src = C.WGPUTexelCopyTextureInfo{
@@ -444,10 +437,7 @@ func (p *CommandEncoder) CopyTextureToTexture(source *TexelCopyTextureInfo, dest
 		}
 	}
 
-	var cb errorCallback = func(_ ErrorType, message string) {
-		err = errors.New("wgpu.(*CommandEncoder).CopyTextureToTexture(): " + message)
-	}
-	errorCallbackHandle := newHandle(cb)
+	errorCallbackHandle := makeErrorCallback(&err)
 	defer errorCallbackHandle.Delete()
 
 	C.gowebgpu_command_encoder_copy_texture_to_texture(
@@ -461,7 +451,7 @@ func (p *CommandEncoder) CopyTextureToTexture(source *TexelCopyTextureInfo, dest
 	return
 }
 
-func (p *CommandEncoder) Finish(descriptor *CommandBufferDescriptor) (*CommandBuffer, error) {
+func (p *CommandEncoder) TryFinish(descriptor *CommandBufferDescriptor) (*CommandBuffer, error) {
 	var desc *C.WGPUCommandBufferDescriptor
 
 	if descriptor != nil && descriptor.Label != "" {
@@ -473,11 +463,9 @@ func (p *CommandEncoder) Finish(descriptor *CommandBufferDescriptor) (*CommandBu
 		}
 	}
 
-	var err error = nil
-	var cb errorCallback = func(_ ErrorType, message string) {
-		err = errors.New("wgpu.(*CommandEncoder).Finish(): " + message)
-	}
-	errorCallbackHandle := newHandle(cb)
+	var err error
+
+	errorCallbackHandle := makeErrorCallback(&err)
 	defer errorCallbackHandle.Delete()
 
 	ref := C.gowebgpu_command_encoder_finish(
@@ -494,14 +482,11 @@ func (p *CommandEncoder) Finish(descriptor *CommandBufferDescriptor) (*CommandBu
 	return releaseOnGC(&CommandBuffer{ref: ref}), nil
 }
 
-func (p *CommandEncoder) InsertDebugMarker(markerLabel string) (err error) {
+func (p *CommandEncoder) TryInsertDebugMarker(markerLabel string) (err error) {
 	markerLabelStr := C.CString(markerLabel)
 	defer C.free(unsafe.Pointer(markerLabelStr))
 
-	var cb errorCallback = func(_ ErrorType, message string) {
-		err = errors.New("wgpu.(*CommandEncoder).InsertDebugMarker(): " + message)
-	}
-	errorCallbackHandle := newHandle(cb)
+	errorCallbackHandle := makeErrorCallback(&err)
 	defer errorCallbackHandle.Delete()
 
 	C.gowebgpu_command_encoder_insert_debug_marker(
@@ -513,11 +498,8 @@ func (p *CommandEncoder) InsertDebugMarker(markerLabel string) (err error) {
 	return
 }
 
-func (p *CommandEncoder) PopDebugGroup() (err error) {
-	var cb errorCallback = func(_ ErrorType, message string) {
-		err = errors.New("wgpu.(*CommandEncoder).PopDebugGroup(): " + message)
-	}
-	errorCallbackHandle := newHandle(cb)
+func (p *CommandEncoder) TryPopDebugGroup() (err error) {
+	errorCallbackHandle := makeErrorCallback(&err)
 	defer errorCallbackHandle.Delete()
 
 	C.gowebgpu_command_encoder_pop_debug_group(
@@ -528,14 +510,11 @@ func (p *CommandEncoder) PopDebugGroup() (err error) {
 	return
 }
 
-func (p *CommandEncoder) PushDebugGroup(groupLabel string) (err error) {
+func (p *CommandEncoder) TryPushDebugGroup(groupLabel string) (err error) {
 	groupLabelStr := C.CString(groupLabel)
 	defer C.free(unsafe.Pointer(groupLabelStr))
 
-	var cb errorCallback = func(_ ErrorType, message string) {
-		err = errors.New("wgpu.(*CommandEncoder).PushDebugGroup(): " + message)
-	}
-	errorCallbackHandle := newHandle(cb)
+	errorCallbackHandle := makeErrorCallback(&err)
 	defer errorCallbackHandle.Delete()
 
 	C.gowebgpu_command_encoder_push_debug_group(
@@ -547,11 +526,8 @@ func (p *CommandEncoder) PushDebugGroup(groupLabel string) (err error) {
 	return
 }
 
-func (p *CommandEncoder) ResolveQuerySet(querySet *QuerySet, firstQuery uint32, queryCount uint32, destination *Buffer, destinationOffset uint64) (err error) {
-	var cb errorCallback = func(_ ErrorType, message string) {
-		err = errors.New("wgpu.(*CommandEncoder).ResolveQuerySet(): " + message)
-	}
-	errorCallbackHandle := newHandle(cb)
+func (p *CommandEncoder) TryResolveQuerySet(querySet *QuerySet, firstQuery uint32, queryCount uint32, destination *Buffer, destinationOffset uint64) (err error) {
+	errorCallbackHandle := makeErrorCallback(&err)
 	defer errorCallbackHandle.Delete()
 
 	C.gowebgpu_command_encoder_resolve_query_set(
@@ -567,11 +543,8 @@ func (p *CommandEncoder) ResolveQuerySet(querySet *QuerySet, firstQuery uint32, 
 	return
 }
 
-func (p *CommandEncoder) WriteTimestamp(querySet *QuerySet, queryIndex uint32) (err error) {
-	var cb errorCallback = func(_ ErrorType, message string) {
-		err = errors.New("wgpu.(*CommandEncoder).WriteTimestamp(): " + message)
-	}
-	errorCallbackHandle := newHandle(cb)
+func (p *CommandEncoder) TryWriteTimestamp(querySet *QuerySet, queryIndex uint32) (err error) {
+	errorCallbackHandle := makeErrorCallback(&err)
 	defer errorCallbackHandle.Delete()
 
 	C.gowebgpu_command_encoder_write_timestamp(

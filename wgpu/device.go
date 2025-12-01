@@ -178,10 +178,31 @@ static inline WGPUTexture gowebgpu_device_create_texture(WGPUDevice device, WGPU
 import "C"
 import (
 	"errors"
+	"runtime"
+	"strings"
 	"unsafe"
 )
 
 type errorCallback func(typ ErrorType, message string)
+
+func makeErrorCallback(err *error) handle {
+	var callers [1]uintptr
+	runtime.Callers(2, callers[:])
+
+	return newHandle(errorCallback(func(typ ErrorType, message string) {
+		frames := runtime.CallersFrames(callers[:])
+		frame, _ := frames.Next()
+
+		context := frame.Func.Name()
+
+		// strip github.com/.../ from method name
+		if idx := strings.LastIndexByte(context, '/'); idx >= 0 {
+			context = context[idx+1:]
+		}
+
+		*err = Error{Context: context, Wrapped: errors.New(message)}
+	}))
+}
 
 //export gowebgpu_error_callback_go
 func gowebgpu_error_callback_go(_type C.WGPUErrorType, message C.WGPUStringView, userdata unsafe.Pointer) {
@@ -192,7 +213,7 @@ func gowebgpu_error_callback_go(_type C.WGPUErrorType, message C.WGPUStringView,
 	}
 }
 
-func (p *Device) CreateBindGroup(descriptor *BindGroupDescriptor) (*BindGroup, error) {
+func (p *Device) TryCreateBindGroup(descriptor *BindGroupDescriptor) (*BindGroup, error) {
 	var desc C.WGPUBindGroupDescriptor
 
 	if descriptor != nil {
@@ -241,10 +262,8 @@ func (p *Device) CreateBindGroup(descriptor *BindGroupDescriptor) (*BindGroup, e
 	}
 
 	var err error = nil
-	var cb errorCallback = func(_ ErrorType, message string) {
-		err = errors.New("wgpu.(*Device).CreateBindGroup(): " + message)
-	}
-	errorCallbackHandle := newHandle(cb)
+
+	errorCallbackHandle := makeErrorCallback(&err)
 	defer errorCallbackHandle.Delete()
 
 	ref := C.gowebgpu_device_create_bind_group(
@@ -291,7 +310,7 @@ type BindGroupLayoutEntry struct {
 	StorageTexture StorageTextureBindingLayout
 }
 
-func (p *Device) CreateBindGroupLayout(descriptor *BindGroupLayoutDescriptor) (*BindGroupLayout, error) {
+func (p *Device) TryCreateBindGroupLayout(descriptor *BindGroupLayoutDescriptor) (*BindGroupLayout, error) {
 	var desc C.WGPUBindGroupLayoutDescriptor
 
 	if descriptor != nil {
@@ -346,10 +365,8 @@ func (p *Device) CreateBindGroupLayout(descriptor *BindGroupLayoutDescriptor) (*
 	}
 
 	var err error = nil
-	var cb errorCallback = func(_ ErrorType, message string) {
-		err = errors.New("wgpu.(*Device).CreateBindGroupLayout(): " + message)
-	}
-	errorCallbackHandle := newHandle(cb)
+
+	errorCallbackHandle := makeErrorCallback(&err)
 	defer errorCallbackHandle.Delete()
 
 	ref := C.gowebgpu_device_create_bind_group_layout(
@@ -365,7 +382,7 @@ func (p *Device) CreateBindGroupLayout(descriptor *BindGroupLayoutDescriptor) (*
 	return releaseOnGC(&BindGroupLayout{ref: ref}), nil
 }
 
-func (p *Device) CreateBuffer(descriptor *BufferDescriptor) (*Buffer, error) {
+func (p *Device) TryCreateBuffer(descriptor *BufferDescriptor) (*Buffer, error) {
 	var desc C.WGPUBufferDescriptor
 
 	if descriptor != nil {
@@ -383,10 +400,8 @@ func (p *Device) CreateBuffer(descriptor *BufferDescriptor) (*Buffer, error) {
 	}
 
 	var err error = nil
-	var cb errorCallback = func(_ ErrorType, message string) {
-		err = errors.New("wgpu.(*Device).CreateBuffer(): " + message)
-	}
-	errorCallbackHandle := newHandle(cb)
+
+	errorCallbackHandle := makeErrorCallback(&err)
 	defer errorCallbackHandle.Delete()
 
 	ref := C.gowebgpu_device_create_buffer(
@@ -402,7 +417,7 @@ func (p *Device) CreateBuffer(descriptor *BufferDescriptor) (*Buffer, error) {
 	return releaseOnGC(&Buffer{device: p.addRef(), ref: ref}), nil
 }
 
-func (p *Device) CreateCommandEncoder(descriptor *CommandEncoderDescriptor) (*CommandEncoder, error) {
+func (p *Device) TryCreateCommandEncoder(descriptor *CommandEncoderDescriptor) (*CommandEncoder, error) {
 	var desc *C.WGPUCommandEncoderDescriptor
 
 	if descriptor != nil && descriptor.Label != "" {
@@ -418,10 +433,8 @@ func (p *Device) CreateCommandEncoder(descriptor *CommandEncoderDescriptor) (*Co
 	}
 
 	var err error = nil
-	var cb errorCallback = func(_ ErrorType, message string) {
-		err = errors.New("wgpu.(*Device).CreateCommandEncoder(): " + message)
-	}
-	errorCallbackHandle := newHandle(cb)
+
+	errorCallbackHandle := makeErrorCallback(&err)
 	defer errorCallbackHandle.Delete()
 
 	ref := C.gowebgpu_device_create_command_encoder(
@@ -448,7 +461,7 @@ type ComputePipelineDescriptor struct {
 	Compute ProgrammableStageDescriptor
 }
 
-func (p *Device) CreateComputePipeline(descriptor *ComputePipelineDescriptor) (*ComputePipeline, error) {
+func (p *Device) TryCreateComputePipeline(descriptor *ComputePipelineDescriptor) (*ComputePipeline, error) {
 	var desc C.WGPUComputePipelineDescriptor
 
 	if descriptor != nil {
@@ -479,10 +492,8 @@ func (p *Device) CreateComputePipeline(descriptor *ComputePipelineDescriptor) (*
 	}
 
 	var err error = nil
-	var cb errorCallback = func(_ ErrorType, message string) {
-		err = errors.New("wgpu.(*Device).CreateComputePipeline(): " + message)
-	}
-	errorCallbackHandle := newHandle(cb)
+
+	errorCallbackHandle := makeErrorCallback(&err)
 	defer errorCallbackHandle.Delete()
 
 	ref := C.gowebgpu_device_create_compute_pipeline(
@@ -510,7 +521,7 @@ type PipelineLayoutDescriptor struct {
 	PushConstantRanges []PushConstantRange
 }
 
-func (p *Device) CreatePipelineLayout(descriptor *PipelineLayoutDescriptor) (*PipelineLayout, error) {
+func (p *Device) TryCreatePipelineLayout(descriptor *PipelineLayoutDescriptor) (*PipelineLayout, error) {
 	var desc C.WGPUPipelineLayoutDescriptor
 
 	if descriptor != nil {
@@ -568,10 +579,8 @@ func (p *Device) CreatePipelineLayout(descriptor *PipelineLayoutDescriptor) (*Pi
 	}
 
 	var err error = nil
-	var cb errorCallback = func(_ ErrorType, message string) {
-		err = errors.New("wgpu.(*Device).CreatePipelineLayout(): " + message)
-	}
-	errorCallbackHandle := newHandle(cb)
+
+	errorCallbackHandle := makeErrorCallback(&err)
 	defer errorCallbackHandle.Delete()
 
 	ref := C.gowebgpu_device_create_pipeline_layout(
@@ -594,7 +603,7 @@ type QuerySetDescriptor struct {
 	PipelineStatistics []PipelineStatisticName
 }
 
-func (p *Device) CreateQuerySet(descriptor *QuerySetDescriptor) (*QuerySet, error) {
+func (p *Device) TryCreateQuerySet(descriptor *QuerySetDescriptor) (*QuerySet, error) {
 	var desc C.WGPUQuerySetDescriptor
 
 	if descriptor != nil {
@@ -624,10 +633,8 @@ func (p *Device) CreateQuerySet(descriptor *QuerySetDescriptor) (*QuerySet, erro
 	}
 
 	var err error = nil
-	var cb errorCallback = func(_ ErrorType, message string) {
-		err = errors.New("wgpu.(*Device).CreateQuerySet(): " + message)
-	}
-	errorCallbackHandle := newHandle(cb)
+
+	errorCallbackHandle := makeErrorCallback(&err)
 	defer errorCallbackHandle.Delete()
 
 	ref := C.gowebgpu_device_create_query_set(
@@ -652,7 +659,7 @@ type RenderBundleEncoderDescriptor struct {
 	StencilReadOnly    bool
 }
 
-func (p *Device) CreateRenderBundleEncoder(descriptor *RenderBundleEncoderDescriptor) (*RenderBundleEncoder, error) {
+func (p *Device) TryCreateRenderBundleEncoder(descriptor *RenderBundleEncoderDescriptor) (*RenderBundleEncoder, error) {
 	var desc C.WGPURenderBundleEncoderDescriptor
 
 	if descriptor != nil {
@@ -767,7 +774,7 @@ type MultisampleState struct {
 	AlphaToCoverageEnabled bool
 }
 
-func (p *Device) CreateRenderPipeline(descriptor *RenderPipelineDescriptor) (*RenderPipeline, error) {
+func (p *Device) TryCreateRenderPipeline(descriptor *RenderPipelineDescriptor) (*RenderPipeline, error) {
 	var desc C.WGPURenderPipelineDescriptor
 
 	if descriptor != nil {
@@ -954,10 +961,8 @@ func (p *Device) CreateRenderPipeline(descriptor *RenderPipelineDescriptor) (*Re
 	}
 
 	var err error = nil
-	var cb errorCallback = func(_ ErrorType, message string) {
-		err = errors.New("wgpu.(*Device).CreateRenderPipeline(): " + message)
-	}
-	errorCallbackHandle := newHandle(cb)
+
+	errorCallbackHandle := makeErrorCallback(&err)
 	defer errorCallbackHandle.Delete()
 
 	ref := C.gowebgpu_device_create_render_pipeline(
@@ -973,7 +978,7 @@ func (p *Device) CreateRenderPipeline(descriptor *RenderPipelineDescriptor) (*Re
 	return releaseOnGC(&RenderPipeline{ref: ref}), nil
 }
 
-func (p *Device) CreateSampler(descriptor *SamplerDescriptor) (*Sampler, error) {
+func (p *Device) TryCreateSampler(descriptor *SamplerDescriptor) (*Sampler, error) {
 	var desc *C.WGPUSamplerDescriptor
 
 	if descriptor != nil {
@@ -1000,10 +1005,8 @@ func (p *Device) CreateSampler(descriptor *SamplerDescriptor) (*Sampler, error) 
 	}
 
 	var err error = nil
-	var cb errorCallback = func(_ ErrorType, message string) {
-		err = errors.New("wgpu.(*Device).CreateSampler(): " + message)
-	}
-	errorCallbackHandle := newHandle(cb)
+
+	errorCallbackHandle := makeErrorCallback(&err)
 	defer errorCallbackHandle.Delete()
 
 	ref := C.gowebgpu_device_create_sampler(
@@ -1032,7 +1035,7 @@ type ShaderModuleDescriptor struct {
 	GLSLSource  *ShaderSourceGLSL
 }
 
-func (p *Device) CreateShaderModule(descriptor *ShaderModuleDescriptor) (*ShaderModule, error) {
+func (p *Device) TryCreateShaderModule(descriptor *ShaderModuleDescriptor) (*ShaderModule, error) {
 	var desc C.WGPUShaderModuleDescriptor
 
 	if descriptor != nil {
@@ -1138,10 +1141,7 @@ func (p *Device) CreateShaderModule(descriptor *ShaderModuleDescriptor) (*Shader
 	}
 
 	var err error = nil
-	var cb errorCallback = func(_ ErrorType, message string) {
-		err = errors.New("wgpu.(*Device).CreateShaderModule(): " + message)
-	}
-	errorCallbackHandle := newHandle(cb)
+	errorCallbackHandle := makeErrorCallback(&err)
 	defer errorCallbackHandle.Delete()
 
 	ref := C.gowebgpu_device_create_shader_module(
@@ -1157,7 +1157,7 @@ func (p *Device) CreateShaderModule(descriptor *ShaderModuleDescriptor) (*Shader
 	return releaseOnGC(&ShaderModule{ref: ref}), nil
 }
 
-func (p *Device) CreateTexture(descriptor *TextureDescriptor) (*Texture, error) {
+func (p *Device) TryCreateTexture(descriptor *TextureDescriptor) (*Texture, error) {
 	var desc C.WGPUTextureDescriptor
 
 	if descriptor != nil {
@@ -1184,10 +1184,8 @@ func (p *Device) CreateTexture(descriptor *TextureDescriptor) (*Texture, error) 
 	}
 
 	var err error = nil
-	var cb errorCallback = func(_ ErrorType, message string) {
-		err = errors.New("wgpu.(*Device).CreateTexture(): " + message)
-	}
-	errorCallbackHandle := newHandle(cb)
+
+	errorCallbackHandle := makeErrorCallback(&err)
 	defer errorCallbackHandle.Delete()
 
 	ref := C.gowebgpu_device_create_texture(

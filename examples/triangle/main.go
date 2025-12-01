@@ -71,7 +71,7 @@ func InitState[T interface{ GetSize() (int, int) }](window T, sd *wgpu.SurfaceDe
 	}
 	s.queue = s.device.GetQueue()
 
-	shader, err := s.device.CreateShaderModule(&wgpu.ShaderModuleDescriptor{
+	shader, err := s.device.TryCreateShaderModule(&wgpu.ShaderModuleDescriptor{
 		Label:      "shader.wgsl",
 		WGSLSource: &wgpu.ShaderSourceWGSL{Code: shader},
 	})
@@ -94,7 +94,7 @@ func InitState[T interface{ GetSize() (int, int) }](window T, sd *wgpu.SurfaceDe
 
 	s.surface.Configure(s.device, s.config)
 
-	s.pipeline, err = s.device.CreateRenderPipeline(&wgpu.RenderPipelineDescriptor{
+	s.pipeline, err = s.device.TryCreateRenderPipeline(&wgpu.RenderPipelineDescriptor{
 		Label: "Render Pipeline",
 		Vertex: wgpu.VertexState{
 			Module:     shader,
@@ -140,17 +140,17 @@ func (s *State) Resize(width, height int) {
 }
 
 func (s *State) Render() error {
-	nextTexture, err := s.surface.GetCurrentTexture()
+	nextTexture, err := s.surface.TryGetCurrentTexture()
 	if err != nil {
 		return err
 	}
-	view, err := nextTexture.CreateView(nil)
+	view, err := nextTexture.TryCreateView(nil)
 	if err != nil {
 		return err
 	}
 	defer view.Release()
 
-	encoder, err := s.device.CreateCommandEncoder(&wgpu.CommandEncoderDescriptor{
+	encoder, err := s.device.TryCreateCommandEncoder(&wgpu.CommandEncoderDescriptor{
 		Label: "Command Encoder",
 	})
 	if err != nil {
@@ -171,10 +171,10 @@ func (s *State) Render() error {
 
 	renderPass.SetPipeline(s.pipeline)
 	renderPass.Draw(3, 1, 0, 0)
-	renderPass.End()
+	renderPass.TryEnd()
 	renderPass.Release() // must release
 
-	cmdBuffer, err := encoder.Finish(nil)
+	cmdBuffer, err := encoder.TryFinish(nil)
 	if err != nil {
 		return err
 	}

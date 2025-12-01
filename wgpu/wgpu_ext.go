@@ -3,7 +3,7 @@ package wgpu
 const (
 	// Buffer-Texture copies must have `TextureDataLayout.BytesPerRow` aligned to this number.
 	//
-	// This doesn't apply to `(*Queue).WriteTexture()`.
+	// This doesn't apply to `(*Queue).TryWriteTexture()`.
 	CopyBytesPerRowAlignment = 256
 	// An offset into the query resolve buffer has to be aligned to this.
 	QueryResolveBufferAlignment = 256

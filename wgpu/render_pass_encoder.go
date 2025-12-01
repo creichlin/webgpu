@@ -24,7 +24,6 @@ static inline void gowebgpu_render_pass_encoder_end(WGPURenderPassEncoder render
 */
 import "C"
 import (
-	"errors"
 	"sync/atomic"
 	"unsafe"
 )
@@ -70,11 +69,8 @@ func (p *RenderPassEncoder) DrawIndirect(indirectBuffer *Buffer, indirectOffset 
 	C.wgpuRenderPassEncoderDrawIndirect(p.ref, indirectBuffer.ref, C.uint64_t(indirectOffset))
 }
 
-func (p *RenderPassEncoder) End() (err error) {
-	var cb errorCallback = func(_ ErrorType, message string) {
-		err = errors.New("wgpu.(*RenderPassEncoder).End(): " + message)
-	}
-	errorCallbackHandle := newHandle(cb)
+func (p *RenderPassEncoder) TryEnd() (err error) {
+	errorCallbackHandle := makeErrorCallback(&err)
 	defer errorCallbackHandle.Delete()
 
 	C.gowebgpu_render_pass_encoder_end(

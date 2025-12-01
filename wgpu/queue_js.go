@@ -16,13 +16,13 @@ type Queue struct {
 	jsValue js.Value
 }
 
-func (g Queue) toJS() any {
+func (g *Queue) toJS() any {
 	return g.jsValue
 }
 
 // Submit as described:
 // https://gpuweb.github.io/gpuweb/#dom-gpuqueue-submit
-func (g Queue) Submit(commandBuffers ...*CommandBuffer) SubmissionIndex {
+func (g *Queue) Submit(commandBuffers ...*CommandBuffer) SubmissionIndex {
 	jsSequence := mapSlice(commandBuffers, func(buffer *CommandBuffer) any {
 		return pointerToJS(buffer)
 	})
@@ -30,9 +30,9 @@ func (g Queue) Submit(commandBuffers ...*CommandBuffer) SubmissionIndex {
 	return SubmissionIndex(0)
 }
 
-// WriteBuffer as described:
+// TryWriteBuffer as described:
 // https://gpuweb.github.io/gpuweb/#dom-gpuqueue-writebuffer
-func (g Queue) WriteBuffer(buffer *Buffer, offset uint64, data []byte) (err error) {
+func (g *Queue) TryWriteBuffer(buffer *Buffer, offset uint64, data []byte) (err error) {
 	defer runtime.KeepAlive(data)
 
 	address := uintptr(unsafe.Pointer(&data[0]))
@@ -40,9 +40,9 @@ func (g Queue) WriteBuffer(buffer *Buffer, offset uint64, data []byte) (err erro
 	return
 }
 
-// WriteTexture as described:
+// TryWriteTexture as described:
 // https://gpuweb.github.io/gpuweb/#dom-gpuqueue-writetexture
-func (g Queue) WriteTexture(destination *TexelCopyTextureInfo, data []byte, dataLayout *TexelCopyBufferLayout, writeSize *Extent3D) (err error) {
+func (g *Queue) TryWriteTexture(destination *TexelCopyTextureInfo, data []byte, dataLayout *TexelCopyBufferLayout, writeSize *Extent3D) (err error) {
 	defer runtime.KeepAlive(data)
 
 	address := uintptr(unsafe.Pointer(&data[0]))
@@ -52,12 +52,12 @@ func (g Queue) WriteTexture(destination *TexelCopyTextureInfo, data []byte, data
 
 // OnSubmittedWorkDone as described:
 // https://gpuweb.github.io/gpuweb/#dom-gpuqueue-onsubmittedworkdone
-func (g Queue) OnSubmittedWorkDone(callback QueueWorkDoneCallback) {
+func (g *Queue) OnSubmittedWorkDone(callback QueueWorkDoneCallback) {
 	jsx.Await(g.jsValue.Call("onSubmittedWorkDone")) // TODO(kai): is this correct?
 	callback(QueueWorkDoneStatusSuccess)
 }
 
-func (g Queue) Release() {} // no-op
+func (g *Queue) Release() {} // no-op
 
 var queueWriteBuffer js.Value
 var queueWriteTexture js.Value

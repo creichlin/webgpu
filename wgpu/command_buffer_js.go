@@ -10,8 +10,8 @@ type CommandBuffer struct {
 	jsValue js.Value
 }
 
-func (g CommandBuffer) toJS() any {
+func (g *CommandBuffer) toJS() any {
 	return g.jsValue
 }
 
-func (g CommandBuffer) Release() {} // no-op
+func (g *CommandBuffer) Release() {} // no-op

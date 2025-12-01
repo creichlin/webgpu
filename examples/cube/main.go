@@ -197,7 +197,7 @@ func InitState(window *glfw.Window) (s *State, err error) {
 
 	s.surface.Configure(s.device, s.config)
 
-	s.vertexBuf, err = s.device.CreateBufferInit(&wgpu.BufferInitDescriptor{
+	s.vertexBuf, err = s.device.TryCreateBufferInit(&wgpu.BufferInitDescriptor{
 		Label:    "Vertex Buffer",
 		Contents: wgpu.ToBytes(vertexData[:]),
 		Usage:    wgpu.BufferUsageVertex,
@@ -206,7 +206,7 @@ func InitState(window *glfw.Window) (s *State, err error) {
 		return s, err
 	}
 
-	s.indexBuf, err = s.device.CreateBufferInit(&wgpu.BufferInitDescriptor{
+	s.indexBuf, err = s.device.TryCreateBufferInit(&wgpu.BufferInitDescriptor{
 		Label:    "Index Buffer",
 		Contents: wgpu.ToBytes(indexData[:]),
 		Usage:    wgpu.BufferUsageIndex,
@@ -221,7 +221,7 @@ func InitState(window *glfw.Window) (s *State, err error) {
 		Height:             texelsSize,
 		DepthOrArrayLayers: 1,
 	}
-	texture, err := s.device.CreateTexture(&wgpu.TextureDescriptor{
+	texture, err := s.device.TryCreateTexture(&wgpu.TextureDescriptor{
 		Size:          textureExtent,
 		MipLevelCount: 1,
 		SampleCount:   1,
@@ -234,13 +234,13 @@ func InitState(window *glfw.Window) (s *State, err error) {
 	}
 	defer texture.Release()
 
-	textureView, err := texture.CreateView(nil)
+	textureView, err := texture.TryCreateView(nil)
 	if err != nil {
 		return s, err
 	}
 	defer textureView.Release()
 
-	s.queue.WriteTexture(
+	s.queue.TryWriteTexture(
 		texture.AsImageCopy(),
 		wgpu.ToBytes(texels[:]),
 		&wgpu.TexelCopyBufferLayout{
@@ -252,7 +252,7 @@ func InitState(window *glfw.Window) (s *State, err error) {
 	)
 
 	mxTotal := generateMatrix(float32(s.config.Width) / float32(s.config.Height))
-	s.uniformBuf, err = s.device.CreateBufferInit(&wgpu.BufferInitDescriptor{
+	s.uniformBuf, err = s.device.TryCreateBufferInit(&wgpu.BufferInitDescriptor{
 		Label:    "Uniform Buffer",
 		Contents: wgpu.ToBytes(mxTotal[:]),
 		Usage:    wgpu.BufferUsageUniform | wgpu.BufferUsageCopyDst,
@@ -261,7 +261,7 @@ func InitState(window *glfw.Window) (s *State, err error) {
 		return s, err
 	}
 
-	shader, err := s.device.CreateShaderModule(&wgpu.ShaderModuleDescriptor{
+	shader, err := s.device.TryCreateShaderModule(&wgpu.ShaderModuleDescriptor{
 		Label:      "shader.wgsl",
 		WGSLSource: &wgpu.ShaderSourceWGSL{Code: shader},
 	})
@@ -270,7 +270,7 @@ func InitState(window *glfw.Window) (s *State, err error) {
 	}
 	defer shader.Release()
 
-	s.pipeline, err = s.device.CreateRenderPipeline(&wgpu.RenderPipelineDescriptor{
+	s.pipeline, err = s.device.TryCreateRenderPipeline(&wgpu.RenderPipelineDescriptor{
 		Vertex: wgpu.VertexState{
 			Module:     shader,
 			EntryPoint: "vs_main",
@@ -306,7 +306,7 @@ func InitState(window *glfw.Window) (s *State, err error) {
 	bindGroupLayout := s.pipeline.GetBindGroupLayout(0)
 	defer bindGroupLayout.Release()
 
-	s.bindGroup, err = s.device.CreateBindGroup(&wgpu.BindGroupDescriptor{
+	s.bindGroup, err = s.device.TryCreateBindGroup(&wgpu.BindGroupDescriptor{
 		Layout: bindGroupLayout,
 		Entries: []wgpu.BindGroupEntry{
 			{
@@ -334,24 +334,24 @@ func (s *State) Resize(width, height int) {
 		s.config.Height = uint32(height)
 
 		mxTotal := generateMatrix(float32(width) / float32(height))
-		s.queue.WriteBuffer(s.uniformBuf, 0, wgpu.ToBytes(mxTotal[:]))
+		s.queue.TryWriteBuffer(s.uniformBuf, 0, wgpu.ToBytes(mxTotal[:]))
 
 		s.surface.Configure(s.device, s.config)
 	}
 }
 
 func (s *State) Render() error {
-	nextTexture, err := s.surface.GetCurrentTexture()
+	nextTexture, err := s.surface.TryGetCurrentTexture()
 	if err != nil {
 		return err
 	}
-	view, err := nextTexture.CreateView(nil)
+	view, err := nextTexture.TryCreateView(nil)
 	if err != nil {
 		return err
 	}
 	defer view.Release()
 
-	encoder, err := s.device.CreateCommandEncoder(nil)
+	encoder, err := s.device.TryCreateCommandEncoder(nil)
 	if err != nil {
 		return err
 	}
@@ -373,10 +373,10 @@ func (s *State) Render() error {
 	renderPass.SetIndexBuffer(s.indexBuf, wgpu.IndexFormatUint16, 0, wgpu.WholeSize)
 	renderPass.SetVertexBuffer(0, s.vertexBuf, 0, wgpu.WholeSize)
 	renderPass.DrawIndexed(uint32(len(indexData)), 1, 0, 0, 0)
-	renderPass.End()
+	renderPass.TryEnd()
 	renderPass.Release() // must release
 
-	cmdBuffer, err := encoder.Finish(nil)
+	cmdBuffer, err := encoder.TryFinish(nil)
 	if err != nil {
 		return err
 	}
