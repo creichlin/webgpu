@@ -2,18 +2,6 @@
 
 package wgpu
 
-import (
-	"syscall/js"
-)
-
-// NewDevice creates a new GPUDevice that uses the specified JavaScript
-// reference of the device.
-func NewDevice(jsValue js.Value) Device {
-	return Device{
-		jsValue: jsValue,
-	}
-}
-
 // GetQueue returns a Queue as described:
 // https://gpuweb.github.io/gpuweb/#dom-gpudevice-queue
 func (g *Device) GetQueue() *Queue {
