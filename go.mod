@@ -10,3 +10,7 @@ require (
 	github.com/oliverbestmann/webgpu/libs-linux v0.0.0-20251123130508-41a15cd9f5d4
 	github.com/oliverbestmann/webgpu/libs-windows v0.0.0-20251123134324-0b4e31ddbbf9
 )
+
+retract (
+	v1.27.0 // published before deciding on a version scheme. we start at v1.0.0
+)
