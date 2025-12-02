@@ -4,11 +4,11 @@ Current upstream version: v27.0.2.0
 
 Go bindings for WebGPU, a cross-platform, safe graphics API.
 
-It runs natively using [wgpu-native](https://github.com/gfx-rs/wgpu-native) on Vulkan, Metal, D3D12 and OpenGL ES.
-As there is still no cgo for wasm, wasm/web builds with `GOOS=js` are using the browser WebGPU interface
-directly.
+It runs natively using [wgpu-native](https://github.com/gfx-rs/wgpu-native) on Vulkan, Metal, D3D12 and OpenGL ES. As
+there is still no cgo for wasm, wasm/web builds with `GOOS=js` are using the browser WebGPU interface directly.
 
-This fork adds garbage collection to types returned by webgpu.
+This fork enhances the API by introducing garbage collection for types returned by WebGPU, preventing object leaks when
+`Release()` is not called, thus mirroring browser/JavaScript WebGPU behavior.
 
 For more information, see:
 
@@ -18,24 +18,34 @@ For more information, see:
 
 The included static libraries downloaded from the wgpu-native project.
 
+## Error handling
+
+Error handling in this library is intentionally designed to use panics for most WebGPU-related validation errors. This
+decision is made to simplify GPU programming by immediately highlighting programming mistakes, similar to how `arr[idx]`
+panics in Go. Many of these errors are validation-related and considered "programmer errors" rather than "expected" or
+"user errors", where graceful error handling is less applicable. For example passing the wrong `TextureFormat` to a pipeline,
+or setting the `SampleCount` of a texture. However, this approach does not affect methods that can
+genuinely fail, such as `RequestAdapter`.
+
+If maintaining panic-free code is essential for your needs, there exists a
+`Try` variant for most methods, such as `TryWriteBuffer(...) error`, which allows you to handle errors without panics.
+
 ## Prebuild libraries
 
-This repository uses prebuild libraries provided by `wgpu-native`.
-All libraries combined are more than 512mb in size, which is more than `go get` allows
-in a single library. THis is an "opinionated limited" which is not configurable.
+This repository uses prebuild libraries provided by `wgpu-native`. All libraries combined are more than 512mb in size,
+which is more than `go get` allows in a single library. This is an "opinionated limit" by golang which is not configurable.
 
-To work around that, libraries for the different systems are split into branches.
-An example is here: https://github.com/oliverbestmann/webgpu/tree/libs-linux/libs-linux
+To work around that, libraries for the different systems are split into branches. An example is here:
+https://github.com/oliverbestmann/webgpu/tree/libs-linux/libs-linux
 
-The `update-wgpu.sh` script updates all those branches and updates the go.mod file to
-pull the prebuild libraries as dependencies in.
+The `update-wgpu.sh` script updates all those branches and updates the go.mod file to pull the prebuild libraries as
+dependencies in.
 
 ## Examples
 
-You can find some examples in the examples directory:
-https://github.com/oliverbestmann/webgpu/tree/main/examples
+You can find some examples in the examples directory: https://github.com/oliverbestmann/webgpu/tree/main/examples
 
 ## Special thanks
 
-This is a fork of [cogentcore/webgpu/](https://github.com/cogentcore/webgpu/).
-Thanks to them for the work they put into WebGPU for Go.
+This is a fork of [cogentcore/webgpu/](https://github.com/cogentcore/webgpu/). Thanks to them for the work they put into
+WebGPU for Go.
