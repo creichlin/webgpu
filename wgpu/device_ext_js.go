@@ -7,10 +7,11 @@ import (
 )
 
 // TODO(kai): this only needs to be separate for js because
-// [Buffer.GetMappedRange] does not work correctly without GopherJS.
-func (p *Device) TryCreateBufferInit(descriptor *BufferInitDescriptor) (*Buffer, error) {
+//
+//	[Buffer.GetMappedRange] does not work correctly without GopherJS.
+func (g *Device) TryCreateBufferInit(descriptor *BufferInitDescriptor) (*Buffer, error) {
 	if len(descriptor.Contents) == 0 {
-		return p.TryCreateBuffer(&BufferDescriptor{
+		return g.TryCreateBuffer(&BufferDescriptor{
 			Label:            descriptor.Label,
 			Size:             0,
 			Usage:            descriptor.Usage,
@@ -22,7 +23,7 @@ func (p *Device) TryCreateBufferInit(descriptor *BufferInitDescriptor) (*Buffer,
 	const alignMask = CopyBufferAlignment - 1
 	paddedSize := max(((unpaddedSize + alignMask) & ^alignMask), CopyBufferAlignment)
 
-	buffer, err := p.TryCreateBuffer(&BufferDescriptor{
+	buffer, err := g.TryCreateBuffer(&BufferDescriptor{
 		Label:            descriptor.Label,
 		Size:             uint64(paddedSize),
 		Usage:            descriptor.Usage,

@@ -8,20 +8,12 @@ import (
 
 // ComputePassDescriptor as described:
 // https://gpuweb.github.io/gpuweb/#dictdef-gpucomputepassdescriptor
-type ComputePassDescriptor struct{}
+type ComputePassDescriptor struct {
+	Label string
+}
 
 func (g *ComputePassDescriptor) toJS() any {
-	return map[string]any{}
-}
-
-// ComputePassEncoder as described:
-// https://gpuweb.github.io/gpuweb/#gpucomputepassencoder
-type ComputePassEncoder struct {
-	jsValue js.Value
-}
-
-func (g *ComputePassEncoder) toJS() any {
-	return g.jsValue
+	return map[string]any{"label": g.Label}
 }
 
 // SetPipeline as described:
@@ -66,5 +58,3 @@ func (g *ComputePassEncoder) TryEnd() error {
 	g.jsValue.Call("end")
 	return nil
 }
-
-func (g *ComputePassEncoder) Release() {} // no-op

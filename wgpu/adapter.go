@@ -17,9 +17,9 @@ import (
 	"unsafe"
 )
 
-func (p *Adapter) GetFeatures() []FeatureName {
+func (g *Adapter) GetFeatures() []FeatureName {
 	var supportedFeatures C.WGPUSupportedFeatures
-	C.wgpuAdapterGetFeatures(p.ref, (*C.WGPUSupportedFeatures)(unsafe.Pointer(&supportedFeatures)))
+	C.wgpuAdapterGetFeatures(g.ref, (*C.WGPUSupportedFeatures)(unsafe.Pointer(&supportedFeatures)))
 	defer C.free(unsafe.Pointer(supportedFeatures.features))
 
 	features := make([]FeatureName, supportedFeatures.featureCount)
@@ -32,14 +32,14 @@ func (p *Adapter) GetFeatures() []FeatureName {
 	return features
 }
 
-func (p *Adapter) GetLimits() Limits {
+func (g *Adapter) GetLimits() Limits {
 	var limits C.WGPULimits
 
 	nativeLimits := (*C.WGPUNativeLimits)(C.malloc(C.size_t(unsafe.Sizeof(C.WGPUNativeLimits{}))))
 	defer C.free(unsafe.Pointer(nativeLimits))
 	limits.nextInChain = (*C.WGPUChainedStructOut)(unsafe.Pointer(nativeLimits))
 
-	C.wgpuAdapterGetLimits(p.ref, &limits)
+	C.wgpuAdapterGetLimits(g.ref, &limits)
 
 	return Limits{
 		MaxTextureDimension1D:                     uint32(limits.maxTextureDimension1D),
@@ -78,10 +78,10 @@ func (p *Adapter) GetLimits() Limits {
 	}
 }
 
-func (p *Adapter) GetInfo() AdapterInfo {
+func (g *Adapter) GetInfo() AdapterInfo {
 	var info C.WGPUAdapterInfo
 
-	C.wgpuAdapterGetInfo(p.ref, &info)
+	C.wgpuAdapterGetInfo(g.ref, &info)
 
 	return AdapterInfo{
 		Vendor:       C.GoStringN(info.vendor.data, C.int(info.vendor.length)),
@@ -95,8 +95,8 @@ func (p *Adapter) GetInfo() AdapterInfo {
 	}
 }
 
-func (p *Adapter) HasFeature(feature FeatureName) bool {
-	hasFeature := C.wgpuAdapterHasFeature(p.ref, C.WGPUFeatureName(feature))
+func (g *Adapter) HasFeature(feature FeatureName) bool {
+	hasFeature := C.wgpuAdapterHasFeature(g.ref, C.WGPUFeatureName(feature))
 	return goBool(hasFeature)
 }
 
@@ -125,7 +125,7 @@ func gowebgpu_device_lost_callback_go(reason C.WGPUDeviceLostReason, message *C.
 	}
 }
 
-func (p *Adapter) RequestDevice(descriptor *DeviceDescriptor) (*Device, error) {
+func (g *Adapter) RequestDevice(descriptor *DeviceDescriptor) (*Device, error) {
 	var desc *C.WGPUDeviceDescriptor = nil
 
 	if descriptor != nil {
@@ -235,7 +235,7 @@ func (p *Adapter) RequestDevice(descriptor *DeviceDescriptor) (*Device, error) {
 		device = d
 	}
 	handle := newHandle(cb)
-	C.wgpuAdapterRequestDevice(p.ref, desc, C.WGPURequestDeviceCallbackInfo{
+	C.wgpuAdapterRequestDevice(g.ref, desc, C.WGPURequestDeviceCallbackInfo{
 		callback:  C.WGPURequestDeviceCallback(C.gowebgpu_request_device_callback_c),
 		userdata1: handle.ToPointer(),
 	})

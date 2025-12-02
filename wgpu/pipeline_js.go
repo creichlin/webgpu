@@ -2,10 +2,6 @@
 
 package wgpu
 
-import (
-	"syscall/js"
-)
-
 // PipelineLayoutDescriptor as described:
 // https://gpuweb.github.io/gpuweb/#dictdef-gpupipelinelayoutdescriptor
 type PipelineLayoutDescriptor struct {
@@ -13,25 +9,13 @@ type PipelineLayoutDescriptor struct {
 	BindGroupLayouts []*BindGroupLayout
 }
 
-func (g PipelineLayoutDescriptor) toJS() any {
+func (g *PipelineLayoutDescriptor) toJS() any {
 	return map[string]any{
 		"bindGroupLayouts": mapSlice(g.BindGroupLayouts, func(layout *BindGroupLayout) any {
 			return pointerToJS(layout)
 		}),
 	}
 }
-
-// PipelineLayout as described:
-// https://gpuweb.github.io/gpuweb/#gpupipelinelayout
-type PipelineLayout struct {
-	jsValue js.Value
-}
-
-func (g PipelineLayout) toJS() any {
-	return g.jsValue
-}
-
-func (g PipelineLayout) Release() {} // no-op
 
 // VertexAttribute as described:
 // https://gpuweb.github.io/gpuweb/#dictdef-gpuvertexattribute
@@ -233,21 +217,12 @@ func (g FragmentState) toJS() any {
 
 // RenderPipeline as described:
 // https://gpuweb.github.io/gpuweb/#gpurenderpipeline
-type RenderPipeline struct {
-	jsValue js.Value
-}
 
 // GetBindGroupLayout as described:
 // https://gpuweb.github.io/gpuweb/#dom-gpupipelinebase-getbindgrouplayout
-func (g RenderPipeline) GetBindGroupLayout(index uint32) *BindGroupLayout {
+func (g *RenderPipeline) GetBindGroupLayout(index uint32) *BindGroupLayout {
 	jsLayout := g.jsValue.Call("getBindGroupLayout", index)
 	return &BindGroupLayout{
 		jsValue: jsLayout,
 	}
 }
-
-func (g RenderPipeline) toJS() any {
-	return g.jsValue
-}
-
-func (g RenderPipeline) Release() {} // no-op

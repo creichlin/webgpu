@@ -10,8 +10,8 @@ package wgpu
 */
 import "C"
 
-func (p *ComputePipeline) GetBindGroupLayout(groupIndex uint32) *BindGroupLayout {
-	ref := C.wgpuComputePipelineGetBindGroupLayout(p.ref, C.uint32_t(groupIndex))
+func (g *ComputePipeline) GetBindGroupLayout(groupIndex uint32) *BindGroupLayout {
+	ref := C.wgpuComputePipelineGetBindGroupLayout(g.ref, C.uint32_t(groupIndex))
 	if ref == nil {
 		panic("Failed to acquire BindGroupLayout")
 	}

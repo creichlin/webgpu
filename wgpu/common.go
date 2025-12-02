@@ -2,7 +2,8 @@ package wgpu
 
 import "strconv"
 
-//go:generate go run ../cmd/enums -i lib/linux/arm64/ -o enums.go -pkg wgpu
+//go:generate go run ../cmd/enums -i lib/linux/arm64/ -o gen_enums.go -pkg wgpu
+//go:generate go run ../cmd/refcount Adapter BindGroup BindGroupLayout CommandBuffer ComputePipeline Device Instance PipelineLayout QuerySet RenderBundle RenderBundleEncoder RenderPipeline Sampler ShaderModule TextureView +Queue +Buffer +CommandEncoder +Texture +ComputePassEncoder +RenderPassEncoder +Surface
 //go:generate sh -c "cd .. && go run ./cmd/wrappers"
 
 // This file contains common types and constants

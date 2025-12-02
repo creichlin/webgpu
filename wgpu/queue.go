@@ -37,15 +37,8 @@ static inline void gowebgpu_queue_write_texture(WGPUQueue queue, WGPUTexelCopyTe
 */
 import "C"
 import (
-	"sync/atomic"
 	"unsafe"
 )
-
-type Queue struct {
-	device   *Device
-	ref      C.WGPUQueue
-	released int32
-}
 
 //export gowebgpu_queue_work_done_callback_go
 func gowebgpu_queue_work_done_callback_go(status C.WGPUQueueWorkDoneStatus, userdata unsafe.Pointer) {
@@ -184,10 +177,4 @@ func (p *Queue) TryWriteTexture(destination *TexelCopyTextureInfo, data []byte, 
 		errorCallbackHandle.ToPointer(),
 	)
 	return
-}
-
-func (p *Queue) Release() {
-	if p.ref != nil && atomic.CompareAndSwapInt32(&p.released, 0, 1) {
-		C.wgpuQueueRelease(p.ref)
-	}
 }

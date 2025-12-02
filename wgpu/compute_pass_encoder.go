@@ -24,15 +24,8 @@ static inline void gowebgpu_compute_pass_encoder_end(WGPUComputePassEncoder comp
 */
 import "C"
 import (
-	"sync/atomic"
 	"unsafe"
 )
-
-type ComputePassEncoder struct {
-	device   *Device
-	ref      C.WGPUComputePassEncoder
-	released int32
-}
 
 func (p *ComputePassEncoder) BeginPipelineStatisticsQuery(querySet *QuerySet, queryIndex uint32) {
 	C.wgpuComputePassEncoderBeginPipelineStatisticsQuery(p.ref, querySet.ref, C.uint32_t(queryIndex))
@@ -96,10 +89,4 @@ func (p *ComputePassEncoder) SetBindGroup(groupIndex uint32, group *BindGroup, d
 
 func (p *ComputePassEncoder) SetPipeline(pipeline *ComputePipeline) {
 	C.wgpuComputePassEncoderSetPipeline(p.ref, pipeline.ref)
-}
-
-func (p *ComputePassEncoder) Release() {
-	if p.ref != nil && atomic.CompareAndSwapInt32(&p.released, 0, 1) {
-		C.wgpuComputePassEncoderRelease(p.ref)
-	}
 }

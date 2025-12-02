@@ -154,6 +154,14 @@ func (g *TexelCopyBufferLayout) toJS() any {
 	}
 }
 
+func (g *QuerySetDescriptor) toJS() any {
+	return map[string]any{
+		"label": g.Label,
+		"type":  enumToJS(g.Type),
+		"count": g.Count,
+	}
+}
+
 func (g *RenderPassDescriptor) toJS() any {
 	result := make(map[string]any)
 	result["colorAttachments"] = mapSlice(g.ColorAttachments, func(attachment RenderPassColorAttachment) any {
@@ -189,10 +197,10 @@ func (g *RenderPassDepthStencilAttachment) toJS() any {
 
 func (g *RenderPipelineDescriptor) toJS() any {
 	result := make(map[string]any)
-	if g.Layout == nil {
-		result["layout"] = "auto"
-	} else {
+	if g.Layout != nil {
 		result["layout"] = pointerToJS(g.Layout)
+	} else {
+		result["layout"] = "auto"
 	}
 	result["vertex"] = g.Vertex.toJS()
 	result["primitive"] = g.Primitive.toJS()
@@ -221,14 +229,6 @@ func (g *ProgrammableStageDescriptor) toJS() any {
 	return map[string]any{
 		"module":     pointerToJS(g.Module),
 		"entryPoint": g.EntryPoint,
-	}
-}
-
-func (g *QuerySetDescriptor) toJS() any {
-	return map[string]any{
-		"label": g.Label,
-		"type":  enumToJS(g.Type),
-		"count": g.Count,
 	}
 }
 

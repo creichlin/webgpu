@@ -213,7 +213,7 @@ func gowebgpu_error_callback_go(_type C.WGPUErrorType, message C.WGPUStringView,
 	}
 }
 
-func (p *Device) TryCreateBindGroup(descriptor *BindGroupDescriptor) (*BindGroup, error) {
+func (g *Device) TryCreateBindGroup(descriptor *BindGroupDescriptor) (*BindGroup, error) {
 	var desc C.WGPUBindGroupDescriptor
 
 	if descriptor != nil {
@@ -267,7 +267,7 @@ func (p *Device) TryCreateBindGroup(descriptor *BindGroupDescriptor) (*BindGroup
 	defer errorCallbackHandle.Delete()
 
 	ref := C.gowebgpu_device_create_bind_group(
-		p.ref,
+		g.ref,
 		&desc,
 		errorCallbackHandle.ToPointer(),
 	)
@@ -310,7 +310,7 @@ type BindGroupLayoutEntry struct {
 	StorageTexture StorageTextureBindingLayout
 }
 
-func (p *Device) TryCreateBindGroupLayout(descriptor *BindGroupLayoutDescriptor) (*BindGroupLayout, error) {
+func (g *Device) TryCreateBindGroupLayout(descriptor *BindGroupLayoutDescriptor) (*BindGroupLayout, error) {
 	var desc C.WGPUBindGroupLayoutDescriptor
 
 	if descriptor != nil {
@@ -370,7 +370,7 @@ func (p *Device) TryCreateBindGroupLayout(descriptor *BindGroupLayoutDescriptor)
 	defer errorCallbackHandle.Delete()
 
 	ref := C.gowebgpu_device_create_bind_group_layout(
-		p.ref,
+		g.ref,
 		&desc,
 		errorCallbackHandle.ToPointer(),
 	)
@@ -382,7 +382,7 @@ func (p *Device) TryCreateBindGroupLayout(descriptor *BindGroupLayoutDescriptor)
 	return releaseOnGC(&BindGroupLayout{ref: ref}), nil
 }
 
-func (p *Device) TryCreateBuffer(descriptor *BufferDescriptor) (*Buffer, error) {
+func (g *Device) TryCreateBuffer(descriptor *BufferDescriptor) (*Buffer, error) {
 	var desc C.WGPUBufferDescriptor
 
 	if descriptor != nil {
@@ -405,7 +405,7 @@ func (p *Device) TryCreateBuffer(descriptor *BufferDescriptor) (*Buffer, error) 
 	defer errorCallbackHandle.Delete()
 
 	ref := C.gowebgpu_device_create_buffer(
-		p.ref,
+		g.ref,
 		&desc,
 		errorCallbackHandle.ToPointer(),
 	)
@@ -414,10 +414,10 @@ func (p *Device) TryCreateBuffer(descriptor *BufferDescriptor) (*Buffer, error) 
 		return nil, err
 	}
 
-	return releaseOnGC(&Buffer{device: p.addRef(), ref: ref}), nil
+	return releaseOnGC(&Buffer{device: g.addRef(), ref: ref}), nil
 }
 
-func (p *Device) TryCreateCommandEncoder(descriptor *CommandEncoderDescriptor) (*CommandEncoder, error) {
+func (g *Device) TryCreateCommandEncoder(descriptor *CommandEncoderDescriptor) (*CommandEncoder, error) {
 	var desc *C.WGPUCommandEncoderDescriptor
 
 	if descriptor != nil && descriptor.Label != "" {
@@ -438,7 +438,7 @@ func (p *Device) TryCreateCommandEncoder(descriptor *CommandEncoderDescriptor) (
 	defer errorCallbackHandle.Delete()
 
 	ref := C.gowebgpu_device_create_command_encoder(
-		p.ref,
+		g.ref,
 		desc,
 		errorCallbackHandle.ToPointer(),
 	)
@@ -447,7 +447,7 @@ func (p *Device) TryCreateCommandEncoder(descriptor *CommandEncoderDescriptor) (
 		return nil, err
 	}
 
-	return releaseOnGC(&CommandEncoder{device: p.addRef(), ref: ref}), nil
+	return releaseOnGC(&CommandEncoder{device: g.addRef(), ref: ref}), nil
 }
 
 type ConstantEntry struct {
@@ -461,7 +461,7 @@ type ComputePipelineDescriptor struct {
 	Compute ProgrammableStageDescriptor
 }
 
-func (p *Device) TryCreateComputePipeline(descriptor *ComputePipelineDescriptor) (*ComputePipeline, error) {
+func (g *Device) TryCreateComputePipeline(descriptor *ComputePipelineDescriptor) (*ComputePipeline, error) {
 	var desc C.WGPUComputePipelineDescriptor
 
 	if descriptor != nil {
@@ -497,7 +497,7 @@ func (p *Device) TryCreateComputePipeline(descriptor *ComputePipelineDescriptor)
 	defer errorCallbackHandle.Delete()
 
 	ref := C.gowebgpu_device_create_compute_pipeline(
-		p.ref,
+		g.ref,
 		&desc,
 		errorCallbackHandle.ToPointer(),
 	)
@@ -521,7 +521,7 @@ type PipelineLayoutDescriptor struct {
 	PushConstantRanges []PushConstantRange
 }
 
-func (p *Device) TryCreatePipelineLayout(descriptor *PipelineLayoutDescriptor) (*PipelineLayout, error) {
+func (g *Device) TryCreatePipelineLayout(descriptor *PipelineLayoutDescriptor) (*PipelineLayout, error) {
 	var desc C.WGPUPipelineLayoutDescriptor
 
 	if descriptor != nil {
@@ -584,7 +584,7 @@ func (p *Device) TryCreatePipelineLayout(descriptor *PipelineLayoutDescriptor) (
 	defer errorCallbackHandle.Delete()
 
 	ref := C.gowebgpu_device_create_pipeline_layout(
-		p.ref,
+		g.ref,
 		&desc,
 		errorCallbackHandle.ToPointer(),
 	)
@@ -596,7 +596,7 @@ func (p *Device) TryCreatePipelineLayout(descriptor *PipelineLayoutDescriptor) (
 	return releaseOnGC(&PipelineLayout{ref: ref}), nil
 }
 
-func (p *Device) TryCreateQuerySet(descriptor *QuerySetDescriptor) (*QuerySet, error) {
+func (g *Device) TryCreateQuerySet(descriptor *QuerySetDescriptor) (*QuerySet, error) {
 	var desc C.WGPUQuerySetDescriptor
 
 	if descriptor != nil {
@@ -631,7 +631,7 @@ func (p *Device) TryCreateQuerySet(descriptor *QuerySetDescriptor) (*QuerySet, e
 	defer errorCallbackHandle.Delete()
 
 	ref := C.gowebgpu_device_create_query_set(
-		p.ref,
+		g.ref,
 		&desc,
 		errorCallbackHandle.ToPointer(),
 	)
@@ -643,7 +643,7 @@ func (p *Device) TryCreateQuerySet(descriptor *QuerySetDescriptor) (*QuerySet, e
 	return releaseOnGC(&QuerySet{ref: ref}), nil
 }
 
-func (p *Device) TryCreateRenderBundleEncoder(descriptor *RenderBundleEncoderDescriptor) (*RenderBundleEncoder, error) {
+func (g *Device) TryCreateRenderBundleEncoder(descriptor *RenderBundleEncoderDescriptor) (*RenderBundleEncoder, error) {
 	var desc C.WGPURenderBundleEncoderDescriptor
 
 	if descriptor != nil {
@@ -673,7 +673,7 @@ func (p *Device) TryCreateRenderBundleEncoder(descriptor *RenderBundleEncoderDes
 		desc.stencilReadOnly = cBool(descriptor.StencilReadOnly)
 	}
 
-	ref := C.wgpuDeviceCreateRenderBundleEncoder(p.ref, &desc)
+	ref := C.wgpuDeviceCreateRenderBundleEncoder(g.ref, &desc)
 
 	return releaseOnGC(&RenderBundleEncoder{ref: ref}), nil
 }
@@ -758,7 +758,7 @@ type MultisampleState struct {
 	AlphaToCoverageEnabled bool
 }
 
-func (p *Device) TryCreateRenderPipeline(descriptor *RenderPipelineDescriptor) (*RenderPipeline, error) {
+func (g *Device) TryCreateRenderPipeline(descriptor *RenderPipelineDescriptor) (*RenderPipeline, error) {
 	var desc C.WGPURenderPipelineDescriptor
 
 	if descriptor != nil {
@@ -950,7 +950,7 @@ func (p *Device) TryCreateRenderPipeline(descriptor *RenderPipelineDescriptor) (
 	defer errorCallbackHandle.Delete()
 
 	ref := C.gowebgpu_device_create_render_pipeline(
-		p.ref,
+		g.ref,
 		&desc,
 		errorCallbackHandle.ToPointer(),
 	)
@@ -962,7 +962,7 @@ func (p *Device) TryCreateRenderPipeline(descriptor *RenderPipelineDescriptor) (
 	return releaseOnGC(&RenderPipeline{ref: ref}), nil
 }
 
-func (p *Device) TryCreateSampler(descriptor *SamplerDescriptor) (*Sampler, error) {
+func (g *Device) TryCreateSampler(descriptor *SamplerDescriptor) (*Sampler, error) {
 	var desc *C.WGPUSamplerDescriptor
 
 	if descriptor != nil {
@@ -994,7 +994,7 @@ func (p *Device) TryCreateSampler(descriptor *SamplerDescriptor) (*Sampler, erro
 	defer errorCallbackHandle.Delete()
 
 	ref := C.gowebgpu_device_create_sampler(
-		p.ref,
+		g.ref,
 		desc,
 		errorCallbackHandle.ToPointer(),
 	)
@@ -1019,7 +1019,7 @@ type ShaderModuleDescriptor struct {
 	GLSLSource  *ShaderSourceGLSL
 }
 
-func (p *Device) TryCreateShaderModule(descriptor *ShaderModuleDescriptor) (*ShaderModule, error) {
+func (g *Device) TryCreateShaderModule(descriptor *ShaderModuleDescriptor) (*ShaderModule, error) {
 	var desc C.WGPUShaderModuleDescriptor
 
 	if descriptor != nil {
@@ -1129,7 +1129,7 @@ func (p *Device) TryCreateShaderModule(descriptor *ShaderModuleDescriptor) (*Sha
 	defer errorCallbackHandle.Delete()
 
 	ref := C.gowebgpu_device_create_shader_module(
-		p.ref,
+		g.ref,
 		&desc,
 		errorCallbackHandle.ToPointer(),
 	)
@@ -1141,7 +1141,7 @@ func (p *Device) TryCreateShaderModule(descriptor *ShaderModuleDescriptor) (*Sha
 	return releaseOnGC(&ShaderModule{ref: ref}), nil
 }
 
-func (p *Device) TryCreateTexture(descriptor *TextureDescriptor) (*Texture, error) {
+func (g *Device) TryCreateTexture(descriptor *TextureDescriptor) (*Texture, error) {
 	var desc C.WGPUTextureDescriptor
 
 	if descriptor != nil {
@@ -1173,7 +1173,7 @@ func (p *Device) TryCreateTexture(descriptor *TextureDescriptor) (*Texture, erro
 	defer errorCallbackHandle.Delete()
 
 	ref := C.gowebgpu_device_create_texture(
-		p.ref,
+		g.ref,
 		&desc,
 		errorCallbackHandle.ToPointer(),
 	)
@@ -1182,12 +1182,12 @@ func (p *Device) TryCreateTexture(descriptor *TextureDescriptor) (*Texture, erro
 		return nil, err
 	}
 
-	return releaseOnGC(&Texture{device: p.addRef(), ref: ref}), nil
+	return releaseOnGC(&Texture{device: g.addRef(), ref: ref}), nil
 }
 
-func (p *Device) GetFeatures() []FeatureName {
+func (g *Device) GetFeatures() []FeatureName {
 	var supportedFeatures C.WGPUSupportedFeatures
-	C.wgpuDeviceGetFeatures(p.ref, (*C.WGPUSupportedFeatures)(unsafe.Pointer(&supportedFeatures)))
+	C.wgpuDeviceGetFeatures(g.ref, (*C.WGPUSupportedFeatures)(unsafe.Pointer(&supportedFeatures)))
 	defer C.free(unsafe.Pointer(supportedFeatures.features))
 
 	features := make([]FeatureName, supportedFeatures.featureCount)
@@ -1200,14 +1200,14 @@ func (p *Device) GetFeatures() []FeatureName {
 	return features
 }
 
-func (p *Device) GetLimits() Limits {
+func (g *Device) GetLimits() Limits {
 	var limits C.WGPULimits
 
 	nativeLimits := (*C.WGPUNativeLimits)(C.malloc(C.size_t(unsafe.Sizeof(C.WGPUNativeLimits{}))))
 	defer C.free(unsafe.Pointer(&nativeLimits))
 	limits.nextInChain = (*C.WGPUChainedStructOut)(unsafe.Pointer(&nativeLimits))
 
-	C.wgpuDeviceGetLimits(p.ref, &limits)
+	C.wgpuDeviceGetLimits(g.ref, &limits)
 
 	return Limits{
 		MaxTextureDimension1D:                     uint32(limits.maxTextureDimension1D),
@@ -1245,16 +1245,16 @@ func (p *Device) GetLimits() Limits {
 	}
 }
 
-func (p *Device) GetQueue() *Queue {
-	ref := C.wgpuDeviceGetQueue(p.ref)
-	return releaseOnGC(&Queue{device: p.addRef(), ref: ref})
+func (g *Device) GetQueue() *Queue {
+	ref := C.wgpuDeviceGetQueue(g.ref)
+	return releaseOnGC(&Queue{device: g.addRef(), ref: ref})
 }
 
-func (p *Device) HasFeature(feature FeatureName) bool {
-	hasFeature := C.wgpuDeviceHasFeature(p.ref, C.WGPUFeatureName(feature))
+func (g *Device) HasFeature(feature FeatureName) bool {
+	hasFeature := C.wgpuDeviceHasFeature(g.ref, C.WGPUFeatureName(feature))
 	return goBool(hasFeature)
 }
 
-func (p *Device) Poll(wait bool, submissionIndex *uint64) (queueEmpty bool) {
-	return goBool(C.wgpuDevicePoll(p.ref, cBool(wait), (*C.WGPUSubmissionIndex)(submissionIndex)))
+func (g *Device) Poll(wait bool, submissionIndex *uint64) (queueEmpty bool) {
+	return goBool(C.wgpuDevicePoll(g.ref, cBool(wait), (*C.WGPUSubmissionIndex)(submissionIndex)))
 }

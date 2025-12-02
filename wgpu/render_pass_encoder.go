@@ -24,15 +24,8 @@ static inline void gowebgpu_render_pass_encoder_end(WGPURenderPassEncoder render
 */
 import "C"
 import (
-	"sync/atomic"
 	"unsafe"
 )
-
-type RenderPassEncoder struct {
-	device   *Device
-	ref      C.WGPURenderPassEncoder
-	released int32
-}
 
 func (p *RenderPassEncoder) BeginOcclusionQuery(queryIndex uint32) {
 	C.wgpuRenderPassEncoderBeginOcclusionQuery(p.ref, C.uint32_t(queryIndex))
@@ -278,11 +271,4 @@ func (p *RenderPassEncoder) MultiDrawIndexedIndirectCount(encoder *RenderPassEnc
 		C.uint64_t(countBufferOffset),
 		C.uint32_t(maxCount),
 	)
-}
-
-func (p *RenderPassEncoder) Release() {
-	if p.ref != nil && atomic.CompareAndSwapInt32(&p.released, 0, 1) {
-		C.wgpuRenderPassEncoderRelease(p.ref)
-		p.ref = nil
-	}
 }

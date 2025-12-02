@@ -86,7 +86,7 @@ type SurfaceDescriptor struct {
 	AndroidNativeWindow *SurfaceSourceAndroidNativeWindow
 }
 
-func (p *Instance) CreateSurface(descriptor *SurfaceDescriptor) *Surface {
+func (g *Instance) CreateSurface(descriptor *SurfaceDescriptor) *Surface {
 	var desc C.WGPUSurfaceDescriptor
 
 	if descriptor != nil {
@@ -169,7 +169,7 @@ func (p *Instance) CreateSurface(descriptor *SurfaceDescriptor) *Surface {
 		}
 	}
 
-	ref := C.wgpuInstanceCreateSurface(p.ref, &desc)
+	ref := C.wgpuInstanceCreateSurface(g.ref, &desc)
 	if ref == nil {
 		panic("Failed to acquire Surface")
 	}
@@ -190,7 +190,7 @@ func gowebgpu_request_adapter_callback_go(status C.WGPURequestAdapterStatus, ada
 	}
 }
 
-func (p *Instance) RequestAdapter(options *RequestAdapterOptions) (*Adapter, error) {
+func (g *Instance) RequestAdapter(options *RequestAdapterOptions) (*Adapter, error) {
 	var opts *C.WGPURequestAdapterOptions
 
 	if options != nil {
@@ -212,7 +212,7 @@ func (p *Instance) RequestAdapter(options *RequestAdapterOptions) (*Adapter, err
 		adapter = a
 	}
 	handle := newHandle(cb)
-	C.wgpuInstanceRequestAdapter(p.ref, opts, C.WGPURequestAdapterCallbackInfo{
+	C.wgpuInstanceRequestAdapter(g.ref, opts, C.WGPURequestAdapterCallbackInfo{
 		callback:  C.WGPURequestAdapterCallback(C.gowebgpu_request_adapter_callback_c),
 		userdata1: handle.ToPointer(),
 	})
@@ -223,7 +223,7 @@ func (p *Instance) RequestAdapter(options *RequestAdapterOptions) (*Adapter, err
 	return adapter, nil
 }
 
-func (p *Instance) EnumerateAdapters(options *InstanceEnumerateAdapterOptons) []*Adapter {
+func (g *Instance) EnumerateAdapters(options *InstanceEnumerateAdapterOptons) []*Adapter {
 	var opts *C.WGPUInstanceEnumerateAdapterOptions
 	if options != nil {
 		opts = &C.WGPUInstanceEnumerateAdapterOptions{
@@ -231,13 +231,13 @@ func (p *Instance) EnumerateAdapters(options *InstanceEnumerateAdapterOptons) []
 		}
 	}
 
-	size := C.wgpuInstanceEnumerateAdapters(p.ref, opts, nil)
+	size := C.wgpuInstanceEnumerateAdapters(g.ref, opts, nil)
 	if size == 0 {
 		return nil
 	}
 
 	adapterRefs := make([]C.WGPUAdapter, size)
-	C.wgpuInstanceEnumerateAdapters(p.ref, opts, (*C.WGPUAdapter)(unsafe.Pointer(&adapterRefs[0])))
+	C.wgpuInstanceEnumerateAdapters(g.ref, opts, (*C.WGPUAdapter)(unsafe.Pointer(&adapterRefs[0])))
 
 	adapters := make([]*Adapter, size)
 	for i, ref := range adapterRefs {
@@ -277,9 +277,9 @@ type GlobalReport struct {
 	Hub      *HubReport
 }
 
-func (p *Instance) GenerateReport() GlobalReport {
+func (g *Instance) GenerateReport() GlobalReport {
 	var r C.WGPUGlobalReport
-	C.wgpuGenerateReport(p.ref, &r)
+	C.wgpuGenerateReport(g.ref, &r)
 
 	mapRegistryReport := func(creport C.WGPURegistryReport) RegistryReport {
 		return RegistryReport{

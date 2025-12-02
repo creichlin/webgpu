@@ -27,17 +27,10 @@ static inline WGPUTextureView gowebgpu_texture_create_view(WGPUTexture texture, 
 */
 import "C"
 import (
-	"sync/atomic"
 	"unsafe"
 )
 
-type Texture struct {
-	device   *Device
-	ref      C.WGPUTexture
-	released int32
-}
-
-func (p *Texture) TryCreateView(descriptor *TextureViewDescriptor) (*TextureView, error) {
+func (g *Texture) TryCreateView(descriptor *TextureViewDescriptor) (*TextureView, error) {
 	var desc *C.WGPUTextureViewDescriptor
 
 	if descriptor != nil {
@@ -66,9 +59,9 @@ func (p *Texture) TryCreateView(descriptor *TextureViewDescriptor) (*TextureView
 	defer errorCallbackHandle.Delete()
 
 	ref := C.gowebgpu_texture_create_view(
-		p.ref,
+		g.ref,
 		desc,
-		p.device.ref,
+		g.device.ref,
 		errorCallbackHandle.ToPointer(),
 	)
 	if err != nil {
@@ -79,44 +72,38 @@ func (p *Texture) TryCreateView(descriptor *TextureViewDescriptor) (*TextureView
 	return releaseOnGC(&TextureView{ref: ref}), nil
 }
 
-func (p *Texture) Destroy() {
-	C.wgpuTextureDestroy(p.ref)
+func (g *Texture) Destroy() {
+	C.wgpuTextureDestroy(g.ref)
 }
 
-func (p *Texture) GetDepthOrArrayLayers() uint32 {
-	return uint32(C.wgpuTextureGetDepthOrArrayLayers(p.ref))
+func (g *Texture) GetDepthOrArrayLayers() uint32 {
+	return uint32(C.wgpuTextureGetDepthOrArrayLayers(g.ref))
 }
 
-func (p *Texture) GetDimension() TextureDimension {
-	return TextureDimension(C.wgpuTextureGetDimension(p.ref))
+func (g *Texture) GetDimension() TextureDimension {
+	return TextureDimension(C.wgpuTextureGetDimension(g.ref))
 }
 
-func (p *Texture) GetFormat() TextureFormat {
-	return TextureFormat(C.wgpuTextureGetFormat(p.ref))
+func (g *Texture) GetFormat() TextureFormat {
+	return TextureFormat(C.wgpuTextureGetFormat(g.ref))
 }
 
-func (p *Texture) GetHeight() uint32 {
-	return uint32(C.wgpuTextureGetHeight(p.ref))
+func (g *Texture) GetHeight() uint32 {
+	return uint32(C.wgpuTextureGetHeight(g.ref))
 }
 
-func (p *Texture) GetMipLevelCount() uint32 {
-	return uint32(C.wgpuTextureGetMipLevelCount(p.ref))
+func (g *Texture) GetMipLevelCount() uint32 {
+	return uint32(C.wgpuTextureGetMipLevelCount(g.ref))
 }
 
-func (p *Texture) GetSampleCount() uint32 {
-	return uint32(C.wgpuTextureGetSampleCount(p.ref))
+func (g *Texture) GetSampleCount() uint32 {
+	return uint32(C.wgpuTextureGetSampleCount(g.ref))
 }
 
-func (p *Texture) GetUsage() TextureUsage {
-	return TextureUsage(C.wgpuTextureGetUsage(p.ref))
+func (g *Texture) GetUsage() TextureUsage {
+	return TextureUsage(C.wgpuTextureGetUsage(g.ref))
 }
 
-func (p *Texture) GetWidth() uint32 {
-	return uint32(C.wgpuTextureGetWidth(p.ref))
-}
-
-func (p *Texture) Release() {
-	if p.ref != nil && atomic.CompareAndSwapInt32(&p.released, 0, 1) {
-		C.wgpuTextureRelease(p.ref)
-	}
+func (g *Texture) GetWidth() uint32 {
+	return uint32(C.wgpuTextureGetWidth(g.ref))
 }

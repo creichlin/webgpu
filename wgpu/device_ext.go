@@ -2,9 +2,9 @@
 
 package wgpu
 
-func (p *Device) TryCreateBufferInit(descriptor *BufferInitDescriptor) (*Buffer, error) {
+func (g *Device) TryCreateBufferInit(descriptor *BufferInitDescriptor) (*Buffer, error) {
 	if len(descriptor.Contents) == 0 {
-		return p.TryCreateBuffer(&BufferDescriptor{
+		return g.TryCreateBuffer(&BufferDescriptor{
 			Label:            descriptor.Label,
 			Size:             0,
 			Usage:            descriptor.Usage,
@@ -16,7 +16,7 @@ func (p *Device) TryCreateBufferInit(descriptor *BufferInitDescriptor) (*Buffer,
 	const alignMask = CopyBufferAlignment - 1
 	paddedSize := max((unpaddedSize+alignMask) & ^alignMask, CopyBufferAlignment)
 
-	buffer, err := p.TryCreateBuffer(&BufferDescriptor{
+	buffer, err := g.TryCreateBuffer(&BufferDescriptor{
 		Label:            descriptor.Label,
 		Size:             uint64(paddedSize),
 		Usage:            descriptor.Usage,
@@ -25,7 +25,7 @@ func (p *Device) TryCreateBufferInit(descriptor *BufferInitDescriptor) (*Buffer,
 	if err != nil {
 		return nil, err
 	}
-	
+
 	buf := buffer.GetMappedRange(0, uint(paddedSize))
 	copy(buf, descriptor.Contents)
 

@@ -8,16 +8,6 @@ import (
 	"github.com/oliverbestmann/webgpu/jsx"
 )
 
-// Buffer as described:
-// https://gpuweb.github.io/gpuweb/#gpubuffer
-type Buffer struct {
-	jsValue js.Value
-}
-
-func (g *Buffer) toJS() any {
-	return g.jsValue
-}
-
 // Destroy as described:
 // https://gpuweb.github.io/gpuweb/#dom-gpubuffer-destroy
 func (g *Buffer) Destroy() {
@@ -50,5 +40,3 @@ func (g *Buffer) TryUnmap() (err error) {
 	g.jsValue.Call("unmap")
 	return
 }
-
-func (g *Buffer) Release() {} // no-op

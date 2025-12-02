@@ -10,16 +10,6 @@ import (
 	"github.com/oliverbestmann/webgpu/jsx"
 )
 
-// Queue as described:
-// https://gpuweb.github.io/gpuweb/#gpuqueue
-type Queue struct {
-	jsValue js.Value
-}
-
-func (g *Queue) toJS() any {
-	return g.jsValue
-}
-
 // Submit as described:
 // https://gpuweb.github.io/gpuweb/#dom-gpuqueue-submit
 func (g *Queue) Submit(commandBuffers ...*CommandBuffer) SubmissionIndex {
@@ -56,8 +46,6 @@ func (g *Queue) OnSubmittedWorkDone(callback QueueWorkDoneCallback) {
 	jsx.Await(g.jsValue.Call("onSubmittedWorkDone")) // TODO(kai): is this correct?
 	callback(QueueWorkDoneStatusSuccess)
 }
-
-func (g *Queue) Release() {} // no-op
 
 var queueWriteBuffer js.Value
 var queueWriteTexture js.Value

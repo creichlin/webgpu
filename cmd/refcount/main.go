@@ -1,0 +1,102 @@
+package main
+
+import (
+	"fmt"
+	"go/format"
+	"os"
+	"slices"
+	"strings"
+	"text/template"
+)
+
+var nativeTmpl = template.Must(template.New("").Parse(`
+	type {{ .Name }} struct {
+		ref C.WGPU{{ .Name }}
+		{{ if .WithDev }}
+		device *Device
+		{{ end }}
+	}
+	
+	func (g *{{ .Name }}) Release() {
+		if g.ref == nil { return }
+		
+		// pointer to the ref field
+		ptr := (*unsafe.Pointer)(unsafe.Pointer(&g.ref))
+
+		// get current ref value
+		ref := atomic.LoadPointer(ptr)
+
+		// set ref to nil and release instance 
+		if ref != nil && atomic.CompareAndSwapPointer(ptr, ref, nil) {
+			C.wgpu{{ .Name }}Release(C.WGPU{{ .Name }}(ref))
+		}  
+	}
+`))
+
+func main() {
+	var native, js []string
+
+	native = append(native, "//go:build !js")
+	native = append(native, "package wgpu")
+	native = append(native, `
+		/*
+		#include <wgpu.h>
+		*/
+		import "C"
+	
+		import (
+			"sync/atomic"
+			"unsafe"
+		)
+	`)
+
+	js = append(js, "//go:build js")
+	js = append(js, "package wgpu")
+	js = append(js, `import "syscall/js"`)
+
+	for _, name := range slices.Sorted(slices.Values(os.Args[1:])) {
+		var withdev bool
+
+		if name[0] == '+' {
+			name = name[1:]
+			withdev = true
+		}
+
+		var buf strings.Builder
+		_ = nativeTmpl.Execute(&buf, map[string]any{
+			"Name":    name,
+			"WithDev": withdev,
+		})
+
+		native = append(native, buf.String())
+
+		js = append(js, fmt.Sprintf(`
+			type %[1]s struct {
+				jsValue js.Value
+			}
+			
+			func (g *%[1]s) Release() {
+				// no-op, just here to keep api compatibly with native version
+			}
+		
+			func (g *%[1]s) toJS() any {
+				return g.jsValue
+			}
+
+		`, name))
+
+	}
+
+	writeCode("gen_types.go", native)
+	writeCode("gen_types_js.go", js)
+}
+
+func writeCode(name string, native []string) {
+	source := strings.Join(native, "\n")
+	formatted, err := format.Source([]byte(source))
+	if err != nil {
+		panic(err)
+	}
+
+	_ = os.WriteFile(name, formatted, 0644)
+}

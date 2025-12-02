@@ -2,20 +2,6 @@
 
 package wgpu
 
-import (
-	"syscall/js"
-)
-
-// CommandEncoder as described:
-// https://gpuweb.github.io/gpuweb/#gpucommandencoder
-type CommandEncoder struct {
-	jsValue js.Value
-}
-
-func (g *CommandEncoder) toJS() any {
-	return g.jsValue
-}
-
 // BeginRenderPass as described:
 // https://gpuweb.github.io/gpuweb/#dom-gpucommandencoder-beginrenderpass
 func (g *CommandEncoder) BeginRenderPass(descriptor *RenderPassDescriptor) *RenderPassEncoder {
@@ -72,8 +58,6 @@ func (g *CommandEncoder) TryFinish(descriptor *CommandBufferDescriptor) (*Comman
 		jsValue: jsBuffer,
 	}, nil
 }
-
-func (g *CommandEncoder) Release() {}
 
 func (g *CommandEncoder) TryClearBuffer(buffer *Buffer, offset uint64, size uint64) error {
 	panic("unimplemented")

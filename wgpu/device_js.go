@@ -14,17 +14,7 @@ func NewDevice(jsValue js.Value) Device {
 	}
 }
 
-// Device as described:
-// https://gpuweb.github.io/gpuweb/#gpudevice
-type Device struct {
-	jsValue js.Value
-}
-
-func (g *Device) toJS() any {
-	return g.jsValue
-}
-
-// Queue as described:
+// GetQueue returns a Queue as described:
 // https://gpuweb.github.io/gpuweb/#dom-gpudevice-queue
 func (g *Device) GetQueue() *Queue {
 	jsQueue := g.jsValue.Get("queue")
@@ -136,9 +126,7 @@ func (g *Device) Poll(wait bool, wrappedSubmissionIndex *uint64) (queueEmpty boo
 	return false // no-op
 }
 
-func (g *Device) Release() {}
-
-func (p *Device) TryCreateRenderBundleEncoder(descriptor *RenderBundleEncoderDescriptor) (*RenderBundleEncoder, error) {
+func (g *Device) TryCreateRenderBundleEncoder(descriptor *RenderBundleEncoderDescriptor) (*RenderBundleEncoder, error) {
 	// TODO implement this
 	panic("unimplemented")
 }

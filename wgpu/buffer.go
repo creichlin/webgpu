@@ -38,15 +38,8 @@ static inline void gowebgpu_buffer_unmap(WGPUBuffer buffer, WGPUDevice device, v
 */
 import "C"
 import (
-	"sync/atomic"
 	"unsafe"
 )
-
-type Buffer struct {
-	device   *Device
-	ref      C.WGPUBuffer
-	released int32
-}
 
 func (p *Buffer) Destroy() {
 	C.wgpuBufferDestroy(p.ref)
@@ -107,10 +100,4 @@ func (p *Buffer) TryUnmap() (err error) {
 		errorCallbackHandle.ToPointer(),
 	)
 	return
-}
-
-func (p *Buffer) Release() {
-	if p.ref != nil && atomic.CompareAndSwapInt32(&p.released, 0, 1) {
-		C.wgpuBufferRelease(p.ref)
-	}
 }

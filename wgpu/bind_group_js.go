@@ -114,18 +114,6 @@ func (g BindGroupLayoutDescriptor) toJS() any {
 	}
 }
 
-// BindGroupLayout as described:
-// https://gpuweb.github.io/gpuweb/#gpubindgrouplayout
-type BindGroupLayout struct {
-	jsValue js.Value
-}
-
-func (g BindGroupLayout) toJS() any {
-	return g.jsValue
-}
-
-func (g BindGroupLayout) Release() {} // no-op
-
 func (g BindGroupEntry) toJS() any {
 	result := make(map[string]any)
 	result["binding"] = g.Binding
@@ -151,16 +139,4 @@ func (g BindGroupDescriptor) toJS() any {
 			return entry.toJS()
 		}),
 	}
-}
-
-// BindGroup as described:
-// https://gpuweb.github.io/gpuweb/#gpubindgroup
-type BindGroup struct {
-	jsValue js.Value
-}
-
-func (g BindGroup) Release() {} // no-op
-
-func (g BindGroup) toJS() any {
-	return g.jsValue
 }

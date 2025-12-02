@@ -2,20 +2,6 @@
 
 package wgpu
 
-import (
-	"syscall/js"
-)
-
-// RenderPassEncoder as described:
-// https://gpuweb.github.io/gpuweb/#gpurenderpassencoder
-type RenderPassEncoder struct {
-	jsValue js.Value
-}
-
-func (g *RenderPassEncoder) toJS() any {
-	return g.jsValue
-}
-
 // SetPipeline as described:
 // https://gpuweb.github.io/gpuweb/#dom-gpurendercommandsmixin-setpipeline
 func (g *RenderPassEncoder) SetPipeline(pipeline *RenderPipeline) {
@@ -102,5 +88,3 @@ func (g *RenderPassEncoder) TryEnd() error {
 	g.jsValue.Call("end")
 	return nil
 }
-
-func (g *RenderPassEncoder) Release() {} // no-op

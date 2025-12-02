@@ -59,79 +59,79 @@ func (p *CommandEncoder) ResolveQuerySet(querySet *QuerySet, firstQuery uint32, 
 }
 func (p *ComputePassEncoder) End() { err := p.TryEnd(); panicIf(err, "ComputePassEncoder.End failed") }
 
-func (p *Device) CreateBindGroup(descriptor *BindGroupDescriptor) *BindGroup {
-	r0, err := p.TryCreateBindGroup(descriptor)
+func (g *Device) CreateBindGroup(descriptor *BindGroupDescriptor) *BindGroup {
+	r0, err := g.TryCreateBindGroup(descriptor)
 	panicIf(err, "Device.CreateBindGroup failed")
 	return r0
 }
 
-func (p *Device) CreateBindGroupLayout(descriptor *BindGroupLayoutDescriptor) *BindGroupLayout {
-	r0, err := p.TryCreateBindGroupLayout(descriptor)
+func (g *Device) CreateBindGroupLayout(descriptor *BindGroupLayoutDescriptor) *BindGroupLayout {
+	r0, err := g.TryCreateBindGroupLayout(descriptor)
 	panicIf(err, "Device.CreateBindGroupLayout failed")
 	return r0
 }
 
-func (p *Device) CreateBuffer(descriptor *BufferDescriptor) *Buffer {
-	r0, err := p.TryCreateBuffer(descriptor)
+func (g *Device) CreateBuffer(descriptor *BufferDescriptor) *Buffer {
+	r0, err := g.TryCreateBuffer(descriptor)
 	panicIf(err, "Device.CreateBuffer failed")
 	return r0
 }
 
-func (p *Device) CreateCommandEncoder(descriptor *CommandEncoderDescriptor) *CommandEncoder {
-	r0, err := p.TryCreateCommandEncoder(descriptor)
+func (g *Device) CreateCommandEncoder(descriptor *CommandEncoderDescriptor) *CommandEncoder {
+	r0, err := g.TryCreateCommandEncoder(descriptor)
 	panicIf(err, "Device.CreateCommandEncoder failed")
 	return r0
 }
 
-func (p *Device) CreateComputePipeline(descriptor *ComputePipelineDescriptor) *ComputePipeline {
-	r0, err := p.TryCreateComputePipeline(descriptor)
+func (g *Device) CreateComputePipeline(descriptor *ComputePipelineDescriptor) *ComputePipeline {
+	r0, err := g.TryCreateComputePipeline(descriptor)
 	panicIf(err, "Device.CreateComputePipeline failed")
 	return r0
 }
 
-func (p *Device) CreatePipelineLayout(descriptor *PipelineLayoutDescriptor) *PipelineLayout {
-	r0, err := p.TryCreatePipelineLayout(descriptor)
+func (g *Device) CreatePipelineLayout(descriptor *PipelineLayoutDescriptor) *PipelineLayout {
+	r0, err := g.TryCreatePipelineLayout(descriptor)
 	panicIf(err, "Device.CreatePipelineLayout failed")
 	return r0
 }
 
-func (p *Device) CreateQuerySet(descriptor *QuerySetDescriptor) *QuerySet {
-	r0, err := p.TryCreateQuerySet(descriptor)
+func (g *Device) CreateQuerySet(descriptor *QuerySetDescriptor) *QuerySet {
+	r0, err := g.TryCreateQuerySet(descriptor)
 	panicIf(err, "Device.CreateQuerySet failed")
 	return r0
 }
 
-func (p *Device) CreateRenderBundleEncoder(descriptor *RenderBundleEncoderDescriptor) *RenderBundleEncoder {
-	r0, err := p.TryCreateRenderBundleEncoder(descriptor)
+func (g *Device) CreateRenderBundleEncoder(descriptor *RenderBundleEncoderDescriptor) *RenderBundleEncoder {
+	r0, err := g.TryCreateRenderBundleEncoder(descriptor)
 	panicIf(err, "Device.CreateRenderBundleEncoder failed")
 	return r0
 }
 
-func (p *Device) CreateRenderPipeline(descriptor *RenderPipelineDescriptor) *RenderPipeline {
-	r0, err := p.TryCreateRenderPipeline(descriptor)
+func (g *Device) CreateRenderPipeline(descriptor *RenderPipelineDescriptor) *RenderPipeline {
+	r0, err := g.TryCreateRenderPipeline(descriptor)
 	panicIf(err, "Device.CreateRenderPipeline failed")
 	return r0
 }
 
-func (p *Device) CreateSampler(descriptor *SamplerDescriptor) *Sampler {
-	r0, err := p.TryCreateSampler(descriptor)
+func (g *Device) CreateSampler(descriptor *SamplerDescriptor) *Sampler {
+	r0, err := g.TryCreateSampler(descriptor)
 	panicIf(err, "Device.CreateSampler failed")
 	return r0
 }
 
-func (p *Device) CreateShaderModule(descriptor *ShaderModuleDescriptor) *ShaderModule {
-	r0, err := p.TryCreateShaderModule(descriptor)
+func (g *Device) CreateShaderModule(descriptor *ShaderModuleDescriptor) *ShaderModule {
+	r0, err := g.TryCreateShaderModule(descriptor)
 	panicIf(err, "Device.CreateShaderModule failed")
 	return r0
 }
 
-func (p *Device) CreateTexture(descriptor *TextureDescriptor) *Texture {
-	r0, err := p.TryCreateTexture(descriptor)
+func (g *Device) CreateTexture(descriptor *TextureDescriptor) *Texture {
+	r0, err := g.TryCreateTexture(descriptor)
 	panicIf(err, "Device.CreateTexture failed")
 	return r0
 }
-func (p *Device) CreateBufferInit(descriptor *BufferInitDescriptor) *Buffer {
-	r0, err := p.TryCreateBufferInit(descriptor)
+func (g *Device) CreateBufferInit(descriptor *BufferInitDescriptor) *Buffer {
+	r0, err := g.TryCreateBufferInit(descriptor)
 	panicIf(err, "Device.CreateBufferInit failed")
 	return r0
 }
@@ -145,17 +145,20 @@ func (p *Queue) WriteTexture(destination *TexelCopyTextureInfo, data []byte, dat
 	err := p.TryWriteTexture(destination, data, dataLayout, writeSize)
 	panicIf(err, "Queue.WriteTexture failed")
 }
+
+// TryEnd ends the current render pass encoder.
+// This will also release the instance, so it must not be used afterwards
 func (p *RenderPassEncoder) End() { err := p.TryEnd(); panicIf(err, "RenderPassEncoder.End failed") }
 
 // NOTE: you should typically not call [Texture.Release] on the returned texture.
 // Instead, you should call [TextureView.Release] on any [TextureView] you create from it.
-func (p *Surface) GetCurrentTexture() *Texture {
-	r0, err := p.TryGetCurrentTexture()
+func (g *Surface) GetCurrentTexture() *Texture {
+	r0, err := g.TryGetCurrentTexture()
 	panicIf(err, "Surface.GetCurrentTexture failed")
 	return r0
 }
-func (p *Texture) CreateView(descriptor *TextureViewDescriptor) *TextureView {
-	r0, err := p.TryCreateView(descriptor)
+func (g *Texture) CreateView(descriptor *TextureViewDescriptor) *TextureView {
+	r0, err := g.TryCreateView(descriptor)
 	panicIf(err, "Texture.CreateView failed")
 	return r0
 }

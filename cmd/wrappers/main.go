@@ -167,7 +167,7 @@ func main() {
 		Decls: wrappers,
 	}
 
-	fp, err := os.Create("wgpu/wrappers.go")
+	fp, err := os.Create("wgpu/gen_wrappers.go")
 	if err != nil {
 		panic(err)
 	}

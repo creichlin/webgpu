@@ -148,15 +148,8 @@ static inline void gowebgpu_command_encoder_write_timestamp(WGPUCommandEncoder c
 import "C"
 import (
 	"errors"
-	"sync/atomic"
 	"unsafe"
 )
-
-type CommandEncoder struct {
-	device   *Device
-	ref      C.WGPUCommandEncoder
-	released int32
-}
 
 type ComputePassDescriptor struct {
 	Label string
@@ -541,10 +534,4 @@ func (p *CommandEncoder) TryResolveQuerySet(querySet *QuerySet, firstQuery uint3
 		errorCallbackHandle.ToPointer(),
 	)
 	return
-}
-
-func (p *CommandEncoder) Release() {
-	if p.ref != nil && atomic.CompareAndSwapInt32(&p.released, 0, 1) {
-		C.wgpuCommandEncoderRelease(p.ref)
-	}
 }
