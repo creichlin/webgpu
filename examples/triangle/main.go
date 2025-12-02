@@ -171,8 +171,7 @@ func (s *State) Render() error {
 
 	renderPass.SetPipeline(s.pipeline)
 	renderPass.Draw(3, 1, 0, 0)
-	renderPass.TryEnd()
-	renderPass.Release() // must release
+	renderPass.End()
 
 	cmdBuffer, err := encoder.TryFinish(nil)
 	if err != nil {

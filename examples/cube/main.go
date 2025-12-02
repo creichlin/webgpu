@@ -373,8 +373,7 @@ func (s *State) Render() error {
 	renderPass.SetIndexBuffer(s.indexBuf, wgpu.IndexFormatUint16, 0, wgpu.WholeSize)
 	renderPass.SetVertexBuffer(0, s.vertexBuf, 0, wgpu.WholeSize)
 	renderPass.DrawIndexed(uint32(len(indexData)), 1, 0, 0, 0)
-	renderPass.TryEnd()
-	renderPass.Release() // must release
+	renderPass.End()
 
 	cmdBuffer, err := encoder.TryFinish(nil)
 	if err != nil {

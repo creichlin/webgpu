@@ -69,6 +69,8 @@ func (p *RenderPassEncoder) DrawIndirect(indirectBuffer *Buffer, indirectOffset 
 	C.wgpuRenderPassEncoderDrawIndirect(p.ref, indirectBuffer.ref, C.uint64_t(indirectOffset))
 }
 
+// TryEnd ends the current render pass encoder.
+// This will also release the instance, so it must not be used afterwards
 func (p *RenderPassEncoder) TryEnd() (err error) {
 	errorCallbackHandle := makeErrorCallback(&err)
 	defer errorCallbackHandle.Delete()
@@ -78,6 +80,10 @@ func (p *RenderPassEncoder) TryEnd() (err error) {
 		p.device.ref,
 		errorCallbackHandle.ToPointer(),
 	)
+
+	// also release the render pass at this point
+	p.Release()
+
 	return
 }
 
@@ -277,5 +283,6 @@ func (p *RenderPassEncoder) MultiDrawIndexedIndirectCount(encoder *RenderPassEnc
 func (p *RenderPassEncoder) Release() {
 	if p.ref != nil && atomic.CompareAndSwapInt32(&p.released, 0, 1) {
 		C.wgpuRenderPassEncoderRelease(p.ref)
+		p.ref = nil
 	}
 }

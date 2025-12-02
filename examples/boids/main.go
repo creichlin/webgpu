@@ -338,8 +338,7 @@ func (s *State) Render() error {
 	renderPass.SetVertexBuffer(0, s.particleBuffers[(s.frameNum+1)%2], 0, wgpu.WholeSize)
 	renderPass.SetVertexBuffer(1, s.vertexBuffer, 0, wgpu.WholeSize)
 	renderPass.Draw(3, NumParticles, 0, 0)
-	renderPass.TryEnd()
-	renderPass.Release() // must release
+	renderPass.End()
 
 	s.frameNum += 1
 
