@@ -1,3 +1,6 @@
+[![Go Reference](https://pkg.go.dev/badge/github.com/oliverbestmann/webgpu/wgpu.svg)](https://pkg.go.dev/github.com/oliverbestmann/webgpu/wgpu)
+![CI workflow](https://github.com/oliverbestmann/webgpu/actions/workflows/ci.yml/badge.svg)
+
 # WebGPU
 
 Current upstream version: v27.0.2.0
