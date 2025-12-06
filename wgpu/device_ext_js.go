@@ -9,7 +9,9 @@ import (
 // TODO(kai): this only needs to be separate for js because
 //
 //	[Buffer.GetMappedRange] does not work correctly without GopherJS.
-func (g *Device) TryCreateBufferInit(descriptor *BufferInitDescriptor) (*Buffer, error) {
+func (g *Device) TryCreateBufferInit(descriptor *BufferInitDescriptor) (_ *Buffer, err error) {
+	defer handleJsException(&err)
+
 	if len(descriptor.Contents) == 0 {
 		return g.TryCreateBuffer(&BufferDescriptor{
 			Label:            descriptor.Label,

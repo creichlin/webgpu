@@ -52,7 +52,9 @@ func (g *Texture) GetSampleCount() uint32 {
 
 // TryCreateView as described:
 // https://gpuweb.github.io/gpuweb/#dom-gputexture-createview
-func (g *Texture) TryCreateView(descriptor *TextureViewDescriptor) (*TextureView, error) {
+func (g *Texture) TryCreateView(descriptor *TextureViewDescriptor) (_ *TextureView, err error) {
+	defer handleJsException(&err)
+
 	jsView := g.jsValue.Call("createView", pointerToJS(descriptor))
 	return &TextureView{
 		jsValue: jsView,

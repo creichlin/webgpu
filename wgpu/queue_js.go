@@ -23,27 +23,29 @@ func (g *Queue) Submit(commandBuffers ...*CommandBuffer) SubmissionIndex {
 // TryWriteBuffer as described:
 // https://gpuweb.github.io/gpuweb/#dom-gpuqueue-writebuffer
 func (g *Queue) TryWriteBuffer(buffer *Buffer, offset uint64, data []byte) (err error) {
-	defer runtime.KeepAlive(data)
-
+	defer handleJsException(&err)
 	address := uintptr(unsafe.Pointer(&data[0]))
 	queueWriteBuffer.Invoke(g.jsValue, pointerToJS(buffer), offset, address, uint64(0), len(data))
+	runtime.KeepAlive(data)
 	return
 }
 
 // TryWriteTexture as described:
 // https://gpuweb.github.io/gpuweb/#dom-gpuqueue-writetexture
 func (g *Queue) TryWriteTexture(destination *TexelCopyTextureInfo, data []byte, dataLayout *TexelCopyBufferLayout, writeSize *Extent3D) (err error) {
-	defer runtime.KeepAlive(data)
+	defer handleJsException(&err)
 
 	address := uintptr(unsafe.Pointer(&data[0]))
 	queueWriteTexture.Invoke(g.jsValue, pointerToJS(destination), address, len(data), pointerToJS(dataLayout), pointerToJS(writeSize))
+	runtime.KeepAlive(data)
 	return
 }
 
 // OnSubmittedWorkDone as described:
 // https://gpuweb.github.io/gpuweb/#dom-gpuqueue-onsubmittedworkdone
 func (g *Queue) OnSubmittedWorkDone(callback QueueWorkDoneCallback) {
-	jsx.Await(g.jsValue.Call("onSubmittedWorkDone")) // TODO(kai): is this correct?
+	// TODO should probably just schedule the callback using .then
+	jsx.Await(g.jsValue.Call("onSubmittedWorkDone"))
 	callback(QueueWorkDoneStatusSuccess)
 }
 

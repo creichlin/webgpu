@@ -115,6 +115,17 @@ func (g *CommandEncoderDescriptor) toJS() any {
 	return map[string]any{"label": g.Label}
 }
 
+func (g *RenderBundleEncoderDescriptor) toJS() any {
+	return map[string]any{
+		"label":              g.Label,
+		"colorFormats":       mapSlice(g.ColorFormats, func(s TextureFormat) any { return enumToJS(s) }),
+		"depthStencilFormat": enumToJS(g.DepthStencilFormat),
+		"sampleCount":        g.SampleCount,
+		"depthReadOnly":      g.DepthReadOnly,
+		"stencilReadOnly":    g.StencilReadOnly,
+	}
+}
+
 func (g *CommandBufferDescriptor) toJS() any {
 	return map[string]any{"label": g.Label}
 }

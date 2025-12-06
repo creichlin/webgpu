@@ -84,7 +84,8 @@ func (g *RenderPassEncoder) DrawIndexed(indexCount uint32, instanceCount uint32,
 
 // TryEnd as described:
 // https://gpuweb.github.io/gpuweb/#dom-gpurenderpassencoder-end
-func (g *RenderPassEncoder) TryEnd() error {
+func (g *RenderPassEncoder) TryEnd() (err error) {
+	defer handleJsException(&err)
 	g.jsValue.Call("end")
 	return nil
 }

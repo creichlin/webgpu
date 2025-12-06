@@ -33,6 +33,10 @@ genuinely fail, such as `RequestAdapter`.
 If maintaining panic-free code is essential for your needs, there exists a
 `Try` variant for most methods, such as `TryWriteBuffer(...) error`, which allows you to handle errors without panics.
 
+### WASM
+
+Error handling in the browser's WebGPU implementation is often asynchronous. For instance, an invalid WGSL shader file will not immediately return an error or throw an exception from `CreateShaderModule`. Some errors do cause synchronous exceptions, such as missing required properties. This library attempts to address these by catching synchronous exceptions in `Try` methods, but some validation errors, like an invalid `usage` attribute for buffer creation, might be missed.
+
 ## Prebuild libraries
 
 This repository uses prebuild libraries provided by `wgpu-native`. All libraries combined are more than 512mb in size,

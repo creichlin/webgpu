@@ -26,7 +26,14 @@ func (g *Buffer) GetMappedRange(offset, size uint) []byte {
 }
 
 func (g *Buffer) TryMapAsync(mode MapMode, offset uint64, size uint64, callback BufferMapCallback) (err error) {
-	_, ok := jsx.Await(g.jsValue.Call("mapAsync", uint32(mode), offset, size))
+	defer handleJsException(&err)
+
+	// mapAsync will just return a promise
+	promise := g.jsValue.Call("mapAsync", uint32(mode), offset, size)
+
+	// TODO probably better to use .Then(...) on the promise
+	//  to schedule the callback some time in the future and not to block here
+	_, ok := jsx.Await(promise)
 	if !ok {
 		callback(MapAsyncStatusError)
 		return
@@ -37,6 +44,8 @@ func (g *Buffer) TryMapAsync(mode MapMode, offset uint64, size uint64, callback 
 }
 
 func (g *Buffer) TryUnmap() (err error) {
+	defer handleJsException(&err)
+
 	g.jsValue.Call("unmap")
 	return
 }

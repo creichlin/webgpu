@@ -16,7 +16,9 @@ func (g *Surface) Configure(device *Device, config *SurfaceConfiguration) {
 	g.jsValue.Call("configure", jsConfig)
 }
 
-func (g *Surface) TryGetCurrentTexture() (*Texture, error) {
+func (g *Surface) TryGetCurrentTexture() (_ *Texture, err error) {
+	defer handleJsException(&err)
+
 	texture := g.jsValue.Call("getCurrentTexture")
 	return &Texture{texture}, nil
 }

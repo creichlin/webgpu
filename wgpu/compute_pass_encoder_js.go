@@ -54,7 +54,9 @@ func (g *ComputePassEncoder) DispatchWorkgroups(workgroupCountX, workgroupCountY
 
 // TryEnd as described:
 // https://gpuweb.github.io/gpuweb/#dom-gpucomputepassencoder-end
-func (g *ComputePassEncoder) TryEnd() error {
+func (g *ComputePassEncoder) TryEnd() (err error) {
+	defer handleJsException(&err)
+
 	g.jsValue.Call("end")
 	return nil
 }
