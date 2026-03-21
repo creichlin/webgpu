@@ -6,7 +6,7 @@ set -ex -o pipefail
 # the header files to wgpu/lib.
 # the library files are pushed to branches according to the arch.
 
-VERSION="v27.0.2.0"
+VERSION="v27.0.4.0"
 
 ZIPS="releases-$VERSION"
 
