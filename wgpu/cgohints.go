@@ -27,6 +27,8 @@ package wgpu
 #cgo nocallback go_wgpuCommandEncoderPushDebugGroup
 #cgo noescape go_wgpuCommandEncoderResolveQuerySet
 #cgo nocallback go_wgpuCommandEncoderResolveQuerySet
+#cgo noescape go_wgpuCommandEncoderWriteTimestamp
+#cgo nocallback go_wgpuCommandEncoderWriteTimestamp
 #cgo noescape go_wgpuComputePassEncoderEnd
 #cgo nocallback go_wgpuComputePassEncoderEnd
 #cgo noescape go_wgpuDeviceCreateBindGroup

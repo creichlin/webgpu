@@ -91,3 +91,9 @@ func (g *CommandEncoder) TryResolveQuerySet(querySet *QuerySet, query uint32, co
 	g.jsValue.Call("resolveQuerySet", querySet.toJS(), query, count, destination.toJS(), offset)
 	return nil
 }
+
+func (g *CommandEncoder) TryWriteTimestamp(querySet *QuerySet, queryIndex uint32) (err error) {
+	defer handleJsException(&err)
+	g.jsValue.Call("writeTimestamp", querySet.toJS(), queryIndex)
+	return nil
+}

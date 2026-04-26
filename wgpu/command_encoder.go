@@ -414,3 +414,18 @@ func (p *CommandEncoder) TryResolveQuerySet(querySet *QuerySet, firstQuery uint3
 
 	return errh.ToError()
 }
+
+func (p *CommandEncoder) TryWriteTimestamp(querySet *QuerySet, queryIndex uint32) error {
+	errh := acquireErrorCallback()
+	defer errh.Done()
+
+	C.go_wgpuCommandEncoderWriteTimestamp(
+		p.device,
+		errh.ToPointer(),
+		p.ref,
+		querySet.ref,
+		C.uint32_t(queryIndex),
+	)
+
+	return errh.ToError()
+}

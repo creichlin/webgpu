@@ -63,6 +63,11 @@ func (p *CommandEncoder) ResolveQuerySet(querySet *QuerySet, firstQuery uint32, 
 	err := p.TryResolveQuerySet(querySet, firstQuery, queryCount, destination, destinationOffset)
 	panicIf(err, "CommandEncoder.ResolveQuerySet failed")
 }
+
+func (p *CommandEncoder) WriteTimestamp(querySet *QuerySet, queryIndex uint32) {
+	err := p.TryWriteTimestamp(querySet, queryIndex)
+	panicIf(err, "CommandEncoder.WriteTimestamp failed")
+}
 func (p *ComputePassEncoder) End() { err := p.TryEnd(); panicIf(err, "ComputePassEncoder.End failed") }
 func (g *Device) CreateBindGroup(descriptor *BindGroupDescriptor) *BindGroup {
 	r0, err := g.TryCreateBindGroup(descriptor)
