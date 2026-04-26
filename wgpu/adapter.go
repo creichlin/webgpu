@@ -14,6 +14,7 @@ extern void gowebgpu_device_lost_callback_c(WGPUDeviceLostReason reason, char co
 import "C"
 import (
 	"errors"
+	"runtime"
 	"unsafe"
 )
 
@@ -126,6 +127,9 @@ func gowebgpu_device_lost_callback_go(reason C.WGPUDeviceLostReason, message *C.
 }
 
 func (g *Adapter) RequestDevice(descriptor *DeviceDescriptor) (*Device, error) {
+	var pinner runtime.Pinner
+	defer pinner.Unpin()
+
 	var desc *C.WGPUDeviceDescriptor = nil
 
 	if descriptor != nil {
@@ -203,10 +207,12 @@ func (g *Adapter) RequestDevice(descriptor *DeviceDescriptor) (*Device, error) {
 
 		if descriptor.DeviceLostCallback != nil {
 			handle := newHandle(descriptor.DeviceLostCallback)
+			udata := handle.ToPointer()
+			pinner.Pin(udata)
 
 			desc.deviceLostCallbackInfo = C.WGPUDeviceLostCallbackInfo{
 				callback:  C.WGPUDeviceLostCallback(C.gowebgpu_device_lost_callback_c),
-				userdata1: handle.ToPointer(),
+				userdata1: udata,
 			}
 		}
 

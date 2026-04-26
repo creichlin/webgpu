@@ -4,6 +4,7 @@ package wgpu
 
 // #include "gen_wgpu_wrappers.h"
 import "C"
+
 import (
 	"errors"
 	"unsafe"
@@ -90,7 +91,7 @@ func (p *CommandEncoder) TryBeginRenderPass(descriptor *RenderPassDescriptor) (*
 			depthStencilAttachment.stencilLoadOp = C.WGPULoadOp(descriptor.DepthStencilAttachment.StencilLoadOp)
 			depthStencilAttachment.stencilStoreOp = C.WGPUStoreOp(descriptor.DepthStencilAttachment.StencilStoreOp)
 			depthStencilAttachment.stencilClearValue = C.uint32_t(descriptor.DepthStencilAttachment.StencilClearValue)
-			depthStencilAttachment.stencilReadOnly = cBool(descriptor.DepthStencilAttachment.DepthReadOnly)
+			depthStencilAttachment.stencilReadOnly = cBool(descriptor.DepthStencilAttachment.StencilReadOnly)
 
 			desc.depthStencilAttachment = depthStencilAttachment
 		}
@@ -395,6 +396,21 @@ func (p *CommandEncoder) TryResolveQuerySet(querySet *QuerySet, firstQuery uint3
 		C.uint32_t(queryCount),
 		destination.ref,
 		C.uint64_t(destinationOffset),
+	)
+
+	return errh.ToError()
+}
+
+func (p *CommandEncoder) TryWriteTimestamp(querySet *QuerySet, queryIndex uint32) error {
+	errh := acquireErrorCallback()
+	defer errh.Done()
+
+	C.go_wgpuCommandEncoderWriteTimestamp(
+		p.device,
+		errh.ToPointer(),
+		p.ref,
+		querySet.ref,
+		C.uint32_t(queryIndex),
 	)
 
 	return errh.ToError()
