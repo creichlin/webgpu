@@ -69,10 +69,10 @@ func gowebgpu_buffer_map_callback_go(status C.WGPUMapAsyncStatus, userdata unsaf
 	}
 }
 
-func (p *Buffer) TryMapAsync(mode MapMode, offset uint64, size uint64, callback BufferMapCallback) (err error) {
+func (p *Buffer) TryMapAsync(mode MapMode, offset uint64, size uint64, callback BufferMapCallback) error {
 	callbackHandle := newHandle(callback)
 
-	errorCallbackHandle := makeErrorCallback(&err)
+	errorCallbackHandle, perr := makeErrorCallback()
 	defer errorCallbackHandle.Delete()
 
 	C.gowebgpu_buffer_map_async(
@@ -87,11 +87,12 @@ func (p *Buffer) TryMapAsync(mode MapMode, offset uint64, size uint64, callback 
 		p.device.ref,
 		errorCallbackHandle.ToPointer(),
 	)
-	return
+
+	return *perr
 }
 
-func (p *Buffer) TryUnmap() (err error) {
-	errorCallbackHandle := makeErrorCallback(&err)
+func (p *Buffer) TryUnmap() error {
+	errorCallbackHandle, perr := makeErrorCallback()
 	defer errorCallbackHandle.Delete()
 
 	C.gowebgpu_buffer_unmap(
@@ -99,5 +100,6 @@ func (p *Buffer) TryUnmap() (err error) {
 		p.device.ref,
 		errorCallbackHandle.ToPointer(),
 	)
-	return
+
+	return *perr
 }

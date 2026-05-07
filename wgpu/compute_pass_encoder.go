@@ -39,12 +39,12 @@ func (p *ComputePassEncoder) DispatchWorkgroupsIndirect(indirectBuffer *Buffer, 
 	C.wgpuComputePassEncoderDispatchWorkgroupsIndirect(p.ref, indirectBuffer.ref, C.uint64_t(indirectOffset))
 }
 
-func (p *ComputePassEncoder) TryEnd() (err error) {
-	errorCallbackHandle := makeErrorCallback(&err)
+func (p *ComputePassEncoder) TryEnd() error {
+	errorCallbackHandle, perr := makeErrorCallback()
 	defer errorCallbackHandle.Delete()
 
 	C.gowebgpu_compute_pass_encoder_end(p.ref, p.device.ref, errorCallbackHandle.ToPointer())
-	return
+	return *perr
 }
 
 func (p *ComputePassEncoder) EndPipelineStatisticsQuery() {
