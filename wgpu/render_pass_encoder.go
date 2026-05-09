@@ -211,12 +211,11 @@ func (p *RenderPassEncoder) SetViewport(x, y, width, height, minDepth, maxDepth 
 	)
 }
 
-func (p *RenderPassEncoder) SetPushConstants(stages ShaderStage, offset uint32, data []byte) {
+func (p *RenderPassEncoder) SetImmediates(offset uint32, data []byte) {
 	size := len(data)
 	if size == 0 {
-		C.wgpuRenderPassEncoderSetPushConstants(
+		C.wgpuRenderPassEncoderSetImmediates(
 			p.ref,
-			C.WGPUShaderStage(stages),
 			C.uint32_t(offset),
 			0,
 			nil,
@@ -224,9 +223,8 @@ func (p *RenderPassEncoder) SetPushConstants(stages ShaderStage, offset uint32, 
 		return
 	}
 
-	C.wgpuRenderPassEncoderSetPushConstants(
+	C.wgpuRenderPassEncoderSetImmediates(
 		p.ref,
-		C.WGPUShaderStage(stages),
 		C.uint32_t(offset),
 		C.uint32_t(size),
 		unsafe.Pointer(&data[0]),

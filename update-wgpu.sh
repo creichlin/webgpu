@@ -6,7 +6,7 @@ set -ex -o pipefail
 # the header files to wgpu/lib.
 # the library files are pushed to branches according to the arch.
 
-VERSION="v27.0.4.0"
+VERSION="v29.0.0.0"
 
 ZIPS="releases-$VERSION"
 
@@ -137,6 +137,8 @@ for SYSTEM in $SYSTEMS ; do
   env GOPROXY=direct go get -u github.com/oliverbestmann/webgpu/libs-$SYSTEM@libs-$SYSTEM
 done
 
+# re-generate enums & bindings
+go generate ./wgpu
+
 git add go.mod go.sum wgpu/lib/
 git commit -m "chore: update wgpu to $VERSION"
-git tag

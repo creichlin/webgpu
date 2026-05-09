@@ -57,7 +57,7 @@ type Limits struct {
 	MaxComputeWorkgroupSizeZ                  uint32
 	MaxComputeWorkgroupsPerDimension          uint32
 
-	MaxPushConstantSize   uint32
+	MaxImmediateSize      uint32
 	MaxNonSamplerBindings uint32
 }
 

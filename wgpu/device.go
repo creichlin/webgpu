@@ -491,7 +491,7 @@ func (g *Device) TryCreateComputePipeline(descriptor *ComputePipelineDescriptor)
 			desc.layout = descriptor.Layout.ref
 		}
 
-		var compute C.WGPUProgrammableStageDescriptor
+		var compute C.WGPUComputeState
 		if descriptor.Compute.Module != nil {
 			compute.module = descriptor.Compute.Module.ref
 		}
@@ -528,9 +528,11 @@ type PushConstantRange struct {
 }
 
 type PipelineLayoutDescriptor struct {
-	Label              string
-	BindGroupLayouts   []*BindGroupLayout
-	PushConstantRanges []PushConstantRange
+	Label            string
+	BindGroupLayouts []*BindGroupLayout
+
+	// enable support for immediates
+	EnableImmediates bool
 }
 
 func (g *Device) TryCreatePipelineLayout(descriptor *PipelineLayoutDescriptor) (*PipelineLayout, error) {
@@ -560,29 +562,14 @@ func (g *Device) TryCreatePipelineLayout(descriptor *PipelineLayoutDescriptor) (
 			desc.bindGroupLayouts = (*C.WGPUBindGroupLayout)(bindGroupLayouts)
 		}
 
-		if len(descriptor.PushConstantRanges) > 0 {
+		if descriptor.EnableImmediates {
 			pipelineLayoutExtras := (*C.WGPUPipelineLayoutExtras)(C.malloc(C.size_t(unsafe.Sizeof(C.WGPUPipelineLayoutExtras{}))))
 			defer C.free(unsafe.Pointer(pipelineLayoutExtras))
 
 			pipelineLayoutExtras.chain.next = nil
 			pipelineLayoutExtras.chain.sType = C.WGPUSType_PipelineLayoutExtras
 
-			pushConstantRangeCount := len(descriptor.PushConstantRanges)
-			pushConstantRanges := C.malloc(C.size_t(pushConstantRangeCount) * C.size_t(unsafe.Sizeof(C.WGPUPushConstantRange{})))
-			defer C.free(pushConstantRanges)
-
-			pushConstantRangesSlice := unsafe.Slice((*C.WGPUPushConstantRange)(pushConstantRanges), pushConstantRangeCount)
-
-			for i, v := range descriptor.PushConstantRanges {
-				pushConstantRangesSlice[i] = C.WGPUPushConstantRange{
-					stages: C.WGPUShaderStage(v.Stages),
-					start:  C.uint32_t(v.Start),
-					end:    C.uint32_t(v.End),
-				}
-			}
-
-			pipelineLayoutExtras.pushConstantRangeCount = C.size_t(pushConstantRangeCount)
-			pipelineLayoutExtras.pushConstantRanges = (*C.WGPUPushConstantRange)(pushConstantRanges)
+			pipelineLayoutExtras.immediateDataSize = 4
 
 			desc.nextInChain = (*C.WGPUChainedStruct)(unsafe.Pointer(pipelineLayoutExtras))
 		} else {
@@ -1206,7 +1193,7 @@ func (g *Device) GetLimits() Limits {
 
 	nativeLimits := (*C.WGPUNativeLimits)(C.malloc(C.size_t(unsafe.Sizeof(C.WGPUNativeLimits{}))))
 	defer C.free(unsafe.Pointer(&nativeLimits))
-	limits.nextInChain = (*C.WGPUChainedStructOut)(unsafe.Pointer(&nativeLimits))
+	limits.nextInChain = (*C.WGPUChainedStruct)(unsafe.Pointer(&nativeLimits))
 
 	C.wgpuDeviceGetLimits(g.ref, &limits)
 
@@ -1241,7 +1228,7 @@ func (g *Device) GetLimits() Limits {
 		MaxComputeWorkgroupSizeZ:                  uint32(limits.maxComputeWorkgroupSizeZ),
 		MaxComputeWorkgroupsPerDimension:          uint32(limits.maxComputeWorkgroupsPerDimension),
 
-		MaxPushConstantSize:   uint32(nativeLimits.maxPushConstantSize),
+		MaxImmediateSize:      uint32(nativeLimits.maxImmediateSize),
 		MaxNonSamplerBindings: uint32(nativeLimits.maxNonSamplerBindings),
 	}
 }

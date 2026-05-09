@@ -349,20 +349,14 @@ func (v CompareFunction) String() string {
 type CompilationInfoRequestStatus uint32
 
 const CompilationInfoRequestStatusSuccess CompilationInfoRequestStatus = 0x00000001
-const CompilationInfoRequestStatusInstanceDropped CompilationInfoRequestStatus = 0x00000002
-const CompilationInfoRequestStatusError CompilationInfoRequestStatus = 0x00000003
-const CompilationInfoRequestStatusUnknown CompilationInfoRequestStatus = 0x00000004
+const CompilationInfoRequestStatusCallbackCancelled CompilationInfoRequestStatus = 0x00000002
 
 func (v CompilationInfoRequestStatus) String() string {
 	switch v {
 	case CompilationInfoRequestStatusSuccess:
 		return "success"
-	case CompilationInfoRequestStatusInstanceDropped:
-		return "instance-dropped"
-	case CompilationInfoRequestStatusError:
-		return "error"
-	case CompilationInfoRequestStatusUnknown:
-		return "unknown"
+	case CompilationInfoRequestStatusCallbackCancelled:
+		return "callback-cancelled"
 	default:
 		return ""
 	}
@@ -382,6 +376,37 @@ func (v CompilationMessageType) String() string {
 		return "warning"
 	case CompilationMessageTypeInfo:
 		return "info"
+	default:
+		return ""
+	}
+}
+
+type ComponentSwizzle uint32
+
+const ComponentSwizzleUndefined ComponentSwizzle = 0x00000000
+const ComponentSwizzleZero ComponentSwizzle = 0x00000001
+const ComponentSwizzleOne ComponentSwizzle = 0x00000002
+const ComponentSwizzleR ComponentSwizzle = 0x00000003
+const ComponentSwizzleG ComponentSwizzle = 0x00000004
+const ComponentSwizzleB ComponentSwizzle = 0x00000005
+const ComponentSwizzleA ComponentSwizzle = 0x00000006
+
+func (v ComponentSwizzle) String() string {
+	switch v {
+	case ComponentSwizzleUndefined:
+		return "undefined"
+	case ComponentSwizzleZero:
+		return "zero"
+	case ComponentSwizzleOne:
+		return "one"
+	case ComponentSwizzleR:
+		return "r"
+	case ComponentSwizzleG:
+		return "g"
+	case ComponentSwizzleB:
+		return "b"
+	case ComponentSwizzleA:
+		return "a"
 	default:
 		return ""
 	}
@@ -415,23 +440,20 @@ func (v CompositeAlphaMode) String() string {
 type CreatePipelineAsyncStatus uint32
 
 const CreatePipelineAsyncStatusSuccess CreatePipelineAsyncStatus = 0x00000001
-const CreatePipelineAsyncStatusInstanceDropped CreatePipelineAsyncStatus = 0x00000002
+const CreatePipelineAsyncStatusCallbackCancelled CreatePipelineAsyncStatus = 0x00000002
 const CreatePipelineAsyncStatusValidationError CreatePipelineAsyncStatus = 0x00000003
 const CreatePipelineAsyncStatusInternalError CreatePipelineAsyncStatus = 0x00000004
-const CreatePipelineAsyncStatusUnknown CreatePipelineAsyncStatus = 0x00000005
 
 func (v CreatePipelineAsyncStatus) String() string {
 	switch v {
 	case CreatePipelineAsyncStatusSuccess:
 		return "success"
-	case CreatePipelineAsyncStatusInstanceDropped:
-		return "instance-dropped"
+	case CreatePipelineAsyncStatusCallbackCancelled:
+		return "callback-cancelled"
 	case CreatePipelineAsyncStatusValidationError:
 		return "validation-error"
 	case CreatePipelineAsyncStatusInternalError:
 		return "internal-error"
-	case CreatePipelineAsyncStatusUnknown:
-		return "unknown"
 	default:
 		return ""
 	}
@@ -463,7 +485,7 @@ type DeviceLostReason uint32
 
 const DeviceLostReasonUnknown DeviceLostReason = 0x00000001
 const DeviceLostReasonDestroyed DeviceLostReason = 0x00000002
-const DeviceLostReasonInstanceDropped DeviceLostReason = 0x00000003
+const DeviceLostReasonCallbackCancelled DeviceLostReason = 0x00000003
 const DeviceLostReasonFailedCreation DeviceLostReason = 0x00000004
 
 func (v DeviceLostReason) String() string {
@@ -472,8 +494,8 @@ func (v DeviceLostReason) String() string {
 		return "unknown"
 	case DeviceLostReasonDestroyed:
 		return "destroyed"
-	case DeviceLostReasonInstanceDropped:
-		return "instance-dropped"
+	case DeviceLostReasonCallbackCancelled:
+		return "callback-cancelled"
 	case DeviceLostReasonFailedCreation:
 		return "failed-creation"
 	default:
@@ -495,6 +517,25 @@ func (v Dx12Compiler) String() string {
 		return "fxc"
 	case Dx12CompilerDxc:
 		return "dxc"
+	default:
+		return ""
+	}
+}
+
+type Dx12SwapchainKind uint32
+
+const Dx12SwapchainKindUndefined Dx12SwapchainKind = 0x00000000
+const Dx12SwapchainKindDxgiFromHwnd Dx12SwapchainKind = 0x00000001
+const Dx12SwapchainKindDxgiFromVisual Dx12SwapchainKind = 0x00000002
+
+func (v Dx12SwapchainKind) String() string {
+	switch v {
+	case Dx12SwapchainKindUndefined:
+		return "undefined"
+	case Dx12SwapchainKindDxgiFromHwnd:
+		return "dxgi-from-hwnd"
+	case Dx12SwapchainKindDxgiFromVisual:
+		return "dxgi-from-visual"
 	default:
 		return ""
 	}
@@ -546,11 +587,14 @@ func (v ErrorType) String() string {
 
 type FeatureLevel uint32
 
+const FeatureLevelUndefined FeatureLevel = 0x00000000
 const FeatureLevelCompatibility FeatureLevel = 0x00000001
 const FeatureLevelCore FeatureLevel = 0x00000002
 
 func (v FeatureLevel) String() string {
 	switch v {
+	case FeatureLevelUndefined:
+		return "undefined"
 	case FeatureLevelCompatibility:
 		return "compatibility"
 	case FeatureLevelCore:
@@ -562,24 +606,29 @@ func (v FeatureLevel) String() string {
 
 type FeatureName uint32
 
-const FeatureNameUndefined FeatureName = 0x00000000
-const FeatureNameDepthClipControl FeatureName = 0x00000001
-const FeatureNameDepth32FloatStencil8 FeatureName = 0x00000002
-const FeatureNameTimestampQuery FeatureName = 0x00000003
+const FeatureNameCoreFeaturesAndLimits FeatureName = 0x00000001
+const FeatureNameDepthClipControl FeatureName = 0x00000002
+const FeatureNameDepth32FloatStencil8 FeatureName = 0x00000003
 const FeatureNameTextureCompressionBC FeatureName = 0x00000004
 const FeatureNameTextureCompressionBCSliced3D FeatureName = 0x00000005
 const FeatureNameTextureCompressionETC2 FeatureName = 0x00000006
 const FeatureNameTextureCompressionASTC FeatureName = 0x00000007
 const FeatureNameTextureCompressionASTCSliced3D FeatureName = 0x00000008
-const FeatureNameIndirectFirstInstance FeatureName = 0x00000009
-const FeatureNameShaderF16 FeatureName = 0x0000000A
-const FeatureNameRG11B10UfloatRenderable FeatureName = 0x0000000B
-const FeatureNameBGRA8UnormStorage FeatureName = 0x0000000C
-const FeatureNameFloat32Filterable FeatureName = 0x0000000D
-const FeatureNameFloat32Blendable FeatureName = 0x0000000E
-const FeatureNameClipDistances FeatureName = 0x0000000F
-const FeatureNameDualSourceBlending FeatureName = 0x00000010
-const NativeFeaturePushConstants FeatureName = 0x00030001
+const FeatureNameTimestampQuery FeatureName = 0x00000009
+const FeatureNameIndirectFirstInstance FeatureName = 0x0000000A
+const FeatureNameShaderF16 FeatureName = 0x0000000B
+const FeatureNameRG11B10UfloatRenderable FeatureName = 0x0000000C
+const FeatureNameBGRA8UnormStorage FeatureName = 0x0000000D
+const FeatureNameFloat32Filterable FeatureName = 0x0000000E
+const FeatureNameFloat32Blendable FeatureName = 0x0000000F
+const FeatureNameClipDistances FeatureName = 0x00000010
+const FeatureNameDualSourceBlending FeatureName = 0x00000011
+const FeatureNameSubgroups FeatureName = 0x00000012
+const FeatureNameTextureFormatsTier1 FeatureName = 0x00000013
+const FeatureNameTextureFormatsTier2 FeatureName = 0x00000014
+const FeatureNamePrimitiveIndex FeatureName = 0x00000015
+const FeatureNameTextureComponentSwizzle FeatureName = 0x00000016
+const NativeFeatureImmediates FeatureName = 0x00030001
 const NativeFeatureTextureAdapterSpecificFormatFeatures FeatureName = 0x00030002
 const NativeFeatureMultiDrawIndirectCount FeatureName = 0x00030004
 const NativeFeatureVertexWritableStorage FeatureName = 0x00030005
@@ -602,7 +651,6 @@ const NativeFeatureTextureFormatNv12 FeatureName = 0x0003001A
 const NativeFeatureRayQuery FeatureName = 0x0003001C
 const NativeFeatureShaderF64 FeatureName = 0x0003001D
 const NativeFeatureShaderI16 FeatureName = 0x0003001E
-const NativeFeatureShaderPrimitiveIndex FeatureName = 0x0003001F
 const NativeFeatureShaderEarlyDepthTest FeatureName = 0x00030020
 const NativeFeatureSubgroup FeatureName = 0x00030021
 const NativeFeatureSubgroupVertex FeatureName = 0x00030022
@@ -613,14 +661,12 @@ const NativeFeatureShaderInt64 FeatureName = 0x00030026
 
 func (v FeatureName) String() string {
 	switch v {
-	case FeatureNameUndefined:
-		return "undefined"
+	case FeatureNameCoreFeaturesAndLimits:
+		return "core-features-and-limits"
 	case FeatureNameDepthClipControl:
 		return "depth-clip-control"
 	case FeatureNameDepth32FloatStencil8:
 		return "depth32float-stencil8"
-	case FeatureNameTimestampQuery:
-		return "timestamp-query"
 	case FeatureNameTextureCompressionBC:
 		return "texture-compression-bc"
 	case FeatureNameTextureCompressionBCSliced3D:
@@ -631,6 +677,8 @@ func (v FeatureName) String() string {
 		return "texture-compression-astc"
 	case FeatureNameTextureCompressionASTCSliced3D:
 		return "texture-compression-astc-sliced3d"
+	case FeatureNameTimestampQuery:
+		return "timestamp-query"
 	case FeatureNameIndirectFirstInstance:
 		return "indirect-first-instance"
 	case FeatureNameShaderF16:
@@ -647,8 +695,18 @@ func (v FeatureName) String() string {
 		return "clip-distances"
 	case FeatureNameDualSourceBlending:
 		return "dual-source-blending"
-	case NativeFeaturePushConstants:
-		return "native-feature-push-constants"
+	case FeatureNameSubgroups:
+		return "subgroups"
+	case FeatureNameTextureFormatsTier1:
+		return "texture-formats-tier1"
+	case FeatureNameTextureFormatsTier2:
+		return "texture-formats-tier2"
+	case FeatureNamePrimitiveIndex:
+		return "primitive-index"
+	case FeatureNameTextureComponentSwizzle:
+		return "texture-component-swizzle"
+	case NativeFeatureImmediates:
+		return "native-feature-immediates"
 	case NativeFeatureTextureAdapterSpecificFormatFeatures:
 		return "native-feature-texture-adapter-specific-format-features"
 	case NativeFeatureMultiDrawIndirectCount:
@@ -693,8 +751,6 @@ func (v FeatureName) String() string {
 		return "native-feature-shader-f64"
 	case NativeFeatureShaderI16:
 		return "native-feature-shader-i16"
-	case NativeFeatureShaderPrimitiveIndex:
-		return "native-feature-shader-primitive-index"
 	case NativeFeatureShaderEarlyDepthTest:
 		return "native-feature-shader-early-depth-test"
 	case NativeFeatureSubgroup:
@@ -822,14 +878,33 @@ func (v InstanceBackend) String() string {
 	}
 }
 
+type InstanceFeatureName uint32
+
+const InstanceFeatureNameTimedWaitAny InstanceFeatureName = 0x00000001
+const InstanceFeatureNameShaderSourceSPIRV InstanceFeatureName = 0x00000002
+const InstanceFeatureNameMultipleDevicesPerAdapter InstanceFeatureName = 0x00000003
+
+func (v InstanceFeatureName) String() string {
+	switch v {
+	case InstanceFeatureNameTimedWaitAny:
+		return "timed-wait-any"
+	case InstanceFeatureNameShaderSourceSPIRV:
+		return "shader-source-spirv"
+	case InstanceFeatureNameMultipleDevicesPerAdapter:
+		return "multiple-devices-per-adapter"
+	default:
+		return ""
+	}
+}
+
 type InstanceFlag uint64
 
-const InstanceFlagDefault InstanceFlag = 0x00000000
+const InstanceFlagEmpty InstanceFlag = 0x00000000
 
 func (v InstanceFlag) String() string {
 	switch v {
-	case InstanceFlagDefault:
-		return "default"
+	case InstanceFlagEmpty:
+		return "empty"
 	default:
 		return ""
 	}
@@ -885,23 +960,20 @@ func (v LogLevel) String() string {
 type MapAsyncStatus uint32
 
 const MapAsyncStatusSuccess MapAsyncStatus = 0x00000001
-const MapAsyncStatusInstanceDropped MapAsyncStatus = 0x00000002
+const MapAsyncStatusCallbackCancelled MapAsyncStatus = 0x00000002
 const MapAsyncStatusError MapAsyncStatus = 0x00000003
 const MapAsyncStatusAborted MapAsyncStatus = 0x00000004
-const MapAsyncStatusUnknown MapAsyncStatus = 0x00000005
 
 func (v MapAsyncStatus) String() string {
 	switch v {
 	case MapAsyncStatusSuccess:
 		return "success"
-	case MapAsyncStatusInstanceDropped:
-		return "instance-dropped"
+	case MapAsyncStatusCallbackCancelled:
+		return "callback-cancelled"
 	case MapAsyncStatusError:
 		return "error"
 	case MapAsyncStatusAborted:
 		return "aborted"
-	case MapAsyncStatusUnknown:
-		return "unknown"
 	default:
 		return ""
 	}
@@ -940,6 +1012,28 @@ func (v MipmapFilterMode) String() string {
 		return "nearest"
 	case MipmapFilterModeLinear:
 		return "linear"
+	default:
+		return ""
+	}
+}
+
+type NativeDisplayHandleType uint32
+
+const NativeDisplayHandleTypeNone NativeDisplayHandleType = 0x00000000
+const NativeDisplayHandleTypeXlib NativeDisplayHandleType = 0x00000001
+const NativeDisplayHandleTypeXcb NativeDisplayHandleType = 0x00000002
+const NativeDisplayHandleTypeWayland NativeDisplayHandleType = 0x00000003
+
+func (v NativeDisplayHandleType) String() string {
+	switch v {
+	case NativeDisplayHandleTypeNone:
+		return "none"
+	case NativeDisplayHandleTypeXlib:
+		return "xlib"
+	case NativeDisplayHandleTypeXcb:
+		return "xcb"
+	case NativeDisplayHandleTypeWayland:
+		return "wayland"
 	default:
 		return ""
 	}
@@ -1039,17 +1133,17 @@ func (v PipelineStatisticName) String() string {
 type PopErrorScopeStatus uint32
 
 const PopErrorScopeStatusSuccess PopErrorScopeStatus = 0x00000001
-const PopErrorScopeStatusInstanceDropped PopErrorScopeStatus = 0x00000002
-const PopErrorScopeStatusEmptyStack PopErrorScopeStatus = 0x00000003
+const PopErrorScopeStatusCallbackCancelled PopErrorScopeStatus = 0x00000002
+const PopErrorScopeStatusError PopErrorScopeStatus = 0x00000003
 
 func (v PopErrorScopeStatus) String() string {
 	switch v {
 	case PopErrorScopeStatusSuccess:
 		return "success"
-	case PopErrorScopeStatusInstanceDropped:
-		return "instance-dropped"
-	case PopErrorScopeStatusEmptyStack:
-		return "empty-stack"
+	case PopErrorScopeStatusCallbackCancelled:
+		return "callback-cancelled"
+	case PopErrorScopeStatusError:
+		return "error"
 	default:
 		return ""
 	}
@@ -1069,6 +1163,22 @@ func (v PowerPreference) String() string {
 		return "low-power"
 	case PowerPreferenceHighPerformance:
 		return "high-performance"
+	default:
+		return ""
+	}
+}
+
+type PredefinedColorSpace uint32
+
+const PredefinedColorSpaceSRGB PredefinedColorSpace = 0x00000001
+const PredefinedColorSpaceDisplayP3 PredefinedColorSpace = 0x00000002
+
+func (v PredefinedColorSpace) String() string {
+	switch v {
+	case PredefinedColorSpaceSRGB:
+		return "srgb"
+	case PredefinedColorSpaceDisplayP3:
+		return "display-p3"
 	default:
 		return ""
 	}
@@ -1146,20 +1256,17 @@ func (v QueryType) String() string {
 type QueueWorkDoneStatus uint32
 
 const QueueWorkDoneStatusSuccess QueueWorkDoneStatus = 0x00000001
-const QueueWorkDoneStatusInstanceDropped QueueWorkDoneStatus = 0x00000002
+const QueueWorkDoneStatusCallbackCancelled QueueWorkDoneStatus = 0x00000002
 const QueueWorkDoneStatusError QueueWorkDoneStatus = 0x00000003
-const QueueWorkDoneStatusUnknown QueueWorkDoneStatus = 0x00000004
 
 func (v QueueWorkDoneStatus) String() string {
 	switch v {
 	case QueueWorkDoneStatusSuccess:
 		return "success"
-	case QueueWorkDoneStatusInstanceDropped:
-		return "instance-dropped"
+	case QueueWorkDoneStatusCallbackCancelled:
+		return "callback-cancelled"
 	case QueueWorkDoneStatusError:
 		return "error"
-	case QueueWorkDoneStatusUnknown:
-		return "unknown"
 	default:
 		return ""
 	}
@@ -1168,23 +1275,20 @@ func (v QueueWorkDoneStatus) String() string {
 type RequestAdapterStatus uint32
 
 const RequestAdapterStatusSuccess RequestAdapterStatus = 0x00000001
-const RequestAdapterStatusInstanceDropped RequestAdapterStatus = 0x00000002
+const RequestAdapterStatusCallbackCancelled RequestAdapterStatus = 0x00000002
 const RequestAdapterStatusUnavailable RequestAdapterStatus = 0x00000003
 const RequestAdapterStatusError RequestAdapterStatus = 0x00000004
-const RequestAdapterStatusUnknown RequestAdapterStatus = 0x00000005
 
 func (v RequestAdapterStatus) String() string {
 	switch v {
 	case RequestAdapterStatusSuccess:
 		return "success"
-	case RequestAdapterStatusInstanceDropped:
-		return "instance-dropped"
+	case RequestAdapterStatusCallbackCancelled:
+		return "callback-cancelled"
 	case RequestAdapterStatusUnavailable:
 		return "unavailable"
 	case RequestAdapterStatusError:
 		return "error"
-	case RequestAdapterStatusUnknown:
-		return "unknown"
 	default:
 		return ""
 	}
@@ -1193,20 +1297,17 @@ func (v RequestAdapterStatus) String() string {
 type RequestDeviceStatus uint32
 
 const RequestDeviceStatusSuccess RequestDeviceStatus = 0x00000001
-const RequestDeviceStatusInstanceDropped RequestDeviceStatus = 0x00000002
+const RequestDeviceStatusCallbackCancelled RequestDeviceStatus = 0x00000002
 const RequestDeviceStatusError RequestDeviceStatus = 0x00000003
-const RequestDeviceStatusUnknown RequestDeviceStatus = 0x00000004
 
 func (v RequestDeviceStatus) String() string {
 	switch v {
 	case RequestDeviceStatusSuccess:
 		return "success"
-	case RequestDeviceStatusInstanceDropped:
-		return "instance-dropped"
+	case RequestDeviceStatusCallbackCancelled:
+		return "callback-cancelled"
 	case RequestDeviceStatusError:
 		return "error"
-	case RequestDeviceStatusUnknown:
-		return "unknown"
 	default:
 		return ""
 	}
@@ -1363,9 +1464,8 @@ const SurfaceGetCurrentTextureStatusSuccessSuboptimal SurfaceGetCurrentTextureSt
 const SurfaceGetCurrentTextureStatusTimeout SurfaceGetCurrentTextureStatus = 0x00000003
 const SurfaceGetCurrentTextureStatusOutdated SurfaceGetCurrentTextureStatus = 0x00000004
 const SurfaceGetCurrentTextureStatusLost SurfaceGetCurrentTextureStatus = 0x00000005
-const SurfaceGetCurrentTextureStatusOutOfMemory SurfaceGetCurrentTextureStatus = 0x00000006
-const SurfaceGetCurrentTextureStatusDeviceLost SurfaceGetCurrentTextureStatus = 0x00000007
-const SurfaceGetCurrentTextureStatusError SurfaceGetCurrentTextureStatus = 0x00000008
+const SurfaceGetCurrentTextureStatusError SurfaceGetCurrentTextureStatus = 0x00000006
+const SurfaceGetCurrentTextureStatusOccluded SurfaceGetCurrentTextureStatus = 0x00030001
 
 func (v SurfaceGetCurrentTextureStatus) String() string {
 	switch v {
@@ -1379,12 +1479,10 @@ func (v SurfaceGetCurrentTextureStatus) String() string {
 		return "outdated"
 	case SurfaceGetCurrentTextureStatusLost:
 		return "lost"
-	case SurfaceGetCurrentTextureStatusOutOfMemory:
-		return "out-of-memory"
-	case SurfaceGetCurrentTextureStatusDeviceLost:
-		return "device-lost"
 	case SurfaceGetCurrentTextureStatusError:
 		return "error"
+	case SurfaceGetCurrentTextureStatusOccluded:
+		return "occluded"
 	default:
 		return ""
 	}
@@ -1441,97 +1539,103 @@ const TextureFormatR8Unorm TextureFormat = 0x00000001
 const TextureFormatR8Snorm TextureFormat = 0x00000002
 const TextureFormatR8Uint TextureFormat = 0x00000003
 const TextureFormatR8Sint TextureFormat = 0x00000004
-const TextureFormatR16Uint TextureFormat = 0x00000005
-const TextureFormatR16Sint TextureFormat = 0x00000006
-const TextureFormatR16Float TextureFormat = 0x00000007
-const TextureFormatRG8Unorm TextureFormat = 0x00000008
-const TextureFormatRG8Snorm TextureFormat = 0x00000009
-const TextureFormatRG8Uint TextureFormat = 0x0000000A
-const TextureFormatRG8Sint TextureFormat = 0x0000000B
-const TextureFormatR32Float TextureFormat = 0x0000000C
-const TextureFormatR32Uint TextureFormat = 0x0000000D
-const TextureFormatR32Sint TextureFormat = 0x0000000E
-const TextureFormatRG16Uint TextureFormat = 0x0000000F
-const TextureFormatRG16Sint TextureFormat = 0x00000010
-const TextureFormatRG16Float TextureFormat = 0x00000011
-const TextureFormatRGBA8Unorm TextureFormat = 0x00000012
-const TextureFormatRGBA8UnormSrgb TextureFormat = 0x00000013
-const TextureFormatRGBA8Snorm TextureFormat = 0x00000014
-const TextureFormatRGBA8Uint TextureFormat = 0x00000015
-const TextureFormatRGBA8Sint TextureFormat = 0x00000016
-const TextureFormatBGRA8Unorm TextureFormat = 0x00000017
-const TextureFormatBGRA8UnormSrgb TextureFormat = 0x00000018
-const TextureFormatRGB10A2Uint TextureFormat = 0x00000019
-const TextureFormatRGB10A2Unorm TextureFormat = 0x0000001A
-const TextureFormatRG11B10Ufloat TextureFormat = 0x0000001B
-const TextureFormatRGB9E5Ufloat TextureFormat = 0x0000001C
-const TextureFormatRG32Float TextureFormat = 0x0000001D
-const TextureFormatRG32Uint TextureFormat = 0x0000001E
-const TextureFormatRG32Sint TextureFormat = 0x0000001F
-const TextureFormatRGBA16Uint TextureFormat = 0x00000020
-const TextureFormatRGBA16Sint TextureFormat = 0x00000021
-const TextureFormatRGBA16Float TextureFormat = 0x00000022
-const TextureFormatRGBA32Float TextureFormat = 0x00000023
-const TextureFormatRGBA32Uint TextureFormat = 0x00000024
-const TextureFormatRGBA32Sint TextureFormat = 0x00000025
-const TextureFormatStencil8 TextureFormat = 0x00000026
-const TextureFormatDepth16Unorm TextureFormat = 0x00000027
-const TextureFormatDepth24Plus TextureFormat = 0x00000028
-const TextureFormatDepth24PlusStencil8 TextureFormat = 0x00000029
-const TextureFormatDepth32Float TextureFormat = 0x0000002A
-const TextureFormatDepth32FloatStencil8 TextureFormat = 0x0000002B
-const TextureFormatBC1RGBAUnorm TextureFormat = 0x0000002C
-const TextureFormatBC1RGBAUnormSrgb TextureFormat = 0x0000002D
-const TextureFormatBC2RGBAUnorm TextureFormat = 0x0000002E
-const TextureFormatBC2RGBAUnormSrgb TextureFormat = 0x0000002F
-const TextureFormatBC3RGBAUnorm TextureFormat = 0x00000030
-const TextureFormatBC3RGBAUnormSrgb TextureFormat = 0x00000031
-const TextureFormatBC4RUnorm TextureFormat = 0x00000032
-const TextureFormatBC4RSnorm TextureFormat = 0x00000033
-const TextureFormatBC5RGUnorm TextureFormat = 0x00000034
-const TextureFormatBC5RGSnorm TextureFormat = 0x00000035
-const TextureFormatBC6HRGBUfloat TextureFormat = 0x00000036
-const TextureFormatBC6HRGBFloat TextureFormat = 0x00000037
-const TextureFormatBC7RGBAUnorm TextureFormat = 0x00000038
-const TextureFormatBC7RGBAUnormSrgb TextureFormat = 0x00000039
-const TextureFormatETC2RGB8Unorm TextureFormat = 0x0000003A
-const TextureFormatETC2RGB8UnormSrgb TextureFormat = 0x0000003B
-const TextureFormatETC2RGB8A1Unorm TextureFormat = 0x0000003C
-const TextureFormatETC2RGB8A1UnormSrgb TextureFormat = 0x0000003D
-const TextureFormatETC2RGBA8Unorm TextureFormat = 0x0000003E
-const TextureFormatETC2RGBA8UnormSrgb TextureFormat = 0x0000003F
-const TextureFormatEACR11Unorm TextureFormat = 0x00000040
-const TextureFormatEACR11Snorm TextureFormat = 0x00000041
-const TextureFormatEACRG11Unorm TextureFormat = 0x00000042
-const TextureFormatEACRG11Snorm TextureFormat = 0x00000043
-const TextureFormatASTC4x4Unorm TextureFormat = 0x00000044
-const TextureFormatASTC4x4UnormSrgb TextureFormat = 0x00000045
-const TextureFormatASTC5x4Unorm TextureFormat = 0x00000046
-const TextureFormatASTC5x4UnormSrgb TextureFormat = 0x00000047
-const TextureFormatASTC5x5Unorm TextureFormat = 0x00000048
-const TextureFormatASTC5x5UnormSrgb TextureFormat = 0x00000049
-const TextureFormatASTC6x5Unorm TextureFormat = 0x0000004A
-const TextureFormatASTC6x5UnormSrgb TextureFormat = 0x0000004B
-const TextureFormatASTC6x6Unorm TextureFormat = 0x0000004C
-const TextureFormatASTC6x6UnormSrgb TextureFormat = 0x0000004D
-const TextureFormatASTC8x5Unorm TextureFormat = 0x0000004E
-const TextureFormatASTC8x5UnormSrgb TextureFormat = 0x0000004F
-const TextureFormatASTC8x6Unorm TextureFormat = 0x00000050
-const TextureFormatASTC8x6UnormSrgb TextureFormat = 0x00000051
-const TextureFormatASTC8x8Unorm TextureFormat = 0x00000052
-const TextureFormatASTC8x8UnormSrgb TextureFormat = 0x00000053
-const TextureFormatASTC10x5Unorm TextureFormat = 0x00000054
-const TextureFormatASTC10x5UnormSrgb TextureFormat = 0x00000055
-const TextureFormatASTC10x6Unorm TextureFormat = 0x00000056
-const TextureFormatASTC10x6UnormSrgb TextureFormat = 0x00000057
-const TextureFormatASTC10x8Unorm TextureFormat = 0x00000058
-const TextureFormatASTC10x8UnormSrgb TextureFormat = 0x00000059
-const TextureFormatASTC10x10Unorm TextureFormat = 0x0000005A
-const TextureFormatASTC10x10UnormSrgb TextureFormat = 0x0000005B
-const TextureFormatASTC12x10Unorm TextureFormat = 0x0000005C
-const TextureFormatASTC12x10UnormSrgb TextureFormat = 0x0000005D
-const TextureFormatASTC12x12Unorm TextureFormat = 0x0000005E
-const TextureFormatASTC12x12UnormSrgb TextureFormat = 0x0000005F
+const TextureFormatR16Unorm TextureFormat = 0x00000005
+const TextureFormatR16Snorm TextureFormat = 0x00000006
+const TextureFormatR16Uint TextureFormat = 0x00000007
+const TextureFormatR16Sint TextureFormat = 0x00000008
+const TextureFormatR16Float TextureFormat = 0x00000009
+const TextureFormatRG8Unorm TextureFormat = 0x0000000A
+const TextureFormatRG8Snorm TextureFormat = 0x0000000B
+const TextureFormatRG8Uint TextureFormat = 0x0000000C
+const TextureFormatRG8Sint TextureFormat = 0x0000000D
+const TextureFormatR32Float TextureFormat = 0x0000000E
+const TextureFormatR32Uint TextureFormat = 0x0000000F
+const TextureFormatR32Sint TextureFormat = 0x00000010
+const TextureFormatRG16Unorm TextureFormat = 0x00000011
+const TextureFormatRG16Snorm TextureFormat = 0x00000012
+const TextureFormatRG16Uint TextureFormat = 0x00000013
+const TextureFormatRG16Sint TextureFormat = 0x00000014
+const TextureFormatRG16Float TextureFormat = 0x00000015
+const TextureFormatRGBA8Unorm TextureFormat = 0x00000016
+const TextureFormatRGBA8UnormSrgb TextureFormat = 0x00000017
+const TextureFormatRGBA8Snorm TextureFormat = 0x00000018
+const TextureFormatRGBA8Uint TextureFormat = 0x00000019
+const TextureFormatRGBA8Sint TextureFormat = 0x0000001A
+const TextureFormatBGRA8Unorm TextureFormat = 0x0000001B
+const TextureFormatBGRA8UnormSrgb TextureFormat = 0x0000001C
+const TextureFormatRGB10A2Uint TextureFormat = 0x0000001D
+const TextureFormatRGB10A2Unorm TextureFormat = 0x0000001E
+const TextureFormatRG11B10Ufloat TextureFormat = 0x0000001F
+const TextureFormatRGB9E5Ufloat TextureFormat = 0x00000020
+const TextureFormatRG32Float TextureFormat = 0x00000021
+const TextureFormatRG32Uint TextureFormat = 0x00000022
+const TextureFormatRG32Sint TextureFormat = 0x00000023
+const TextureFormatRGBA16Unorm TextureFormat = 0x00000024
+const TextureFormatRGBA16Snorm TextureFormat = 0x00000025
+const TextureFormatRGBA16Uint TextureFormat = 0x00000026
+const TextureFormatRGBA16Sint TextureFormat = 0x00000027
+const TextureFormatRGBA16Float TextureFormat = 0x00000028
+const TextureFormatRGBA32Float TextureFormat = 0x00000029
+const TextureFormatRGBA32Uint TextureFormat = 0x0000002A
+const TextureFormatRGBA32Sint TextureFormat = 0x0000002B
+const TextureFormatStencil8 TextureFormat = 0x0000002C
+const TextureFormatDepth16Unorm TextureFormat = 0x0000002D
+const TextureFormatDepth24Plus TextureFormat = 0x0000002E
+const TextureFormatDepth24PlusStencil8 TextureFormat = 0x0000002F
+const TextureFormatDepth32Float TextureFormat = 0x00000030
+const TextureFormatDepth32FloatStencil8 TextureFormat = 0x00000031
+const TextureFormatBC1RGBAUnorm TextureFormat = 0x00000032
+const TextureFormatBC1RGBAUnormSrgb TextureFormat = 0x00000033
+const TextureFormatBC2RGBAUnorm TextureFormat = 0x00000034
+const TextureFormatBC2RGBAUnormSrgb TextureFormat = 0x00000035
+const TextureFormatBC3RGBAUnorm TextureFormat = 0x00000036
+const TextureFormatBC3RGBAUnormSrgb TextureFormat = 0x00000037
+const TextureFormatBC4RUnorm TextureFormat = 0x00000038
+const TextureFormatBC4RSnorm TextureFormat = 0x00000039
+const TextureFormatBC5RGUnorm TextureFormat = 0x0000003A
+const TextureFormatBC5RGSnorm TextureFormat = 0x0000003B
+const TextureFormatBC6HRGBUfloat TextureFormat = 0x0000003C
+const TextureFormatBC6HRGBFloat TextureFormat = 0x0000003D
+const TextureFormatBC7RGBAUnorm TextureFormat = 0x0000003E
+const TextureFormatBC7RGBAUnormSrgb TextureFormat = 0x0000003F
+const TextureFormatETC2RGB8Unorm TextureFormat = 0x00000040
+const TextureFormatETC2RGB8UnormSrgb TextureFormat = 0x00000041
+const TextureFormatETC2RGB8A1Unorm TextureFormat = 0x00000042
+const TextureFormatETC2RGB8A1UnormSrgb TextureFormat = 0x00000043
+const TextureFormatETC2RGBA8Unorm TextureFormat = 0x00000044
+const TextureFormatETC2RGBA8UnormSrgb TextureFormat = 0x00000045
+const TextureFormatEACR11Unorm TextureFormat = 0x00000046
+const TextureFormatEACR11Snorm TextureFormat = 0x00000047
+const TextureFormatEACRG11Unorm TextureFormat = 0x00000048
+const TextureFormatEACRG11Snorm TextureFormat = 0x00000049
+const TextureFormatASTC4x4Unorm TextureFormat = 0x0000004A
+const TextureFormatASTC4x4UnormSrgb TextureFormat = 0x0000004B
+const TextureFormatASTC5x4Unorm TextureFormat = 0x0000004C
+const TextureFormatASTC5x4UnormSrgb TextureFormat = 0x0000004D
+const TextureFormatASTC5x5Unorm TextureFormat = 0x0000004E
+const TextureFormatASTC5x5UnormSrgb TextureFormat = 0x0000004F
+const TextureFormatASTC6x5Unorm TextureFormat = 0x00000050
+const TextureFormatASTC6x5UnormSrgb TextureFormat = 0x00000051
+const TextureFormatASTC6x6Unorm TextureFormat = 0x00000052
+const TextureFormatASTC6x6UnormSrgb TextureFormat = 0x00000053
+const TextureFormatASTC8x5Unorm TextureFormat = 0x00000054
+const TextureFormatASTC8x5UnormSrgb TextureFormat = 0x00000055
+const TextureFormatASTC8x6Unorm TextureFormat = 0x00000056
+const TextureFormatASTC8x6UnormSrgb TextureFormat = 0x00000057
+const TextureFormatASTC8x8Unorm TextureFormat = 0x00000058
+const TextureFormatASTC8x8UnormSrgb TextureFormat = 0x00000059
+const TextureFormatASTC10x5Unorm TextureFormat = 0x0000005A
+const TextureFormatASTC10x5UnormSrgb TextureFormat = 0x0000005B
+const TextureFormatASTC10x6Unorm TextureFormat = 0x0000005C
+const TextureFormatASTC10x6UnormSrgb TextureFormat = 0x0000005D
+const TextureFormatASTC10x8Unorm TextureFormat = 0x0000005E
+const TextureFormatASTC10x8UnormSrgb TextureFormat = 0x0000005F
+const TextureFormatASTC10x10Unorm TextureFormat = 0x00000060
+const TextureFormatASTC10x10UnormSrgb TextureFormat = 0x00000061
+const TextureFormatASTC12x10Unorm TextureFormat = 0x00000062
+const TextureFormatASTC12x10UnormSrgb TextureFormat = 0x00000063
+const TextureFormatASTC12x12Unorm TextureFormat = 0x00000064
+const TextureFormatASTC12x12UnormSrgb TextureFormat = 0x00000065
 
 func (v TextureFormat) String() string {
 	switch v {
@@ -1545,6 +1649,10 @@ func (v TextureFormat) String() string {
 		return "r8uint"
 	case TextureFormatR8Sint:
 		return "r8sint"
+	case TextureFormatR16Unorm:
+		return "r16unorm"
+	case TextureFormatR16Snorm:
+		return "r16snorm"
 	case TextureFormatR16Uint:
 		return "r16uint"
 	case TextureFormatR16Sint:
@@ -1565,6 +1673,10 @@ func (v TextureFormat) String() string {
 		return "r32uint"
 	case TextureFormatR32Sint:
 		return "r32sint"
+	case TextureFormatRG16Unorm:
+		return "rg16unorm"
+	case TextureFormatRG16Snorm:
+		return "rg16snorm"
 	case TextureFormatRG16Uint:
 		return "rg16uint"
 	case TextureFormatRG16Sint:
@@ -1599,6 +1711,10 @@ func (v TextureFormat) String() string {
 		return "rg32uint"
 	case TextureFormatRG32Sint:
 		return "rg32sint"
+	case TextureFormatRGBA16Unorm:
+		return "rgba16unorm"
+	case TextureFormatRGBA16Snorm:
+		return "rgba16snorm"
 	case TextureFormatRGBA16Uint:
 		return "rgba16uint"
 	case TextureFormatRGBA16Sint:
@@ -1771,6 +1887,7 @@ const TextureUsageCopyDst TextureUsage = 0x00000002
 const TextureUsageTextureBinding TextureUsage = 0x00000004
 const TextureUsageStorageBinding TextureUsage = 0x00000008
 const TextureUsageRenderAttachment TextureUsage = 0x00000010
+const TextureUsageTransientAttachment TextureUsage = 0x00000020
 
 func (v TextureUsage) String() string {
 	switch v {
@@ -1786,6 +1903,8 @@ func (v TextureUsage) String() string {
 		return "storage-binding"
 	case TextureUsageRenderAttachment:
 		return "render-attachment"
+	case TextureUsageTransientAttachment:
+		return "transient-attachment"
 	default:
 		return ""
 	}
@@ -1817,6 +1936,22 @@ func (v TextureViewDimension) String() string {
 		return "cube-array"
 	case TextureViewDimension3D:
 		return "3d"
+	default:
+		return ""
+	}
+}
+
+type ToneMappingMode uint32
+
+const ToneMappingModeStandard ToneMappingMode = 0x00000001
+const ToneMappingModeExtended ToneMappingMode = 0x00000002
+
+func (v ToneMappingMode) String() string {
+	switch v {
+	case ToneMappingModeStandard:
+		return "standard"
+	case ToneMappingModeExtended:
+		return "extended"
 	default:
 		return ""
 	}
@@ -1954,15 +2089,12 @@ func (v VertexFormat) String() string {
 
 type VertexStepMode uint32
 
-const VertexStepModeVertexBufferNotUsed VertexStepMode = 0x00000000
-const VertexStepModeUndefined VertexStepMode = 0x00000001
-const VertexStepModeVertex VertexStepMode = 0x00000002
-const VertexStepModeInstance VertexStepMode = 0x00000003
+const VertexStepModeUndefined VertexStepMode = 0x00000000
+const VertexStepModeVertex VertexStepMode = 0x00000001
+const VertexStepModeInstance VertexStepMode = 0x00000002
 
 func (v VertexStepMode) String() string {
 	switch v {
-	case VertexStepModeVertexBufferNotUsed:
-		return "vertex-buffer-not-used"
 	case VertexStepModeUndefined:
 		return "undefined"
 	case VertexStepModeVertex:
@@ -1980,6 +2112,11 @@ const WGSLLanguageFeatureNameReadonlyAndReadwriteStorageTextures WGSLLanguageFea
 const WGSLLanguageFeatureNamePacked4x8IntegerDotProduct WGSLLanguageFeatureName = 0x00000002
 const WGSLLanguageFeatureNameUnrestrictedPointerParameters WGSLLanguageFeatureName = 0x00000003
 const WGSLLanguageFeatureNamePointerCompositeAccess WGSLLanguageFeatureName = 0x00000004
+const WGSLLanguageFeatureNameUniformBufferStandardLayout WGSLLanguageFeatureName = 0x00000005
+const WGSLLanguageFeatureNameSubgroupId WGSLLanguageFeatureName = 0x00000006
+const WGSLLanguageFeatureNameTextureAndSamplerLet WGSLLanguageFeatureName = 0x00000007
+const WGSLLanguageFeatureNameSubgroupUniformity WGSLLanguageFeatureName = 0x00000008
+const WGSLLanguageFeatureNameTextureFormatsTier1 WGSLLanguageFeatureName = 0x00000009
 
 func (v WGSLLanguageFeatureName) String() string {
 	switch v {
@@ -1991,6 +2128,16 @@ func (v WGSLLanguageFeatureName) String() string {
 		return "unrestricted-pointer-parameters"
 	case WGSLLanguageFeatureNamePointerCompositeAccess:
 		return "pointer-composite-access"
+	case WGSLLanguageFeatureNameUniformBufferStandardLayout:
+		return "uniform-buffer-standard-layout"
+	case WGSLLanguageFeatureNameSubgroupId:
+		return "subgroup-id"
+	case WGSLLanguageFeatureNameTextureAndSamplerLet:
+		return "texture-and-sampler-let"
+	case WGSLLanguageFeatureNameSubgroupUniformity:
+		return "subgroup-uniformity"
+	case WGSLLanguageFeatureNameTextureFormatsTier1:
+		return "texture-formats-tier1"
 	default:
 		return ""
 	}
@@ -2000,9 +2147,7 @@ type WaitStatus uint32
 
 const WaitStatusSuccess WaitStatus = 0x00000001
 const WaitStatusTimedOut WaitStatus = 0x00000002
-const WaitStatusUnsupportedTimeout WaitStatus = 0x00000003
-const WaitStatusUnsupportedCount WaitStatus = 0x00000004
-const WaitStatusUnsupportedMixedSources WaitStatus = 0x00000005
+const WaitStatusError WaitStatus = 0x00000003
 
 func (v WaitStatus) String() string {
 	switch v {
@@ -2010,12 +2155,8 @@ func (v WaitStatus) String() string {
 		return "success"
 	case WaitStatusTimedOut:
 		return "timed-out"
-	case WaitStatusUnsupportedTimeout:
-		return "unsupported-timeout"
-	case WaitStatusUnsupportedCount:
-		return "unsupported-count"
-	case WaitStatusUnsupportedMixedSources:
-		return "unsupported-mixed-sources"
+	case WaitStatusError:
+		return "error"
 	default:
 		return ""
 	}

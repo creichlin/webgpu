@@ -275,6 +275,6 @@ func limitsFromJS(j js.Value) Limits {
 		MaxComputeWorkgroupSizeY:          uint32(j.Get("maxComputeWorkgroupSizeY").Int()),
 		MaxComputeWorkgroupSizeZ:          uint32(j.Get("maxComputeWorkgroupSizeZ").Int()),
 		MaxComputeWorkgroupsPerDimension:  uint32(j.Get("maxComputeWorkgroupsPerDimension").Int()),
-		MaxPushConstantSize:               128,
+		MaxImmediateSize:                  128,
 	}
 }
