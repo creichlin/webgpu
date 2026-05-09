@@ -40,11 +40,11 @@ func (p *ComputePassEncoder) DispatchWorkgroupsIndirect(indirectBuffer *Buffer, 
 }
 
 func (p *ComputePassEncoder) TryEnd() error {
-	errorCallbackHandle, perr := makeErrorCallback()
-	defer errorCallbackHandle.Delete()
+	errh := acquireErrorCallback()
+	defer errh.Done()
 
-	C.gowebgpu_compute_pass_encoder_end(p.ref, p.device.ref, errorCallbackHandle.ToPointer())
-	return *perr
+	C.gowebgpu_compute_pass_encoder_end(p.ref, p.device.ref, errh.ToPointer())
+	return errh.err
 }
 
 func (p *ComputePassEncoder) EndPipelineStatisticsQuery() {

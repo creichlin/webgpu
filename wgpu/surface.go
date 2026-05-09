@@ -123,19 +123,19 @@ func (g *Surface) TryGetCurrentTexture() (*Texture, error) {
 		return nil, errors.New("surface not configured")
 	}
 
-	errorCallbackHandle, perr := makeErrorCallback()
-	defer errorCallbackHandle.Delete()
+	errh := acquireErrorCallback()
+	defer errh.Done()
 
 	ref := C.gowebgpu_surface_get_current_texture(
 		g.ref,
 		g.device.ref,
-		errorCallbackHandle.ToPointer(),
+		errh.ToPointer(),
 	)
-	if *perr != nil {
+	if errh.err != nil {
 		if ref != nil {
 			C.wgpuTextureRelease(ref)
 		}
-		return nil, *perr
+		return nil, errh.err
 	}
 
 	return &Texture{device: g.device.addRef(), ref: ref}, nil

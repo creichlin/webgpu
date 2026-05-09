@@ -53,18 +53,18 @@ func (g *Texture) TryCreateView(descriptor *TextureViewDescriptor) (*TextureView
 		}
 	}
 
-	errorCallbackHandle, perr := makeErrorCallback()
-	defer errorCallbackHandle.Delete()
+	errh := acquireErrorCallback()
+	defer errh.Done()
 
 	ref := C.gowebgpu_texture_create_view(
 		g.ref,
 		desc,
 		g.device.ref,
-		errorCallbackHandle.ToPointer(),
+		errh.ToPointer(),
 	)
-	if *perr != nil {
+	if errh.err != nil {
 		C.wgpuTextureViewRelease(ref)
-		return nil, *perr
+		return nil, errh.err
 	}
 
 	return releaseOnGC(&TextureView{ref: ref}), nil

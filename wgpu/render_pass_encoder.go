@@ -65,19 +65,19 @@ func (p *RenderPassEncoder) DrawIndirect(indirectBuffer *Buffer, indirectOffset 
 // TryEnd ends the current render pass encoder.
 // This will also release the instance, so it must not be used afterwards
 func (p *RenderPassEncoder) TryEnd() error {
-	errorCallbackHandle, perr := makeErrorCallback()
-	defer errorCallbackHandle.Delete()
+	errh := acquireErrorCallback()
+	defer errh.Done()
 
 	C.gowebgpu_render_pass_encoder_end(
 		p.ref,
 		p.device.ref,
-		errorCallbackHandle.ToPointer(),
+		errh.ToPointer(),
 	)
 
 	// also release the render pass at this point
 	p.Release()
 
-	return *perr
+	return errh.err
 }
 
 func (p *RenderPassEncoder) EndOcclusionQuery() {

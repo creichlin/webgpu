@@ -84,8 +84,8 @@ func (p *Queue) Submit(commands ...*CommandBuffer) (submissionIndex SubmissionIn
 }
 
 func (p *Queue) TryWriteBuffer(buffer *Buffer, bufferOffset uint64, data []byte) error {
-	errorCallbackHandle, perr := makeErrorCallback()
-	defer errorCallbackHandle.Delete()
+	errh := acquireErrorCallback()
+	defer errh.Done()
 
 	size := len(data)
 	if size == 0 {
@@ -96,10 +96,10 @@ func (p *Queue) TryWriteBuffer(buffer *Buffer, bufferOffset uint64, data []byte)
 			nil,
 			0,
 			p.device.ref,
-			errorCallbackHandle.ToPointer(),
+			errh.ToPointer(),
 		)
 
-		return *perr
+		return errh.err
 	}
 
 	C.gowebgpu_queue_write_buffer(
@@ -109,10 +109,10 @@ func (p *Queue) TryWriteBuffer(buffer *Buffer, bufferOffset uint64, data []byte)
 		unsafe.Pointer(&data[0]),
 		C.size_t(size),
 		p.device.ref,
-		errorCallbackHandle.ToPointer(),
+		errh.ToPointer(),
 	)
 
-	return *perr
+	return errh.err
 }
 
 func (p *Queue) TryWriteTexture(destination *TexelCopyTextureInfo, data []byte, dataLayout *TexelCopyBufferLayout, writeSize *Extent3D) error {
@@ -150,8 +150,8 @@ func (p *Queue) TryWriteTexture(destination *TexelCopyTextureInfo, data []byte, 
 		}
 	}
 
-	errorCallbackHandle, perr := makeErrorCallback()
-	defer errorCallbackHandle.Delete()
+	errh := acquireErrorCallback()
+	defer errh.Done()
 
 	size := len(data)
 	if size == 0 {
@@ -163,10 +163,10 @@ func (p *Queue) TryWriteTexture(destination *TexelCopyTextureInfo, data []byte, 
 			&layout,
 			&writeExtent,
 			p.device.ref,
-			errorCallbackHandle.ToPointer(),
+			errh.ToPointer(),
 		)
 
-		return *perr
+		return errh.err
 	}
 
 	C.gowebgpu_queue_write_texture(
@@ -177,8 +177,8 @@ func (p *Queue) TryWriteTexture(destination *TexelCopyTextureInfo, data []byte, 
 		&layout,
 		&writeExtent,
 		p.device.ref,
-		errorCallbackHandle.ToPointer(),
+		errh.ToPointer(),
 	)
 
-	return *perr
+	return errh.err
 }
