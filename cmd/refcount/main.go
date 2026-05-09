@@ -16,7 +16,12 @@ var nativeTmpl = template.Must(template.New("").Parse(`
 		device C.WGPUDevice
 		{{- end }}
 	}
-	
+
+
+	func (g *{{ .Name }}) IsValid() bool {
+		return g != nil && g.ref != nil
+	}	
+
 	func (g *{{ .Name }}) Release() {
 		if g.ref == nil { return }
 		

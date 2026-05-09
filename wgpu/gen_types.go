@@ -19,6 +19,10 @@ type Buffer struct {
 	device C.WGPUDevice
 }
 
+func (g *Buffer) IsValid() bool {
+	return g != nil && g.ref != nil
+}
+
 func (g *Buffer) Release() {
 	if g.ref == nil {
 		return
@@ -42,6 +46,10 @@ func (g *Buffer) Release() {
 type CommandEncoder struct {
 	ref    C.WGPUCommandEncoder
 	device C.WGPUDevice
+}
+
+func (g *CommandEncoder) IsValid() bool {
+	return g != nil && g.ref != nil
 }
 
 func (g *CommandEncoder) Release() {
@@ -69,6 +77,10 @@ type ComputePassEncoder struct {
 	device C.WGPUDevice
 }
 
+func (g *ComputePassEncoder) IsValid() bool {
+	return g != nil && g.ref != nil
+}
+
 func (g *ComputePassEncoder) Release() {
 	if g.ref == nil {
 		return
@@ -92,6 +104,10 @@ func (g *ComputePassEncoder) Release() {
 type Queue struct {
 	ref    C.WGPUQueue
 	device C.WGPUDevice
+}
+
+func (g *Queue) IsValid() bool {
+	return g != nil && g.ref != nil
 }
 
 func (g *Queue) Release() {
@@ -119,6 +135,10 @@ type RenderPassEncoder struct {
 	device C.WGPUDevice
 }
 
+func (g *RenderPassEncoder) IsValid() bool {
+	return g != nil && g.ref != nil
+}
+
 func (g *RenderPassEncoder) Release() {
 	if g.ref == nil {
 		return
@@ -142,6 +162,10 @@ func (g *RenderPassEncoder) Release() {
 type Surface struct {
 	ref    C.WGPUSurface
 	device C.WGPUDevice
+}
+
+func (g *Surface) IsValid() bool {
+	return g != nil && g.ref != nil
 }
 
 func (g *Surface) Release() {
@@ -169,6 +193,10 @@ type Texture struct {
 	device C.WGPUDevice
 }
 
+func (g *Texture) IsValid() bool {
+	return g != nil && g.ref != nil
+}
+
 func (g *Texture) Release() {
 	if g.ref == nil {
 		return
@@ -193,6 +221,10 @@ type Adapter struct {
 	ref C.WGPUAdapter
 }
 
+func (g *Adapter) IsValid() bool {
+	return g != nil && g.ref != nil
+}
+
 func (g *Adapter) Release() {
 	if g.ref == nil {
 		return
@@ -212,6 +244,10 @@ func (g *Adapter) Release() {
 
 type BindGroup struct {
 	ref C.WGPUBindGroup
+}
+
+func (g *BindGroup) IsValid() bool {
+	return g != nil && g.ref != nil
 }
 
 func (g *BindGroup) Release() {
@@ -235,6 +271,10 @@ type BindGroupLayout struct {
 	ref C.WGPUBindGroupLayout
 }
 
+func (g *BindGroupLayout) IsValid() bool {
+	return g != nil && g.ref != nil
+}
+
 func (g *BindGroupLayout) Release() {
 	if g.ref == nil {
 		return
@@ -254,6 +294,10 @@ func (g *BindGroupLayout) Release() {
 
 type CommandBuffer struct {
 	ref C.WGPUCommandBuffer
+}
+
+func (g *CommandBuffer) IsValid() bool {
+	return g != nil && g.ref != nil
 }
 
 func (g *CommandBuffer) Release() {
@@ -277,6 +321,10 @@ type ComputePipeline struct {
 	ref C.WGPUComputePipeline
 }
 
+func (g *ComputePipeline) IsValid() bool {
+	return g != nil && g.ref != nil
+}
+
 func (g *ComputePipeline) Release() {
 	if g.ref == nil {
 		return
@@ -296,6 +344,10 @@ func (g *ComputePipeline) Release() {
 
 type Device struct {
 	ref C.WGPUDevice
+}
+
+func (g *Device) IsValid() bool {
+	return g != nil && g.ref != nil
 }
 
 func (g *Device) Release() {
@@ -319,6 +371,10 @@ type Instance struct {
 	ref C.WGPUInstance
 }
 
+func (g *Instance) IsValid() bool {
+	return g != nil && g.ref != nil
+}
+
 func (g *Instance) Release() {
 	if g.ref == nil {
 		return
@@ -338,6 +394,10 @@ func (g *Instance) Release() {
 
 type PipelineLayout struct {
 	ref C.WGPUPipelineLayout
+}
+
+func (g *PipelineLayout) IsValid() bool {
+	return g != nil && g.ref != nil
 }
 
 func (g *PipelineLayout) Release() {
@@ -361,6 +421,10 @@ type QuerySet struct {
 	ref C.WGPUQuerySet
 }
 
+func (g *QuerySet) IsValid() bool {
+	return g != nil && g.ref != nil
+}
+
 func (g *QuerySet) Release() {
 	if g.ref == nil {
 		return
@@ -380,6 +444,10 @@ func (g *QuerySet) Release() {
 
 type RenderBundle struct {
 	ref C.WGPURenderBundle
+}
+
+func (g *RenderBundle) IsValid() bool {
+	return g != nil && g.ref != nil
 }
 
 func (g *RenderBundle) Release() {
@@ -403,6 +471,10 @@ type RenderBundleEncoder struct {
 	ref C.WGPURenderBundleEncoder
 }
 
+func (g *RenderBundleEncoder) IsValid() bool {
+	return g != nil && g.ref != nil
+}
+
 func (g *RenderBundleEncoder) Release() {
 	if g.ref == nil {
 		return
@@ -422,6 +494,10 @@ func (g *RenderBundleEncoder) Release() {
 
 type RenderPipeline struct {
 	ref C.WGPURenderPipeline
+}
+
+func (g *RenderPipeline) IsValid() bool {
+	return g != nil && g.ref != nil
 }
 
 func (g *RenderPipeline) Release() {
@@ -445,6 +521,10 @@ type Sampler struct {
 	ref C.WGPUSampler
 }
 
+func (g *Sampler) IsValid() bool {
+	return g != nil && g.ref != nil
+}
+
 func (g *Sampler) Release() {
 	if g.ref == nil {
 		return
@@ -466,6 +546,10 @@ type ShaderModule struct {
 	ref C.WGPUShaderModule
 }
 
+func (g *ShaderModule) IsValid() bool {
+	return g != nil && g.ref != nil
+}
+
 func (g *ShaderModule) Release() {
 	if g.ref == nil {
 		return
@@ -485,6 +569,10 @@ func (g *ShaderModule) Release() {
 
 type TextureView struct {
 	ref C.WGPUTextureView
+}
+
+func (g *TextureView) IsValid() bool {
+	return g != nil && g.ref != nil
 }
 
 func (g *TextureView) Release() {
