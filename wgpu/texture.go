@@ -59,7 +59,7 @@ func (g *Texture) TryCreateView(descriptor *TextureViewDescriptor) (*TextureView
 	ref := C.gowebgpu_texture_create_view(
 		g.ref,
 		desc,
-		g.device.ref,
+		g.device,
 		errh.ToPointer(),
 	)
 	if errh.err != nil {

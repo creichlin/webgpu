@@ -95,7 +95,7 @@ func (p *Queue) TryWriteBuffer(buffer *Buffer, bufferOffset uint64, data []byte)
 			C.uint64_t(bufferOffset),
 			nil,
 			0,
-			p.device.ref,
+			p.device,
 			errh.ToPointer(),
 		)
 
@@ -108,7 +108,7 @@ func (p *Queue) TryWriteBuffer(buffer *Buffer, bufferOffset uint64, data []byte)
 		C.uint64_t(bufferOffset),
 		unsafe.Pointer(&data[0]),
 		C.size_t(size),
-		p.device.ref,
+		p.device,
 		errh.ToPointer(),
 	)
 
@@ -162,7 +162,7 @@ func (p *Queue) TryWriteTexture(destination *TexelCopyTextureInfo, data []byte, 
 			0,
 			&layout,
 			&writeExtent,
-			p.device.ref,
+			p.device,
 			errh.ToPointer(),
 		)
 
@@ -176,7 +176,7 @@ func (p *Queue) TryWriteTexture(destination *TexelCopyTextureInfo, data []byte, 
 		C.size_t(size),
 		&layout,
 		&writeExtent,
-		p.device.ref,
+		p.device,
 		errh.ToPointer(),
 	)
 

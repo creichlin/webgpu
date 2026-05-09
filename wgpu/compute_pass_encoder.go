@@ -43,7 +43,7 @@ func (p *ComputePassEncoder) TryEnd() error {
 	errh := acquireErrorCallback()
 	defer errh.Done()
 
-	C.gowebgpu_compute_pass_encoder_end(p.ref, p.device.ref, errh.ToPointer())
+	C.gowebgpu_compute_pass_encoder_end(p.ref, p.device, errh.ToPointer())
 	return errh.err
 }
 

@@ -12,9 +12,9 @@ import (
 var nativeTmpl = template.Must(template.New("").Parse(`
 	type {{ .Name }} struct {
 		ref C.WGPU{{ .Name }}
-		{{ if .WithDev }}
-		device *Device
-		{{ end }}
+		{{- if .WithDev }}
+		device C.WGPUDevice
+		{{- end }}
 	}
 	
 	func (g *{{ .Name }}) Release() {
@@ -29,7 +29,13 @@ var nativeTmpl = template.Must(template.New("").Parse(`
 		// set ref to nil and release instance 
 		if ref != nil && atomic.CompareAndSwapPointer(ptr, ref, nil) {
 			C.wgpu{{ .Name }}Release(C.WGPU{{ .Name }}(ref))
-		}  
+
+			{{- if .WithDev }}
+			// release of device is guarded by ref
+			C.wgpuDeviceRelease(g.device)
+			g.device = nil
+			{{- end }}
+		}
 	}
 `))
 

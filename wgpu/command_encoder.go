@@ -177,7 +177,8 @@ func (p *CommandEncoder) BeginComputePass(descriptor *ComputePassDescriptor) *Co
 		panic(wrap(err, ""))
 	}
 
-	return releaseOnGC(&ComputePassEncoder{device: p.device.addRef(), ref: ref})
+	C.wgpuDeviceAddRef(p.device)
+	return releaseOnGC(&ComputePassEncoder{device: p.device, ref: ref})
 }
 
 func (p *CommandEncoder) BeginRenderPass(descriptor *RenderPassDescriptor) *RenderPassEncoder {
@@ -251,7 +252,9 @@ func (p *CommandEncoder) BeginRenderPass(descriptor *RenderPassDescriptor) *Rend
 		err := errors.New("failed to acquire RenderPassEncoder")
 		panic(wrap(err, ""))
 	}
-	return releaseOnGC(&RenderPassEncoder{device: p.device.addRef(), ref: ref})
+
+	C.wgpuDeviceAddRef(p.device)
+	return releaseOnGC(&RenderPassEncoder{device: p.device, ref: ref})
 }
 
 func (p *CommandEncoder) TryClearBuffer(buffer *Buffer, offset uint64, size uint64) error {
@@ -263,7 +266,7 @@ func (p *CommandEncoder) TryClearBuffer(buffer *Buffer, offset uint64, size uint
 		buffer.ref,
 		C.uint64_t(offset),
 		C.uint64_t(size),
-		p.device.ref,
+		p.device,
 		errh.ToPointer(),
 	)
 
@@ -281,7 +284,7 @@ func (p *CommandEncoder) TryCopyBufferToBuffer(source *Buffer, sourceOffset uint
 		destination.ref,
 		C.uint64_t(destinationOffset),
 		C.uint64_t(size),
-		p.device.ref,
+		p.device,
 		errh.ToPointer(),
 	)
 
@@ -334,7 +337,7 @@ func (p *CommandEncoder) TryCopyBufferToTexture(source *TexelCopyBufferInfo, des
 		&src,
 		&dst,
 		&cpySize,
-		p.device.ref,
+		p.device,
 		errh.ToPointer(),
 	)
 
@@ -387,7 +390,7 @@ func (p *CommandEncoder) TryCopyTextureToBuffer(source *TexelCopyTextureInfo, de
 		&src,
 		&dst,
 		&cpySize,
-		p.device.ref,
+		p.device,
 		errh.ToPointer(),
 	)
 
@@ -444,7 +447,7 @@ func (p *CommandEncoder) TryCopyTextureToTexture(source *TexelCopyTextureInfo, d
 		&src,
 		&dst,
 		&cpySize,
-		p.device.ref,
+		p.device,
 		errh.ToPointer(),
 	)
 
@@ -469,7 +472,7 @@ func (p *CommandEncoder) TryFinish(descriptor *CommandBufferDescriptor) (*Comman
 	ref := C.gowebgpu_command_encoder_finish(
 		p.ref,
 		desc,
-		p.device.ref,
+		p.device,
 		errh.ToPointer(),
 	)
 	if errh.err != nil {
@@ -490,7 +493,7 @@ func (p *CommandEncoder) TryInsertDebugMarker(markerLabel string) error {
 	C.gowebgpu_command_encoder_insert_debug_marker(
 		p.ref,
 		markerLabelStr,
-		p.device.ref,
+		p.device,
 		errh.ToPointer(),
 	)
 
@@ -503,7 +506,7 @@ func (p *CommandEncoder) TryPopDebugGroup() error {
 
 	C.gowebgpu_command_encoder_pop_debug_group(
 		p.ref,
-		p.device.ref,
+		p.device,
 		errh.ToPointer(),
 	)
 
@@ -520,7 +523,7 @@ func (p *CommandEncoder) TryPushDebugGroup(groupLabel string) error {
 	C.gowebgpu_command_encoder_push_debug_group(
 		p.ref,
 		groupLabelStr,
-		p.device.ref,
+		p.device,
 		errh.ToPointer(),
 	)
 
@@ -538,7 +541,7 @@ func (p *CommandEncoder) TryResolveQuerySet(querySet *QuerySet, firstQuery uint3
 		C.uint32_t(queryCount),
 		destination.ref,
 		C.uint64_t(destinationOffset),
-		p.device.ref,
+		p.device,
 		errh.ToPointer(),
 	)
 

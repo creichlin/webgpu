@@ -15,9 +15,8 @@ import (
 )
 
 type Buffer struct {
-	ref C.WGPUBuffer
-
-	device *Device
+	ref    C.WGPUBuffer
+	device C.WGPUDevice
 }
 
 func (g *Buffer) Release() {
@@ -34,13 +33,15 @@ func (g *Buffer) Release() {
 	// set ref to nil and release instance
 	if ref != nil && atomic.CompareAndSwapPointer(ptr, ref, nil) {
 		C.wgpuBufferRelease(C.WGPUBuffer(ref))
+		// release of device is guarded by ref
+		C.wgpuDeviceRelease(g.device)
+		g.device = nil
 	}
 }
 
 type CommandEncoder struct {
-	ref C.WGPUCommandEncoder
-
-	device *Device
+	ref    C.WGPUCommandEncoder
+	device C.WGPUDevice
 }
 
 func (g *CommandEncoder) Release() {
@@ -57,13 +58,15 @@ func (g *CommandEncoder) Release() {
 	// set ref to nil and release instance
 	if ref != nil && atomic.CompareAndSwapPointer(ptr, ref, nil) {
 		C.wgpuCommandEncoderRelease(C.WGPUCommandEncoder(ref))
+		// release of device is guarded by ref
+		C.wgpuDeviceRelease(g.device)
+		g.device = nil
 	}
 }
 
 type ComputePassEncoder struct {
-	ref C.WGPUComputePassEncoder
-
-	device *Device
+	ref    C.WGPUComputePassEncoder
+	device C.WGPUDevice
 }
 
 func (g *ComputePassEncoder) Release() {
@@ -80,13 +83,15 @@ func (g *ComputePassEncoder) Release() {
 	// set ref to nil and release instance
 	if ref != nil && atomic.CompareAndSwapPointer(ptr, ref, nil) {
 		C.wgpuComputePassEncoderRelease(C.WGPUComputePassEncoder(ref))
+		// release of device is guarded by ref
+		C.wgpuDeviceRelease(g.device)
+		g.device = nil
 	}
 }
 
 type Queue struct {
-	ref C.WGPUQueue
-
-	device *Device
+	ref    C.WGPUQueue
+	device C.WGPUDevice
 }
 
 func (g *Queue) Release() {
@@ -103,13 +108,15 @@ func (g *Queue) Release() {
 	// set ref to nil and release instance
 	if ref != nil && atomic.CompareAndSwapPointer(ptr, ref, nil) {
 		C.wgpuQueueRelease(C.WGPUQueue(ref))
+		// release of device is guarded by ref
+		C.wgpuDeviceRelease(g.device)
+		g.device = nil
 	}
 }
 
 type RenderPassEncoder struct {
-	ref C.WGPURenderPassEncoder
-
-	device *Device
+	ref    C.WGPURenderPassEncoder
+	device C.WGPUDevice
 }
 
 func (g *RenderPassEncoder) Release() {
@@ -126,13 +133,15 @@ func (g *RenderPassEncoder) Release() {
 	// set ref to nil and release instance
 	if ref != nil && atomic.CompareAndSwapPointer(ptr, ref, nil) {
 		C.wgpuRenderPassEncoderRelease(C.WGPURenderPassEncoder(ref))
+		// release of device is guarded by ref
+		C.wgpuDeviceRelease(g.device)
+		g.device = nil
 	}
 }
 
 type Surface struct {
-	ref C.WGPUSurface
-
-	device *Device
+	ref    C.WGPUSurface
+	device C.WGPUDevice
 }
 
 func (g *Surface) Release() {
@@ -149,13 +158,15 @@ func (g *Surface) Release() {
 	// set ref to nil and release instance
 	if ref != nil && atomic.CompareAndSwapPointer(ptr, ref, nil) {
 		C.wgpuSurfaceRelease(C.WGPUSurface(ref))
+		// release of device is guarded by ref
+		C.wgpuDeviceRelease(g.device)
+		g.device = nil
 	}
 }
 
 type Texture struct {
-	ref C.WGPUTexture
-
-	device *Device
+	ref    C.WGPUTexture
+	device C.WGPUDevice
 }
 
 func (g *Texture) Release() {
@@ -172,6 +183,9 @@ func (g *Texture) Release() {
 	// set ref to nil and release instance
 	if ref != nil && atomic.CompareAndSwapPointer(ptr, ref, nil) {
 		C.wgpuTextureRelease(C.WGPUTexture(ref))
+		// release of device is guarded by ref
+		C.wgpuDeviceRelease(g.device)
+		g.device = nil
 	}
 }
 

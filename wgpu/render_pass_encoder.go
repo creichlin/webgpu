@@ -70,7 +70,7 @@ func (p *RenderPassEncoder) TryEnd() error {
 
 	C.gowebgpu_render_pass_encoder_end(
 		p.ref,
-		p.device.ref,
+		p.device,
 		errh.ToPointer(),
 	)
 

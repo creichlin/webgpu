@@ -100,17 +100,14 @@ func GetVersion() Version {
 	return Version(C.wgpuGetVersion())
 }
 
-func (g *Device) addRef() *Device {
+func (g *Device) addRef() C.WGPUDevice {
 	if g.ref == nil {
 		panic(errors.New("device already released"))
 	}
 
-	// FIXME this is actually not thread safe, the device could have been released
-	//  between getting g.ref and calling wgpuDeviceAddRef.
 	C.wgpuDeviceAddRef(g.ref)
 
-	// return a new object that can be individually garbage collected
-	return releaseOnGC(&Device{ref: g.ref})
+	return g.ref
 }
 
 type releaser interface{ Release() }

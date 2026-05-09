@@ -74,6 +74,12 @@ func (g *Surface) GetCapabilities(adapter *Adapter) (ret SurfaceCapabilities) {
 }
 
 func (g *Surface) Configure(device *Device, config *SurfaceConfiguration) {
+	if g.device != nil {
+		// release previously referenced device
+		C.wgpuDeviceRelease(g.device)
+		g.device = nil
+	}
+
 	g.device = device.addRef()
 
 	var pinner runtime.Pinner
@@ -95,7 +101,7 @@ func (g *Surface) Configure(device *Device, config *SurfaceConfiguration) {
 		}
 
 		cfg = &C.WGPUSurfaceConfiguration{
-			device:      g.device.ref,
+			device:      g.device,
 			format:      C.WGPUTextureFormat(config.Format),
 			usage:       C.WGPUTextureUsage(config.Usage),
 			alphaMode:   C.WGPUCompositeAlphaMode(config.AlphaMode),
@@ -128,7 +134,7 @@ func (g *Surface) TryGetCurrentTexture() (*Texture, error) {
 
 	ref := C.gowebgpu_surface_get_current_texture(
 		g.ref,
-		g.device.ref,
+		g.device,
 		errh.ToPointer(),
 	)
 	if errh.err != nil {
@@ -138,7 +144,8 @@ func (g *Surface) TryGetCurrentTexture() (*Texture, error) {
 		return nil, errh.err
 	}
 
-	return &Texture{device: g.device.addRef(), ref: ref}, nil
+	C.wgpuDeviceAddRef(g.device)
+	return &Texture{device: g.device, ref: ref}, nil
 }
 
 func (g *Surface) Present() {
