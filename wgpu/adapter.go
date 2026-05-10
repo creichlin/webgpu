@@ -35,7 +35,7 @@ func (g *Adapter) GetFeatures() []FeatureName {
 func (g *Adapter) GetLimits() Limits {
 	var limits C.WGPULimits
 
-	nativeLimits := (*C.WGPUNativeLimits)(C.malloc(C.size_t(unsafe.Sizeof(C.WGPUNativeLimits{}))))
+	nativeLimits := (*C.WGPUNativeLimits)(C.calloc(1, C.size_t(unsafe.Sizeof(C.WGPUNativeLimits{}))))
 	defer C.free(unsafe.Pointer(nativeLimits))
 	limits.nextInChain = (*C.WGPUChainedStruct)(unsafe.Pointer(nativeLimits))
 
@@ -141,7 +141,7 @@ func (g *Adapter) RequestDevice(descriptor *DeviceDescriptor) (*Device, error) {
 
 		requiredFeatureCount := len(descriptor.RequiredFeatures)
 		if requiredFeatureCount != 0 {
-			requiredFeatures := C.malloc(C.size_t(requiredFeatureCount) * C.size_t(unsafe.Sizeof(C.WGPUFeatureName(0))))
+			requiredFeatures := C.calloc(C.size_t(requiredFeatureCount), C.size_t(unsafe.Sizeof(C.WGPUFeatureName(0))))
 			defer C.free(requiredFeatures)
 
 			requiredFeaturesSlice := unsafe.Slice((*FeatureName)(requiredFeatures), requiredFeatureCount)
@@ -154,7 +154,7 @@ func (g *Adapter) RequestDevice(descriptor *DeviceDescriptor) (*Device, error) {
 		if descriptor.RequiredLimits != nil {
 			l := descriptor.RequiredLimits
 
-			requiredLimits := (*C.WGPULimits)(C.malloc(C.size_t(unsafe.Sizeof(C.WGPULimits{}))))
+			requiredLimits := (*C.WGPULimits)(C.calloc(1, C.size_t(unsafe.Sizeof(C.WGPULimits{}))))
 			defer C.free(unsafe.Pointer(requiredLimits))
 
 			*requiredLimits = C.WGPULimits{
@@ -190,7 +190,7 @@ func (g *Adapter) RequestDevice(descriptor *DeviceDescriptor) (*Device, error) {
 			}
 			desc.requiredLimits = requiredLimits
 
-			nativeLimits := (*C.WGPUNativeLimits)(C.malloc(C.size_t(unsafe.Sizeof(C.WGPUNativeLimits{}))))
+			nativeLimits := (*C.WGPUNativeLimits)(C.calloc(1, C.size_t(unsafe.Sizeof(C.WGPUNativeLimits{}))))
 			defer C.free(unsafe.Pointer(nativeLimits))
 
 			nativeLimits.chain.next = nil
@@ -211,7 +211,7 @@ func (g *Adapter) RequestDevice(descriptor *DeviceDescriptor) (*Device, error) {
 		}
 
 		if descriptor.TracePath != "" {
-			deviceExtras := (*C.WGPUDeviceExtras)(C.malloc(C.size_t(unsafe.Sizeof(C.WGPUDeviceExtras{}))))
+			deviceExtras := (*C.WGPUDeviceExtras)(C.calloc(1, C.size_t(unsafe.Sizeof(C.WGPUDeviceExtras{}))))
 			defer C.free(unsafe.Pointer(deviceExtras))
 
 			deviceExtras.chain.next = nil

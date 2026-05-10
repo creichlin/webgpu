@@ -20,7 +20,7 @@ func CreateInstance(descriptor *InstanceDescriptor) *Instance {
 	var desc C.WGPUInstanceDescriptor
 
 	if descriptor != nil {
-		instanceExtras := (*C.WGPUInstanceExtras)(C.malloc(C.size_t(unsafe.Sizeof(C.WGPUInstanceExtras{}))))
+		instanceExtras := (*C.WGPUInstanceExtras)(C.calloc(1, C.size_t(unsafe.Sizeof(C.WGPUInstanceExtras{}))))
 		defer C.free(unsafe.Pointer(instanceExtras))
 
 		instanceExtras.chain.next = nil
@@ -99,7 +99,7 @@ func (g *Instance) CreateSurface(descriptor *SurfaceDescriptor) *Surface {
 		}
 
 		if descriptor.WindowsHWND != nil {
-			windowsHWND := (*C.WGPUSurfaceSourceWindowsHWND)(C.malloc(C.size_t(unsafe.Sizeof(C.WGPUSurfaceSourceWindowsHWND{}))))
+			windowsHWND := (*C.WGPUSurfaceSourceWindowsHWND)(C.calloc(1, C.size_t(unsafe.Sizeof(C.WGPUSurfaceSourceWindowsHWND{}))))
 			defer C.free(unsafe.Pointer(windowsHWND))
 
 			windowsHWND.chain.next = nil
@@ -111,7 +111,7 @@ func (g *Instance) CreateSurface(descriptor *SurfaceDescriptor) *Surface {
 		}
 
 		if descriptor.XcbWindow != nil {
-			xcbWindow := (*C.WGPUSurfaceSourceXCBWindow)(C.malloc(C.size_t(unsafe.Sizeof(C.WGPUSurfaceSourceXCBWindow{}))))
+			xcbWindow := (*C.WGPUSurfaceSourceXCBWindow)(C.calloc(1, C.size_t(unsafe.Sizeof(C.WGPUSurfaceSourceXCBWindow{}))))
 			defer C.free(unsafe.Pointer(xcbWindow))
 
 			xcbWindow.chain.next = nil
@@ -123,7 +123,7 @@ func (g *Instance) CreateSurface(descriptor *SurfaceDescriptor) *Surface {
 		}
 
 		if descriptor.XlibWindow != nil {
-			xlibWindow := (*C.WGPUSurfaceSourceXlibWindow)(C.malloc(C.size_t(unsafe.Sizeof(C.WGPUSurfaceSourceXlibWindow{}))))
+			xlibWindow := (*C.WGPUSurfaceSourceXlibWindow)(C.calloc(1, C.size_t(unsafe.Sizeof(C.WGPUSurfaceSourceXlibWindow{}))))
 			defer C.free(unsafe.Pointer(xlibWindow))
 
 			xlibWindow.chain.next = nil
@@ -135,7 +135,7 @@ func (g *Instance) CreateSurface(descriptor *SurfaceDescriptor) *Surface {
 		}
 
 		if descriptor.MetalLayer != nil {
-			metalLayer := (*C.WGPUSurfaceSourceMetalLayer)(C.malloc(C.size_t(unsafe.Sizeof(C.WGPUSurfaceSourceMetalLayer{}))))
+			metalLayer := (*C.WGPUSurfaceSourceMetalLayer)(C.calloc(1, C.size_t(unsafe.Sizeof(C.WGPUSurfaceSourceMetalLayer{}))))
 			defer C.free(unsafe.Pointer(metalLayer))
 
 			metalLayer.chain.next = nil
@@ -146,7 +146,7 @@ func (g *Instance) CreateSurface(descriptor *SurfaceDescriptor) *Surface {
 		}
 
 		if descriptor.WaylandSurface != nil {
-			waylandSurface := (*C.WGPUSurfaceSourceWaylandSurface)(C.malloc(C.size_t(unsafe.Sizeof(C.WGPUSurfaceSourceWaylandSurface{}))))
+			waylandSurface := (*C.WGPUSurfaceSourceWaylandSurface)(C.calloc(1, C.size_t(unsafe.Sizeof(C.WGPUSurfaceSourceWaylandSurface{}))))
 			defer C.free(unsafe.Pointer(waylandSurface))
 
 			waylandSurface.chain.next = nil
@@ -158,7 +158,7 @@ func (g *Instance) CreateSurface(descriptor *SurfaceDescriptor) *Surface {
 		}
 
 		if descriptor.AndroidNativeWindow != nil {
-			androidNativeWindow := (*C.WGPUSurfaceSourceAndroidNativeWindow)(C.malloc(C.size_t(unsafe.Sizeof(C.WGPUSurfaceSourceAndroidNativeWindow{}))))
+			androidNativeWindow := (*C.WGPUSurfaceSourceAndroidNativeWindow)(C.calloc(1, C.size_t(unsafe.Sizeof(C.WGPUSurfaceSourceAndroidNativeWindow{}))))
 			defer C.free(unsafe.Pointer(androidNativeWindow))
 
 			androidNativeWindow.chain.next = nil

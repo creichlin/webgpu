@@ -9,7 +9,7 @@ package wgpu
 
 extern void gowebgpu_error_callback_c(enum WGPUPopErrorScopeStatus status, WGPUErrorType type, WGPUStringView message, void * userdata, void * userdata2);
 
-static inline WGPUTexture gowebgpu_surface_get_current_texture(WGPUSurface surface, WGPUDevice device, void * error_userdata) {
+static inline WGPUSurfaceTexture gowebgpu_surface_get_current_texture(WGPUSurface surface, WGPUDevice device, void * error_userdata) {
 	WGPUSurfaceTexture ref;
 	wgpuDevicePushErrorScope(device, WGPUErrorFilter_Validation);
 	wgpuSurfaceGetCurrentTexture(surface, &ref);
@@ -21,7 +21,7 @@ static inline WGPUTexture gowebgpu_surface_get_current_texture(WGPUSurface surfa
 
 	wgpuDevicePopErrorScope(device, err_cb);
 
-	return ref.texture;
+	return ref;
 }
 
 */
@@ -40,15 +40,15 @@ func (g *Surface) GetCapabilities(adapter *Adapter) (ret SurfaceCapabilities) {
 		return
 	}
 	if caps.formatCount > 0 {
-		caps.formats = (*C.WGPUTextureFormat)(C.malloc(C.size_t(unsafe.Sizeof(C.WGPUTextureFormat(0))) * caps.formatCount))
+		caps.formats = (*C.WGPUTextureFormat)(C.calloc(C.size_t(unsafe.Sizeof(C.WGPUTextureFormat(0))), caps.formatCount))
 		defer C.free(unsafe.Pointer(caps.formats))
 	}
 	if caps.presentModeCount > 0 {
-		caps.presentModes = (*C.WGPUPresentMode)(C.malloc(C.size_t(unsafe.Sizeof(C.WGPUPresentMode(0))) * caps.presentModeCount))
+		caps.presentModes = (*C.WGPUPresentMode)(C.calloc(C.size_t(unsafe.Sizeof(C.WGPUPresentMode(0))), caps.presentModeCount))
 		defer C.free(unsafe.Pointer(caps.presentModes))
 	}
 	if caps.alphaModeCount > 0 {
-		caps.alphaModes = (*C.WGPUCompositeAlphaMode)(C.malloc(C.size_t(unsafe.Sizeof(C.WGPUCompositeAlphaMode(0))) * caps.alphaModeCount))
+		caps.alphaModes = (*C.WGPUCompositeAlphaMode)(C.calloc(C.size_t(unsafe.Sizeof(C.WGPUCompositeAlphaMode(0))), caps.alphaModeCount))
 		defer C.free(unsafe.Pointer(caps.alphaModes))
 	}
 
@@ -124,30 +124,41 @@ func (g *Surface) Configure(device *Device, config *SurfaceConfiguration) {
 
 // NOTE: you should typically not call [Texture.Release] on the returned texture.
 // Instead, you should call [TextureView.Release] on any [TextureView] you create from it.
-func (g *Surface) TryGetCurrentTexture() (*Texture, error) {
+// You need to check the status of the returned texture, or use SurfaceTexture.Get.
+func (g *Surface) TryGetCurrentTexture() (SurfaceTexture, error) {
 	if g.device == nil {
-		return nil, errors.New("surface not configured")
+		return SurfaceTexture{}, errors.New("surface not configured")
 	}
 
 	errh := acquireErrorCallback()
 	defer errh.Done()
 
-	ref := C.gowebgpu_surface_get_current_texture(
+	surfaceTexture := C.gowebgpu_surface_get_current_texture(
 		g.ref,
 		g.device,
 		errh.ToPointer(),
 	)
 	if errh.err != nil {
-		if ref != nil {
-			C.wgpuTextureRelease(ref)
+		if surfaceTexture.texture != nil {
+			C.wgpuTextureRelease(surfaceTexture.texture)
 		}
-		return nil, errh.err
+
+		return SurfaceTexture{}, errh.err
 	}
 
-	C.wgpuDeviceAddRef(g.device)
-	return &Texture{device: g.device, ref: ref}, nil
+	status := SurfaceGetCurrentTextureStatus(surfaceTexture.status)
+
+	var texture *Texture
+	if surfaceTexture.texture != nil {
+		C.wgpuDeviceAddRef(g.device)
+		texture = &Texture{device: g.device, ref: surfaceTexture.texture}
+	}
+
+	return SurfaceTexture{Texture: texture, Status: status}, nil
 }
 
 func (g *Surface) Present() {
 	C.wgpuSurfacePresent(g.ref)
 }
+
+var ErrNoSurfaceTexture = errors.New("no surface texture available")

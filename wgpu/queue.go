@@ -67,7 +67,7 @@ func (p *Queue) Submit(commands ...*CommandBuffer) (submissionIndex SubmissionIn
 		return SubmissionIndex(r)
 	}
 
-	commandRefs := C.malloc(C.size_t(commandCount) * C.size_t(unsafe.Sizeof(C.WGPUCommandBuffer(nil))))
+	commandRefs := C.calloc(C.size_t(commandCount), C.size_t(unsafe.Sizeof(C.WGPUCommandBuffer(nil))))
 	defer C.free(commandRefs)
 
 	commandRefsSlice := unsafe.Slice((*C.WGPUCommandBuffer)(commandRefs), commandCount)

@@ -196,7 +196,7 @@ func (p *CommandEncoder) BeginRenderPass(descriptor *RenderPassDescriptor) *Rend
 
 		colorAttachmentCount := len(descriptor.ColorAttachments)
 		if colorAttachmentCount > 0 {
-			colorAttachments := C.malloc(C.size_t(unsafe.Sizeof(C.WGPURenderPassColorAttachment{})) * C.size_t(colorAttachmentCount))
+			colorAttachments := C.calloc(C.size_t(unsafe.Sizeof(C.WGPURenderPassColorAttachment{})), C.size_t(colorAttachmentCount))
 			defer C.free(colorAttachments)
 
 			colorAttachmentsSlice := unsafe.Slice((*C.WGPURenderPassColorAttachment)(colorAttachments), colorAttachmentCount)
@@ -228,7 +228,7 @@ func (p *CommandEncoder) BeginRenderPass(descriptor *RenderPassDescriptor) *Rend
 		}
 
 		if descriptor.DepthStencilAttachment != nil {
-			depthStencilAttachment := (*C.WGPURenderPassDepthStencilAttachment)(C.malloc(C.size_t(unsafe.Sizeof(C.WGPURenderPassDepthStencilAttachment{}))))
+			depthStencilAttachment := (*C.WGPURenderPassDepthStencilAttachment)(C.calloc(1, C.size_t(unsafe.Sizeof(C.WGPURenderPassDepthStencilAttachment{}))))
 			defer C.free(unsafe.Pointer(depthStencilAttachment))
 
 			if descriptor.DepthStencilAttachment.View != nil {

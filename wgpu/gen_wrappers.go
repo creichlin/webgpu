@@ -153,7 +153,8 @@ func (p *RenderPassEncoder) End() { err := p.TryEnd(); panicIf(err, "RenderPassE
 
 // NOTE: you should typically not call [Texture.Release] on the returned texture.
 // Instead, you should call [TextureView.Release] on any [TextureView] you create from it.
-func (g *Surface) GetCurrentTexture() *Texture {
+// You need to check the status of the returned texture, or use SurfaceTexture.Get.
+func (g *Surface) GetCurrentTexture() SurfaceTexture {
 	r0, err := g.TryGetCurrentTexture()
 	panicIf(err, "Surface.GetCurrentTexture failed")
 	return r0

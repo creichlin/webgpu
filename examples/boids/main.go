@@ -8,6 +8,7 @@ import (
 	"runtime"
 	"strconv"
 	"strings"
+	"time"
 
 	"github.com/go-gl/glfw/v3.4/glfw"
 	"github.com/oliverbestmann/webgpu/wgpu"
@@ -302,10 +303,18 @@ func (s *State) Resize(width, height int) {
 }
 
 func (s *State) Render() error {
-	nextTexture, err := s.surface.TryGetCurrentTexture()
+	surfaceTexture, err := s.surface.TryGetCurrentTexture()
 	if err != nil {
 		return err
 	}
+
+	nextTexture, ok := surfaceTexture.Get()
+	if !ok {
+		// maybe occluded, retry layter
+		time.Sleep(16 * time.Millisecond)
+		return nil
+	}
+
 	view, err := nextTexture.TryCreateView(nil)
 	if err != nil {
 		return err

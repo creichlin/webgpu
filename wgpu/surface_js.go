@@ -16,11 +16,17 @@ func (g *Surface) Configure(device *Device, config *SurfaceConfiguration) {
 	g.jsValue.Call("configure", jsConfig)
 }
 
-func (g *Surface) TryGetCurrentTexture() (_ *Texture, err error) {
+func (g *Surface) TryGetCurrentTexture() (_ SurfaceTexture, err error) {
 	defer handleJsException(&err)
 
-	texture := g.jsValue.Call("getCurrentTexture")
-	return &Texture{texture}, nil
+	surfaceTexture := SurfaceTexture{
+		Status: SurfaceGetCurrentTextureStatusSuccessOptimal,
+		Texture: &Texture{
+			jsValue: g.jsValue.Call("getCurrentTexture"),
+		},
+	}
+
+	return surfaceTexture, nil
 }
 
 // Present is a no-op on javascript. The surface is automatically presented at the end

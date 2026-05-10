@@ -199,7 +199,7 @@ func (g *Device) TryCreateBindGroup(descriptor *BindGroupDescriptor) (*BindGroup
 
 		entryCount := len(descriptor.Entries)
 		if entryCount > 0 {
-			entries := C.malloc(C.size_t(entryCount) * C.size_t(unsafe.Sizeof(C.WGPUBindGroupEntry{})))
+			entries := C.calloc(C.size_t(entryCount), C.size_t(unsafe.Sizeof(C.WGPUBindGroupEntry{})))
 			defer C.free(entries)
 
 			entriesSlice := unsafe.Slice((*C.WGPUBindGroupEntry)(entries), entryCount)
@@ -290,7 +290,7 @@ func (g *Device) TryCreateBindGroupLayout(descriptor *BindGroupLayoutDescriptor)
 
 		entryCount := len(descriptor.Entries)
 		if entryCount > 0 {
-			entries := C.malloc(C.size_t(entryCount) * C.size_t(unsafe.Sizeof(C.WGPUBindGroupLayoutEntry{})))
+			entries := C.calloc(C.size_t(entryCount), C.size_t(unsafe.Sizeof(C.WGPUBindGroupLayoutEntry{})))
 			defer C.free(entries)
 
 			entriesSlice := unsafe.Slice((*C.WGPUBindGroupLayoutEntry)(entries), entryCount)
@@ -496,7 +496,7 @@ func (g *Device) TryCreatePipelineLayout(descriptor *PipelineLayoutDescriptor) (
 
 		bindGroupLayoutCount := len(descriptor.BindGroupLayouts)
 		if bindGroupLayoutCount > 0 {
-			bindGroupLayouts := C.malloc(C.size_t(bindGroupLayoutCount) * C.size_t(unsafe.Sizeof(C.WGPUBindGroupLayout(nil))))
+			bindGroupLayouts := C.calloc(C.size_t(bindGroupLayoutCount), C.size_t(unsafe.Sizeof(C.WGPUBindGroupLayout(nil))))
 			defer C.free(bindGroupLayouts)
 
 			bindGroupLayoutsSlice := unsafe.Slice((*C.WGPUBindGroupLayout)(bindGroupLayouts), bindGroupLayoutCount)
@@ -510,7 +510,7 @@ func (g *Device) TryCreatePipelineLayout(descriptor *PipelineLayoutDescriptor) (
 		}
 
 		if descriptor.EnableImmediates {
-			pipelineLayoutExtras := (*C.WGPUPipelineLayoutExtras)(C.malloc(C.size_t(unsafe.Sizeof(C.WGPUPipelineLayoutExtras{}))))
+			pipelineLayoutExtras := (*C.WGPUPipelineLayoutExtras)(C.calloc(1, C.size_t(unsafe.Sizeof(C.WGPUPipelineLayoutExtras{}))))
 			defer C.free(unsafe.Pointer(pipelineLayoutExtras))
 
 			pipelineLayoutExtras.chain.next = nil
@@ -586,7 +586,7 @@ func (g *Device) TryCreateRenderBundleEncoder(descriptor *RenderBundleEncoderDes
 
 		colorFormatCount := len(descriptor.ColorFormats)
 		if colorFormatCount > 0 {
-			colorFormats := C.malloc(C.size_t(colorFormatCount) * C.size_t(unsafe.Sizeof(C.WGPUTextureFormat(0))))
+			colorFormats := C.calloc(C.size_t(colorFormatCount), C.size_t(unsafe.Sizeof(C.WGPUTextureFormat(0))))
 			defer C.free(colorFormats)
 
 			colorFormatsSlice := unsafe.Slice((*TextureFormat)(colorFormats), colorFormatCount)
@@ -723,7 +723,7 @@ func (g *Device) TryCreateRenderPipeline(descriptor *RenderPipelineDescriptor) (
 
 			bufferCount := len(vertex.Buffers)
 			if bufferCount > 0 {
-				buffers := C.malloc(C.size_t(bufferCount) * C.size_t(unsafe.Sizeof(C.WGPUVertexBufferLayout{})))
+				buffers := C.calloc(C.size_t(bufferCount), C.size_t(unsafe.Sizeof(C.WGPUVertexBufferLayout{})))
 				defer C.free(buffers)
 
 				buffersSlice := unsafe.Slice((*C.WGPUVertexBufferLayout)(buffers), bufferCount)
@@ -736,7 +736,7 @@ func (g *Device) TryCreateRenderPipeline(descriptor *RenderPipelineDescriptor) (
 
 					attributeCount := len(v.Attributes)
 					if attributeCount > 0 {
-						attributes := C.malloc(C.size_t(attributeCount) * C.size_t(unsafe.Sizeof(C.WGPUVertexAttribute{})))
+						attributes := C.calloc(C.size_t(attributeCount), C.size_t(unsafe.Sizeof(C.WGPUVertexAttribute{})))
 						defer C.free(attributes)
 
 						attributesSlice := unsafe.Slice((*C.WGPUVertexAttribute)(attributes), attributeCount)
@@ -773,7 +773,7 @@ func (g *Device) TryCreateRenderPipeline(descriptor *RenderPipelineDescriptor) (
 		if descriptor.DepthStencil != nil {
 			depthStencil := descriptor.DepthStencil
 
-			ds := (*C.WGPUDepthStencilState)(C.malloc(C.size_t(unsafe.Sizeof(C.WGPUDepthStencilState{}))))
+			ds := (*C.WGPUDepthStencilState)(C.calloc(1, C.size_t(unsafe.Sizeof(C.WGPUDepthStencilState{}))))
 			defer C.free(unsafe.Pointer(ds))
 
 			ds.nextInChain = nil
@@ -810,7 +810,7 @@ func (g *Device) TryCreateRenderPipeline(descriptor *RenderPipelineDescriptor) (
 		if descriptor.Fragment != nil {
 			fragment := descriptor.Fragment
 
-			frag := (*C.WGPUFragmentState)(C.malloc(C.size_t(unsafe.Sizeof(C.WGPUFragmentState{}))))
+			frag := (*C.WGPUFragmentState)(C.calloc(1, C.size_t(unsafe.Sizeof(C.WGPUFragmentState{}))))
 			defer C.free(unsafe.Pointer(frag))
 
 			frag.nextInChain = nil
@@ -828,7 +828,7 @@ func (g *Device) TryCreateRenderPipeline(descriptor *RenderPipelineDescriptor) (
 
 			targetCount := len(fragment.Targets)
 			if targetCount > 0 {
-				targets := C.malloc(C.size_t(targetCount) * C.size_t(unsafe.Sizeof(C.WGPUColorTargetState{})))
+				targets := C.calloc(C.size_t(targetCount), C.size_t(unsafe.Sizeof(C.WGPUColorTargetState{})))
 				defer C.free(targets)
 
 				targetsSlice := unsafe.Slice((*C.WGPUColorTargetState)(targets), targetCount)
@@ -840,7 +840,7 @@ func (g *Device) TryCreateRenderPipeline(descriptor *RenderPipelineDescriptor) (
 					}
 
 					if v.Blend != nil {
-						blend := (*C.WGPUBlendState)(C.malloc(C.size_t(unsafe.Sizeof(C.WGPUBlendState{}))))
+						blend := (*C.WGPUBlendState)(C.calloc(1, C.size_t(unsafe.Sizeof(C.WGPUBlendState{}))))
 						defer C.free(unsafe.Pointer(blend))
 
 						blend.color = C.WGPUBlendComponent{
@@ -958,7 +958,7 @@ func (g *Device) TryCreateShaderModule(descriptor *ShaderModuleDescriptor) (*Sha
 
 		switch {
 		case descriptor.SPIRVSource != nil:
-			spirv := (*C.WGPUShaderSourceSPIRV)(C.malloc(C.size_t(unsafe.Sizeof(C.WGPUShaderSourceSPIRV{}))))
+			spirv := (*C.WGPUShaderSourceSPIRV)(C.calloc(1, C.size_t(unsafe.Sizeof(C.WGPUShaderSourceSPIRV{}))))
 			defer C.free(unsafe.Pointer(spirv))
 
 			codeSize := len(descriptor.SPIRVSource.Code)
@@ -979,7 +979,7 @@ func (g *Device) TryCreateShaderModule(descriptor *ShaderModuleDescriptor) (*Sha
 			desc.nextInChain = (*C.WGPUChainedStruct)(unsafe.Pointer(spirv))
 
 		case descriptor.WGSLSource != nil:
-			wgsl := (*C.WGPUShaderSourceWGSL)(C.malloc(C.size_t(unsafe.Sizeof(C.WGPUShaderSourceWGSL{}))))
+			wgsl := (*C.WGPUShaderSourceWGSL)(C.calloc(1, C.size_t(unsafe.Sizeof(C.WGPUShaderSourceWGSL{}))))
 			defer C.free(unsafe.Pointer(wgsl))
 
 			if descriptor.WGSLSource.Code != "" {
@@ -999,7 +999,7 @@ func (g *Device) TryCreateShaderModule(descriptor *ShaderModuleDescriptor) (*Sha
 			desc.nextInChain = (*C.WGPUChainedStruct)(unsafe.Pointer(wgsl))
 
 		case descriptor.GLSLSource != nil:
-			glsl := (*C.WGPUShaderSourceGLSL)(C.malloc(C.size_t(unsafe.Sizeof(C.WGPUShaderSourceGLSL{}))))
+			glsl := (*C.WGPUShaderSourceGLSL)(C.calloc(1, C.size_t(unsafe.Sizeof(C.WGPUShaderSourceGLSL{}))))
 			defer C.free(unsafe.Pointer(glsl))
 
 			if descriptor.GLSLSource.Code != "" {
@@ -1015,7 +1015,7 @@ func (g *Device) TryCreateShaderModule(descriptor *ShaderModuleDescriptor) (*Sha
 
 			defineCount := len(descriptor.GLSLSource.Defines)
 			if defineCount > 0 {
-				shaderDefines := C.malloc(C.size_t(unsafe.Sizeof(C.WGPUShaderDefine{})) * C.size_t(defineCount))
+				shaderDefines := C.calloc(C.size_t(unsafe.Sizeof(C.WGPUShaderDefine{})), C.size_t(defineCount))
 				defer C.free(shaderDefines)
 
 				shaderDefinesSlice := unsafe.Slice((*C.WGPUShaderDefine)(shaderDefines), defineCount)
@@ -1125,7 +1125,7 @@ func (g *Device) GetFeatures() []FeatureName {
 func (g *Device) GetLimits() Limits {
 	var limits C.WGPULimits
 
-	nativeLimits := (*C.WGPUNativeLimits)(C.malloc(C.size_t(unsafe.Sizeof(C.WGPUNativeLimits{}))))
+	nativeLimits := (*C.WGPUNativeLimits)(C.calloc(1, C.size_t(unsafe.Sizeof(C.WGPUNativeLimits{}))))
 	defer C.free(unsafe.Pointer(&nativeLimits))
 	limits.nextInChain = (*C.WGPUChainedStruct)(unsafe.Pointer(&nativeLimits))
 

@@ -1,8 +1,10 @@
 package wgpu
 
-import "strconv"
+import (
+	"strconv"
+)
 
-//go:generate go run ../cmd/enums -i lib/linux/arm64/ -o gen_enums.go -pkg wgpu
+//go:generate sh -c "cd ../cmd/enums && go run . -i ../../wgpu/lib/linux/arm64/ -o ../../wgpu/gen_enums.go -pkg wgpu"
 //go:generate go run ../cmd/refcount Adapter BindGroup BindGroupLayout CommandBuffer ComputePipeline Device Instance PipelineLayout QuerySet RenderBundle RenderBundleEncoder RenderPipeline Sampler ShaderModule TextureView +Queue +Buffer +CommandEncoder +Texture +ComputePassEncoder +RenderPassEncoder +Surface
 //go:generate sh -c "cd .. && go run ./cmd/wrappers"
 
@@ -321,4 +323,21 @@ type BindGroupEntry struct {
 type ProgrammableStageDescriptor struct {
 	Module     *ShaderModule
 	EntryPoint string
+}
+
+type SurfaceTexture struct {
+	// Texture might not be set depending on Status
+	Texture *Texture
+
+	// Status of the texture returned
+	Status SurfaceGetCurrentTextureStatus
+}
+
+func (s *SurfaceTexture) IsStatusSuccess() bool {
+	return s.Status == SurfaceGetCurrentTextureStatusSuccessOptimal ||
+		s.Status == SurfaceGetCurrentTextureStatusSuccessSuboptimal
+}
+
+func (s *SurfaceTexture) Get() (nextTexture *Texture, success bool) {
+	return s.Texture, s.IsStatusSuccess()
 }

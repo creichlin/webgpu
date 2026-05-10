@@ -95,7 +95,7 @@ func (p *RenderPassEncoder) ExecuteBundles(bundles ...*RenderBundle) {
 		return
 	}
 
-	bundlesPtr := C.malloc(C.size_t(bundlesCount) * C.size_t(unsafe.Sizeof(C.WGPURenderBundle(nil))))
+	bundlesPtr := C.calloc(C.size_t(bundlesCount), C.size_t(unsafe.Sizeof(C.WGPURenderBundle(nil))))
 	defer C.free(bundlesPtr)
 
 	bundlesSlice := unsafe.Slice((*C.WGPURenderBundle)(bundlesPtr), bundlesCount)
