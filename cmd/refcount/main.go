@@ -90,7 +90,12 @@ func main() {
 			func (g *%[1]s) Release() {
 				// no-op, just here to keep api compatibly with native version
 			}
-		
+				
+			func (g *%[1]s) IsValid() bool {
+				// as long as the instance is reachable it is valid
+				return true
+			}	
+
 			func (g *%[1]s) toJS() any {
 				return g.jsValue
 			}
