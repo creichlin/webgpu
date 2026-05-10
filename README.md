@@ -21,6 +21,15 @@ For more information, see:
 
 The included static libraries downloaded from the wgpu-native project.
 
+## Building
+
+You might need to have dependencies installed. For debian/ubuntu, you can do
+```sh
+apt install -y libegl1-mesa-dev mesa-vulkan-drivers \
+    libasound2-dev libxcursor-dev libxi-dev libxinerama-dev libxrandr-dev libxxf86vm-dev \
+    libxkbcommon-dev libwayland-dev
+```
+
 ## Error handling
 
 Error handling in this library is intentionally designed to use panics for most WebGPU-related validation errors. This
