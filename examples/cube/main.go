@@ -8,7 +8,7 @@ import (
 	"strings"
 	"unsafe"
 
-	"github.com/go-gl/glfw/v3.3/glfw"
+	"github.com/go-gl/glfw/v3.4/glfw"
 	"github.com/oliverbestmann/webgpu/examples/internal/glm"
 	"github.com/oliverbestmann/webgpu/wgpu"
 	"github.com/oliverbestmann/webgpu/wgpuglfw"
@@ -426,10 +426,16 @@ func (s *State) Destroy() {
 }
 
 func main() {
+	glfw.InitHint(glfw.WaylandLibdecor, glfw.WaylandPreferLibdecor)
+
 	if err := glfw.Init(); err != nil {
 		panic(err)
 	}
 	defer glfw.Terminate()
+
+	fmt.Println("Wayland supported:", glfw.PlatformSupported(glfw.PlatformWayland))
+	fmt.Println("X11 supoprted:", glfw.PlatformSupported(glfw.PlatformX11))
+	fmt.Println("Using X11:", glfw.GetPlatform() == glfw.PlatformX11)
 
 	glfw.WindowHint(glfw.ClientAPI, glfw.NoAPI)
 	window, err := glfw.CreateWindow(640, 480, "go-webgpu with glfw", nil, nil)
