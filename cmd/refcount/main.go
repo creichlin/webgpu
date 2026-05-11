@@ -24,7 +24,7 @@ var nativeTmpl = template.Must(template.New("").Parse(`
 	}
 
 	func (g *{{ .Name }}) Release() {
-		if g.ref == nil { return }
+		if g == nil || g.ref == nil { return }
 
 		// pointer to the ref field
 		ptr := (*unsafe.Pointer)(unsafe.Pointer(&g.ref))
@@ -97,7 +97,7 @@ func main() {
 
 			func (g *%[1]s) IsValid() bool {
 				// as long as the instance is reachable it is valid
-				return true
+				return g != nil
 			}
 
 			func (g *%[1]s) toJS() any {

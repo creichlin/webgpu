@@ -14,7 +14,7 @@ func (g *Buffer) Release() {
 
 func (g *Buffer) IsValid() bool {
 	// as long as the instance is reachable it is valid
-	return true
+	return g != nil
 }
 
 func (g *Buffer) toJS() any {
@@ -31,7 +31,7 @@ func (g *CommandEncoder) Release() {
 
 func (g *CommandEncoder) IsValid() bool {
 	// as long as the instance is reachable it is valid
-	return true
+	return g != nil
 }
 
 func (g *CommandEncoder) toJS() any {
@@ -48,7 +48,7 @@ func (g *ComputePassEncoder) Release() {
 
 func (g *ComputePassEncoder) IsValid() bool {
 	// as long as the instance is reachable it is valid
-	return true
+	return g != nil
 }
 
 func (g *ComputePassEncoder) toJS() any {
@@ -65,7 +65,7 @@ func (g *Queue) Release() {
 
 func (g *Queue) IsValid() bool {
 	// as long as the instance is reachable it is valid
-	return true
+	return g != nil
 }
 
 func (g *Queue) toJS() any {
@@ -82,7 +82,7 @@ func (g *RenderPassEncoder) Release() {
 
 func (g *RenderPassEncoder) IsValid() bool {
 	// as long as the instance is reachable it is valid
-	return true
+	return g != nil
 }
 
 func (g *RenderPassEncoder) toJS() any {
@@ -99,7 +99,7 @@ func (g *Surface) Release() {
 
 func (g *Surface) IsValid() bool {
 	// as long as the instance is reachable it is valid
-	return true
+	return g != nil
 }
 
 func (g *Surface) toJS() any {
@@ -116,7 +116,7 @@ func (g *Texture) Release() {
 
 func (g *Texture) IsValid() bool {
 	// as long as the instance is reachable it is valid
-	return true
+	return g != nil
 }
 
 func (g *Texture) toJS() any {
@@ -133,7 +133,7 @@ func (g *Adapter) Release() {
 
 func (g *Adapter) IsValid() bool {
 	// as long as the instance is reachable it is valid
-	return true
+	return g != nil
 }
 
 func (g *Adapter) toJS() any {
@@ -150,7 +150,7 @@ func (g *BindGroup) Release() {
 
 func (g *BindGroup) IsValid() bool {
 	// as long as the instance is reachable it is valid
-	return true
+	return g != nil
 }
 
 func (g *BindGroup) toJS() any {
@@ -167,7 +167,7 @@ func (g *BindGroupLayout) Release() {
 
 func (g *BindGroupLayout) IsValid() bool {
 	// as long as the instance is reachable it is valid
-	return true
+	return g != nil
 }
 
 func (g *BindGroupLayout) toJS() any {
@@ -184,7 +184,7 @@ func (g *CommandBuffer) Release() {
 
 func (g *CommandBuffer) IsValid() bool {
 	// as long as the instance is reachable it is valid
-	return true
+	return g != nil
 }
 
 func (g *CommandBuffer) toJS() any {
@@ -201,7 +201,7 @@ func (g *ComputePipeline) Release() {
 
 func (g *ComputePipeline) IsValid() bool {
 	// as long as the instance is reachable it is valid
-	return true
+	return g != nil
 }
 
 func (g *ComputePipeline) toJS() any {
@@ -218,7 +218,7 @@ func (g *Device) Release() {
 
 func (g *Device) IsValid() bool {
 	// as long as the instance is reachable it is valid
-	return true
+	return g != nil
 }
 
 func (g *Device) toJS() any {
@@ -235,7 +235,7 @@ func (g *Instance) Release() {
 
 func (g *Instance) IsValid() bool {
 	// as long as the instance is reachable it is valid
-	return true
+	return g != nil
 }
 
 func (g *Instance) toJS() any {
@@ -252,7 +252,7 @@ func (g *PipelineLayout) Release() {
 
 func (g *PipelineLayout) IsValid() bool {
 	// as long as the instance is reachable it is valid
-	return true
+	return g != nil
 }
 
 func (g *PipelineLayout) toJS() any {
@@ -269,7 +269,7 @@ func (g *QuerySet) Release() {
 
 func (g *QuerySet) IsValid() bool {
 	// as long as the instance is reachable it is valid
-	return true
+	return g != nil
 }
 
 func (g *QuerySet) toJS() any {
@@ -286,7 +286,7 @@ func (g *RenderBundle) Release() {
 
 func (g *RenderBundle) IsValid() bool {
 	// as long as the instance is reachable it is valid
-	return true
+	return g != nil
 }
 
 func (g *RenderBundle) toJS() any {
@@ -303,7 +303,7 @@ func (g *RenderBundleEncoder) Release() {
 
 func (g *RenderBundleEncoder) IsValid() bool {
 	// as long as the instance is reachable it is valid
-	return true
+	return g != nil
 }
 
 func (g *RenderBundleEncoder) toJS() any {
@@ -320,7 +320,7 @@ func (g *RenderPipeline) Release() {
 
 func (g *RenderPipeline) IsValid() bool {
 	// as long as the instance is reachable it is valid
-	return true
+	return g != nil
 }
 
 func (g *RenderPipeline) toJS() any {
@@ -337,7 +337,7 @@ func (g *Sampler) Release() {
 
 func (g *Sampler) IsValid() bool {
 	// as long as the instance is reachable it is valid
-	return true
+	return g != nil
 }
 
 func (g *Sampler) toJS() any {
@@ -354,7 +354,7 @@ func (g *ShaderModule) Release() {
 
 func (g *ShaderModule) IsValid() bool {
 	// as long as the instance is reachable it is valid
-	return true
+	return g != nil
 }
 
 func (g *ShaderModule) toJS() any {
@@ -371,7 +371,7 @@ func (g *TextureView) Release() {
 
 func (g *TextureView) IsValid() bool {
 	// as long as the instance is reachable it is valid
-	return true
+	return g != nil
 }
 
 func (g *TextureView) toJS() any {

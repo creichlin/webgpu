@@ -24,7 +24,7 @@ func (g *Buffer) IsValid() bool {
 }
 
 func (g *Buffer) Release() {
-	if g.ref == nil {
+	if g == nil || g.ref == nil {
 		return
 	}
 
@@ -53,7 +53,7 @@ func (g *CommandEncoder) IsValid() bool {
 }
 
 func (g *CommandEncoder) Release() {
-	if g.ref == nil {
+	if g == nil || g.ref == nil {
 		return
 	}
 
@@ -82,7 +82,7 @@ func (g *ComputePassEncoder) IsValid() bool {
 }
 
 func (g *ComputePassEncoder) Release() {
-	if g.ref == nil {
+	if g == nil || g.ref == nil {
 		return
 	}
 
@@ -111,7 +111,7 @@ func (g *Queue) IsValid() bool {
 }
 
 func (g *Queue) Release() {
-	if g.ref == nil {
+	if g == nil || g.ref == nil {
 		return
 	}
 
@@ -140,7 +140,7 @@ func (g *RenderPassEncoder) IsValid() bool {
 }
 
 func (g *RenderPassEncoder) Release() {
-	if g.ref == nil {
+	if g == nil || g.ref == nil {
 		return
 	}
 
@@ -169,7 +169,7 @@ func (g *Surface) IsValid() bool {
 }
 
 func (g *Surface) Release() {
-	if g.ref == nil {
+	if g == nil || g.ref == nil {
 		return
 	}
 
@@ -198,7 +198,7 @@ func (g *Texture) IsValid() bool {
 }
 
 func (g *Texture) Release() {
-	if g.ref == nil {
+	if g == nil || g.ref == nil {
 		return
 	}
 
@@ -226,7 +226,7 @@ func (g *Adapter) IsValid() bool {
 }
 
 func (g *Adapter) Release() {
-	if g.ref == nil {
+	if g == nil || g.ref == nil {
 		return
 	}
 
@@ -251,7 +251,7 @@ func (g *BindGroup) IsValid() bool {
 }
 
 func (g *BindGroup) Release() {
-	if g.ref == nil {
+	if g == nil || g.ref == nil {
 		return
 	}
 
@@ -276,7 +276,7 @@ func (g *BindGroupLayout) IsValid() bool {
 }
 
 func (g *BindGroupLayout) Release() {
-	if g.ref == nil {
+	if g == nil || g.ref == nil {
 		return
 	}
 
@@ -301,7 +301,7 @@ func (g *CommandBuffer) IsValid() bool {
 }
 
 func (g *CommandBuffer) Release() {
-	if g.ref == nil {
+	if g == nil || g.ref == nil {
 		return
 	}
 
@@ -326,7 +326,7 @@ func (g *ComputePipeline) IsValid() bool {
 }
 
 func (g *ComputePipeline) Release() {
-	if g.ref == nil {
+	if g == nil || g.ref == nil {
 		return
 	}
 
@@ -351,7 +351,7 @@ func (g *Device) IsValid() bool {
 }
 
 func (g *Device) Release() {
-	if g.ref == nil {
+	if g == nil || g.ref == nil {
 		return
 	}
 
@@ -376,7 +376,7 @@ func (g *Instance) IsValid() bool {
 }
 
 func (g *Instance) Release() {
-	if g.ref == nil {
+	if g == nil || g.ref == nil {
 		return
 	}
 
@@ -401,7 +401,7 @@ func (g *PipelineLayout) IsValid() bool {
 }
 
 func (g *PipelineLayout) Release() {
-	if g.ref == nil {
+	if g == nil || g.ref == nil {
 		return
 	}
 
@@ -426,7 +426,7 @@ func (g *QuerySet) IsValid() bool {
 }
 
 func (g *QuerySet) Release() {
-	if g.ref == nil {
+	if g == nil || g.ref == nil {
 		return
 	}
 
@@ -451,7 +451,7 @@ func (g *RenderBundle) IsValid() bool {
 }
 
 func (g *RenderBundle) Release() {
-	if g.ref == nil {
+	if g == nil || g.ref == nil {
 		return
 	}
 
@@ -476,7 +476,7 @@ func (g *RenderBundleEncoder) IsValid() bool {
 }
 
 func (g *RenderBundleEncoder) Release() {
-	if g.ref == nil {
+	if g == nil || g.ref == nil {
 		return
 	}
 
@@ -501,7 +501,7 @@ func (g *RenderPipeline) IsValid() bool {
 }
 
 func (g *RenderPipeline) Release() {
-	if g.ref == nil {
+	if g == nil || g.ref == nil {
 		return
 	}
 
@@ -526,7 +526,7 @@ func (g *Sampler) IsValid() bool {
 }
 
 func (g *Sampler) Release() {
-	if g.ref == nil {
+	if g == nil || g.ref == nil {
 		return
 	}
 
@@ -551,7 +551,7 @@ func (g *ShaderModule) IsValid() bool {
 }
 
 func (g *ShaderModule) Release() {
-	if g.ref == nil {
+	if g == nil || g.ref == nil {
 		return
 	}
 
@@ -576,7 +576,7 @@ func (g *TextureView) IsValid() bool {
 }
 
 func (g *TextureView) Release() {
-	if g.ref == nil {
+	if g == nil || g.ref == nil {
 		return
 	}
 
