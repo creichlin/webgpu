@@ -29,10 +29,7 @@ import "C"
 import (
 	"errors"
 	"runtime"
-	"time"
 	"unsafe"
-
-	"github.com/go-gl/glfw/v3.4/glfw"
 )
 
 func (g *Surface) GetCapabilities(adapter *Adapter) (ret SurfaceCapabilities) {
@@ -136,35 +133,28 @@ func (g *Surface) TryGetCurrentTexture() (SurfaceTexture, error) {
 	errh := acquireErrorCallback()
 	defer errh.Done()
 
-	for {
-		surfaceTexture := C.gowebgpu_surface_get_current_texture(
-			g.ref,
-			g.device,
-			errh.ToPointer(),
-		)
-		if errh.err != nil {
-			if surfaceTexture.texture != nil {
-				C.wgpuTextureRelease(surfaceTexture.texture)
-			}
-
-			return SurfaceTexture{}, errh.err
-		}
-
-		status := SurfaceGetCurrentTextureStatus(surfaceTexture.status)
-		if status == SurfaceGetCurrentTextureStatusOccluded {
-			time.Sleep(16 * time.Millisecond)
-			glfw.PollEvents()
-			continue
-		}
-
-		var texture *Texture
+	surfaceTexture := C.gowebgpu_surface_get_current_texture(
+		g.ref,
+		g.device,
+		errh.ToPointer(),
+	)
+	if errh.err != nil {
 		if surfaceTexture.texture != nil {
-			C.wgpuDeviceAddRef(g.device)
-			texture = &Texture{device: g.device, ref: surfaceTexture.texture}
+			C.wgpuTextureRelease(surfaceTexture.texture)
 		}
 
-		return SurfaceTexture{Texture: texture, Status: status}, nil
+		return SurfaceTexture{}, errh.err
 	}
+
+	status := SurfaceGetCurrentTextureStatus(surfaceTexture.status)
+
+	var texture *Texture
+	if surfaceTexture.texture != nil {
+		C.wgpuDeviceAddRef(g.device)
+		texture = &Texture{device: g.device, ref: surfaceTexture.texture}
+	}
+
+	return SurfaceTexture{Texture: texture, Status: status}, nil
 }
 
 func (g *Surface) Present() {

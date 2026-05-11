@@ -3,6 +3,7 @@ package main
 import (
 	"os"
 	"runtime"
+	"time"
 
 	"github.com/oliverbestmann/webgpu/wgpu"
 
@@ -147,7 +148,8 @@ func (s *State) Render() error {
 
 	nextTexture, ok := surfaceTexture.Get()
 	if !ok {
-		// todo: in this case you actually want to re-configure the surface!
+		// maybe occluded, retry layter
+		time.Sleep(16 * time.Millisecond)
 		return nil
 	}
 
