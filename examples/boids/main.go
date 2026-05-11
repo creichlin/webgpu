@@ -8,7 +8,6 @@ import (
 	"runtime"
 	"strconv"
 	"strings"
-	"time"
 
 	"github.com/go-gl/glfw/v3.4/glfw"
 	"github.com/oliverbestmann/webgpu/wgpu"
@@ -310,8 +309,7 @@ func (s *State) Render() error {
 
 	nextTexture, ok := surfaceTexture.Get()
 	if !ok {
-		// maybe occluded, retry layter
-		time.Sleep(16 * time.Millisecond)
+		// todo: in this case you actually want to re-configure the surface!
 		return nil
 	}
 

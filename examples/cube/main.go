@@ -6,7 +6,6 @@ import (
 	"os"
 	"runtime"
 	"strings"
-	"time"
 	"unsafe"
 
 	"github.com/go-gl/glfw/v3.4/glfw"
@@ -349,8 +348,7 @@ func (s *State) Render() error {
 
 	nextTexture, ok := surfaceTexture.Get()
 	if !ok {
-		// maybe occluded, retry layter
-		time.Sleep(16 * time.Millisecond)
+		// todo: in this case you actually want to re-configure the surface!
 		return nil
 	}
 
