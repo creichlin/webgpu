@@ -23,6 +23,10 @@ func (g *Queue) Submit(commandBuffers ...*CommandBuffer) SubmissionIndex {
 // TryWriteBuffer as described:
 // https://gpuweb.github.io/gpuweb/#dom-gpuqueue-writebuffer
 func (g *Queue) TryWriteBuffer(buffer *Buffer, offset uint64, data []byte) (err error) {
+	if len(data) == 0 {
+		return nil
+	}
+
 	defer handleJsException(&err)
 	address := uintptr(unsafe.Pointer(&data[0]))
 	queueWriteBuffer.Invoke(g.jsValue, pointerToJS(buffer), offset, address, uint64(0), len(data))
@@ -33,8 +37,11 @@ func (g *Queue) TryWriteBuffer(buffer *Buffer, offset uint64, data []byte) (err 
 // TryWriteTexture as described:
 // https://gpuweb.github.io/gpuweb/#dom-gpuqueue-writetexture
 func (g *Queue) TryWriteTexture(destination *TexelCopyTextureInfo, data []byte, dataLayout *TexelCopyBufferLayout, writeSize *Extent3D) (err error) {
-	defer handleJsException(&err)
+	if len(data) == 0 {
+		return nil
+	}
 
+	defer handleJsException(&err)
 	address := uintptr(unsafe.Pointer(&data[0]))
 	queueWriteTexture.Invoke(g.jsValue, pointerToJS(destination), address, len(data), pointerToJS(dataLayout), pointerToJS(writeSize))
 	runtime.KeepAlive(data)

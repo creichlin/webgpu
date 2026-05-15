@@ -2,6 +2,8 @@
 
 package wgpu
 
+import "syscall/js"
+
 // SetPipeline as described:
 // https://gpuweb.github.io/gpuweb/#dom-gpurendercommandsmixin-setpipeline
 func (g *RenderPassEncoder) SetPipeline(pipeline *RenderPipeline) {
@@ -57,6 +59,13 @@ func (g *RenderPassEncoder) SetBindGroup(index uint32, bindGroup *BindGroup, dyn
 		return offset
 	})
 	g.jsValue.Call("setBindGroup", params...)
+}
+
+// SetBlendConstant as described:
+// https://gpuweb.github.io/gpuweb/#dom-gpurenderpassencoder-setblendconstant
+func (g *RenderPassEncoder) SetBlendConstant(color *Color) {
+	jsColor := js.ValueOf([]any{color.R, color.G, color.B, color.A})
+	g.jsValue.Call("setBlendConstant", jsColor)
 }
 
 // Draw as described:

@@ -9,7 +9,11 @@ import (
 )
 
 func (g *Adapter) RequestDevice(descriptor *DeviceDescriptor) (*Device, error) {
-	device, ok := jsx.Await(g.jsValue.Call("requestDevice", pointerToJS(descriptor)))
+	fmt.Println(pointerToJS(descriptor))
+	descriptor.toJS()
+	promise := g.jsValue.Call("requestDevice", pointerToJS(descriptor))
+
+	device, ok := jsx.Await(promise)
 	if !ok || !device.Truthy() {
 		return nil, fmt.Errorf("no WebGPU device avaliable")
 	}
