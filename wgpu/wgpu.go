@@ -110,10 +110,10 @@ func (g *Device) addRef() C.WGPUDevice {
 	return g.ref
 }
 
-type releaser interface{ Release() }
+type releaser interface{ release() }
 
 func releaseNow[T releaser](value T) {
-	value.Release()
+	value.release()
 }
 
 func releaseOnGC[T releaser](value T) T {

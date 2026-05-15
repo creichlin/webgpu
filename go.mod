@@ -11,9 +11,4 @@ require (
 	github.com/oliverbestmann/webgpu/libs-windows v0.0.0-20260509160807-0bc32b12c7bc
 )
 
-// The current glfw/v3.4 bindings are broken when trying to use wayland and x11 at the same time.
-// This is a fix for that.
-// See https://github.com/go-gl/glfw/pull/420 for more information
-replace github.com/go-gl/glfw/v3.4/glfw v0.1.0-pre.1.0.20260406072232-3ac4aa2bb164 => github.com/oliverbestmann/go-gl-glfw/v3.4/glfw v0.0.0-20260510101646-c1f83c493fe1
-
 retract v1.27.0 // published before deciding on a version scheme. we start at v1.0.0

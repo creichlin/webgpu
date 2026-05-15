@@ -16,6 +16,7 @@ var nativeTmpl = template.Must(template.New("").Parse(`
 		{{- if .WithDev }}
 		device C.WGPUDevice
 		{{- end }}
+		shared bool
 	}
 
 
@@ -26,6 +27,17 @@ var nativeTmpl = template.Must(template.New("").Parse(`
 	func (g *{{ .Name }}) Release() {
 		if g == nil || g.ref == nil { return }
 
+		// if this is shared, we should not be able to release it manually
+		if g.shared { return }
+
+		// we manually release this object, remove the finalizer, no
+		// need to run release on gc again
+		runtime.SetFinalizer(g, nil)
+
+		g.release()
+	}
+
+	func (g *{{ .Name }}) release() {
 		// pointer to the ref field
 		ptr := (*unsafe.Pointer)(unsafe.Pointer(&g.ref))
 
@@ -42,6 +54,10 @@ var nativeTmpl = template.Must(template.New("").Parse(`
 			g.device = nil
 			{{- end }}
 		}
+	}
+
+	func (g *{{ .Name }}) markShared() {
+		g.shared = true
 	}
 `))
 
@@ -63,6 +79,7 @@ func main() {
 		import (
 			"sync/atomic"
 			"unsafe"
+			"runtime"
 		)
 	`)
 
@@ -94,7 +111,7 @@ func main() {
 			func (g *%[1]s) Release() {
 				// no-op, just here to keep api compatibly with native version
 			}
-
+		
 			func (g *%[1]s) IsValid() bool {
 				// as long as the instance is reachable it is valid
 				return g != nil
@@ -103,6 +120,8 @@ func main() {
 			func (g *%[1]s) toJS() any {
 				return g.jsValue
 			}
+
+			func (g *%[1]s) markShared() {}
 
 		`, name))
 

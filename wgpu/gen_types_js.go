@@ -21,6 +21,8 @@ func (g *Buffer) toJS() any {
 	return g.jsValue
 }
 
+func (g *Buffer) markShared() {}
+
 type CommandEncoder struct {
 	jsValue js.Value
 }
@@ -37,6 +39,8 @@ func (g *CommandEncoder) IsValid() bool {
 func (g *CommandEncoder) toJS() any {
 	return g.jsValue
 }
+
+func (g *CommandEncoder) markShared() {}
 
 type ComputePassEncoder struct {
 	jsValue js.Value
@@ -55,6 +59,8 @@ func (g *ComputePassEncoder) toJS() any {
 	return g.jsValue
 }
 
+func (g *ComputePassEncoder) markShared() {}
+
 type Queue struct {
 	jsValue js.Value
 }
@@ -71,6 +77,8 @@ func (g *Queue) IsValid() bool {
 func (g *Queue) toJS() any {
 	return g.jsValue
 }
+
+func (g *Queue) markShared() {}
 
 type RenderPassEncoder struct {
 	jsValue js.Value
@@ -89,6 +97,8 @@ func (g *RenderPassEncoder) toJS() any {
 	return g.jsValue
 }
 
+func (g *RenderPassEncoder) markShared() {}
+
 type Surface struct {
 	jsValue js.Value
 }
@@ -105,6 +115,8 @@ func (g *Surface) IsValid() bool {
 func (g *Surface) toJS() any {
 	return g.jsValue
 }
+
+func (g *Surface) markShared() {}
 
 type Texture struct {
 	jsValue js.Value
@@ -123,6 +135,8 @@ func (g *Texture) toJS() any {
 	return g.jsValue
 }
 
+func (g *Texture) markShared() {}
+
 type Adapter struct {
 	jsValue js.Value
 }
@@ -139,6 +153,8 @@ func (g *Adapter) IsValid() bool {
 func (g *Adapter) toJS() any {
 	return g.jsValue
 }
+
+func (g *Adapter) markShared() {}
 
 type BindGroup struct {
 	jsValue js.Value
@@ -157,6 +173,8 @@ func (g *BindGroup) toJS() any {
 	return g.jsValue
 }
 
+func (g *BindGroup) markShared() {}
+
 type BindGroupLayout struct {
 	jsValue js.Value
 }
@@ -173,6 +191,8 @@ func (g *BindGroupLayout) IsValid() bool {
 func (g *BindGroupLayout) toJS() any {
 	return g.jsValue
 }
+
+func (g *BindGroupLayout) markShared() {}
 
 type CommandBuffer struct {
 	jsValue js.Value
@@ -191,6 +211,8 @@ func (g *CommandBuffer) toJS() any {
 	return g.jsValue
 }
 
+func (g *CommandBuffer) markShared() {}
+
 type ComputePipeline struct {
 	jsValue js.Value
 }
@@ -207,6 +229,8 @@ func (g *ComputePipeline) IsValid() bool {
 func (g *ComputePipeline) toJS() any {
 	return g.jsValue
 }
+
+func (g *ComputePipeline) markShared() {}
 
 type Device struct {
 	jsValue js.Value
@@ -225,6 +249,8 @@ func (g *Device) toJS() any {
 	return g.jsValue
 }
 
+func (g *Device) markShared() {}
+
 type Instance struct {
 	jsValue js.Value
 }
@@ -241,6 +267,8 @@ func (g *Instance) IsValid() bool {
 func (g *Instance) toJS() any {
 	return g.jsValue
 }
+
+func (g *Instance) markShared() {}
 
 type PipelineLayout struct {
 	jsValue js.Value
@@ -259,6 +287,8 @@ func (g *PipelineLayout) toJS() any {
 	return g.jsValue
 }
 
+func (g *PipelineLayout) markShared() {}
+
 type QuerySet struct {
 	jsValue js.Value
 }
@@ -275,6 +305,8 @@ func (g *QuerySet) IsValid() bool {
 func (g *QuerySet) toJS() any {
 	return g.jsValue
 }
+
+func (g *QuerySet) markShared() {}
 
 type RenderBundle struct {
 	jsValue js.Value
@@ -293,6 +325,8 @@ func (g *RenderBundle) toJS() any {
 	return g.jsValue
 }
 
+func (g *RenderBundle) markShared() {}
+
 type RenderBundleEncoder struct {
 	jsValue js.Value
 }
@@ -309,6 +343,8 @@ func (g *RenderBundleEncoder) IsValid() bool {
 func (g *RenderBundleEncoder) toJS() any {
 	return g.jsValue
 }
+
+func (g *RenderBundleEncoder) markShared() {}
 
 type RenderPipeline struct {
 	jsValue js.Value
@@ -327,6 +363,8 @@ func (g *RenderPipeline) toJS() any {
 	return g.jsValue
 }
 
+func (g *RenderPipeline) markShared() {}
+
 type Sampler struct {
 	jsValue js.Value
 }
@@ -343,6 +381,8 @@ func (g *Sampler) IsValid() bool {
 func (g *Sampler) toJS() any {
 	return g.jsValue
 }
+
+func (g *Sampler) markShared() {}
 
 type ShaderModule struct {
 	jsValue js.Value
@@ -361,6 +401,8 @@ func (g *ShaderModule) toJS() any {
 	return g.jsValue
 }
 
+func (g *ShaderModule) markShared() {}
+
 type TextureView struct {
 	jsValue js.Value
 }
@@ -377,3 +419,5 @@ func (g *TextureView) IsValid() bool {
 func (g *TextureView) toJS() any {
 	return g.jsValue
 }
+
+func (g *TextureView) markShared() {}

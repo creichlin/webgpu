@@ -10,6 +10,7 @@ package wgpu
 import "C"
 
 import (
+	"runtime"
 	"sync/atomic"
 	"unsafe"
 )
@@ -17,6 +18,7 @@ import (
 type Buffer struct {
 	ref    C.WGPUBuffer
 	device C.WGPUDevice
+	shared bool
 }
 
 func (g *Buffer) IsValid() bool {
@@ -28,6 +30,19 @@ func (g *Buffer) Release() {
 		return
 	}
 
+	// if this is shared, we should not be able to release it manually
+	if g.shared {
+		return
+	}
+
+	// we manually release this object, remove the finalizer, no
+	// need to run release on gc again
+	runtime.SetFinalizer(g, nil)
+
+	g.release()
+}
+
+func (g *Buffer) release() {
 	// pointer to the ref field
 	ptr := (*unsafe.Pointer)(unsafe.Pointer(&g.ref))
 
@@ -43,9 +58,14 @@ func (g *Buffer) Release() {
 	}
 }
 
+func (g *Buffer) markShared() {
+	g.shared = true
+}
+
 type CommandEncoder struct {
 	ref    C.WGPUCommandEncoder
 	device C.WGPUDevice
+	shared bool
 }
 
 func (g *CommandEncoder) IsValid() bool {
@@ -57,6 +77,19 @@ func (g *CommandEncoder) Release() {
 		return
 	}
 
+	// if this is shared, we should not be able to release it manually
+	if g.shared {
+		return
+	}
+
+	// we manually release this object, remove the finalizer, no
+	// need to run release on gc again
+	runtime.SetFinalizer(g, nil)
+
+	g.release()
+}
+
+func (g *CommandEncoder) release() {
 	// pointer to the ref field
 	ptr := (*unsafe.Pointer)(unsafe.Pointer(&g.ref))
 
@@ -72,9 +105,14 @@ func (g *CommandEncoder) Release() {
 	}
 }
 
+func (g *CommandEncoder) markShared() {
+	g.shared = true
+}
+
 type ComputePassEncoder struct {
 	ref    C.WGPUComputePassEncoder
 	device C.WGPUDevice
+	shared bool
 }
 
 func (g *ComputePassEncoder) IsValid() bool {
@@ -86,6 +124,19 @@ func (g *ComputePassEncoder) Release() {
 		return
 	}
 
+	// if this is shared, we should not be able to release it manually
+	if g.shared {
+		return
+	}
+
+	// we manually release this object, remove the finalizer, no
+	// need to run release on gc again
+	runtime.SetFinalizer(g, nil)
+
+	g.release()
+}
+
+func (g *ComputePassEncoder) release() {
 	// pointer to the ref field
 	ptr := (*unsafe.Pointer)(unsafe.Pointer(&g.ref))
 
@@ -101,9 +152,14 @@ func (g *ComputePassEncoder) Release() {
 	}
 }
 
+func (g *ComputePassEncoder) markShared() {
+	g.shared = true
+}
+
 type Queue struct {
 	ref    C.WGPUQueue
 	device C.WGPUDevice
+	shared bool
 }
 
 func (g *Queue) IsValid() bool {
@@ -115,6 +171,19 @@ func (g *Queue) Release() {
 		return
 	}
 
+	// if this is shared, we should not be able to release it manually
+	if g.shared {
+		return
+	}
+
+	// we manually release this object, remove the finalizer, no
+	// need to run release on gc again
+	runtime.SetFinalizer(g, nil)
+
+	g.release()
+}
+
+func (g *Queue) release() {
 	// pointer to the ref field
 	ptr := (*unsafe.Pointer)(unsafe.Pointer(&g.ref))
 
@@ -130,9 +199,14 @@ func (g *Queue) Release() {
 	}
 }
 
+func (g *Queue) markShared() {
+	g.shared = true
+}
+
 type RenderPassEncoder struct {
 	ref    C.WGPURenderPassEncoder
 	device C.WGPUDevice
+	shared bool
 }
 
 func (g *RenderPassEncoder) IsValid() bool {
@@ -144,6 +218,19 @@ func (g *RenderPassEncoder) Release() {
 		return
 	}
 
+	// if this is shared, we should not be able to release it manually
+	if g.shared {
+		return
+	}
+
+	// we manually release this object, remove the finalizer, no
+	// need to run release on gc again
+	runtime.SetFinalizer(g, nil)
+
+	g.release()
+}
+
+func (g *RenderPassEncoder) release() {
 	// pointer to the ref field
 	ptr := (*unsafe.Pointer)(unsafe.Pointer(&g.ref))
 
@@ -159,9 +246,14 @@ func (g *RenderPassEncoder) Release() {
 	}
 }
 
+func (g *RenderPassEncoder) markShared() {
+	g.shared = true
+}
+
 type Surface struct {
 	ref    C.WGPUSurface
 	device C.WGPUDevice
+	shared bool
 }
 
 func (g *Surface) IsValid() bool {
@@ -173,6 +265,19 @@ func (g *Surface) Release() {
 		return
 	}
 
+	// if this is shared, we should not be able to release it manually
+	if g.shared {
+		return
+	}
+
+	// we manually release this object, remove the finalizer, no
+	// need to run release on gc again
+	runtime.SetFinalizer(g, nil)
+
+	g.release()
+}
+
+func (g *Surface) release() {
 	// pointer to the ref field
 	ptr := (*unsafe.Pointer)(unsafe.Pointer(&g.ref))
 
@@ -188,9 +293,14 @@ func (g *Surface) Release() {
 	}
 }
 
+func (g *Surface) markShared() {
+	g.shared = true
+}
+
 type Texture struct {
 	ref    C.WGPUTexture
 	device C.WGPUDevice
+	shared bool
 }
 
 func (g *Texture) IsValid() bool {
@@ -202,6 +312,19 @@ func (g *Texture) Release() {
 		return
 	}
 
+	// if this is shared, we should not be able to release it manually
+	if g.shared {
+		return
+	}
+
+	// we manually release this object, remove the finalizer, no
+	// need to run release on gc again
+	runtime.SetFinalizer(g, nil)
+
+	g.release()
+}
+
+func (g *Texture) release() {
 	// pointer to the ref field
 	ptr := (*unsafe.Pointer)(unsafe.Pointer(&g.ref))
 
@@ -217,8 +340,13 @@ func (g *Texture) Release() {
 	}
 }
 
+func (g *Texture) markShared() {
+	g.shared = true
+}
+
 type Adapter struct {
-	ref C.WGPUAdapter
+	ref    C.WGPUAdapter
+	shared bool
 }
 
 func (g *Adapter) IsValid() bool {
@@ -230,6 +358,19 @@ func (g *Adapter) Release() {
 		return
 	}
 
+	// if this is shared, we should not be able to release it manually
+	if g.shared {
+		return
+	}
+
+	// we manually release this object, remove the finalizer, no
+	// need to run release on gc again
+	runtime.SetFinalizer(g, nil)
+
+	g.release()
+}
+
+func (g *Adapter) release() {
 	// pointer to the ref field
 	ptr := (*unsafe.Pointer)(unsafe.Pointer(&g.ref))
 
@@ -242,8 +383,13 @@ func (g *Adapter) Release() {
 	}
 }
 
+func (g *Adapter) markShared() {
+	g.shared = true
+}
+
 type BindGroup struct {
-	ref C.WGPUBindGroup
+	ref    C.WGPUBindGroup
+	shared bool
 }
 
 func (g *BindGroup) IsValid() bool {
@@ -255,6 +401,19 @@ func (g *BindGroup) Release() {
 		return
 	}
 
+	// if this is shared, we should not be able to release it manually
+	if g.shared {
+		return
+	}
+
+	// we manually release this object, remove the finalizer, no
+	// need to run release on gc again
+	runtime.SetFinalizer(g, nil)
+
+	g.release()
+}
+
+func (g *BindGroup) release() {
 	// pointer to the ref field
 	ptr := (*unsafe.Pointer)(unsafe.Pointer(&g.ref))
 
@@ -267,8 +426,13 @@ func (g *BindGroup) Release() {
 	}
 }
 
+func (g *BindGroup) markShared() {
+	g.shared = true
+}
+
 type BindGroupLayout struct {
-	ref C.WGPUBindGroupLayout
+	ref    C.WGPUBindGroupLayout
+	shared bool
 }
 
 func (g *BindGroupLayout) IsValid() bool {
@@ -280,6 +444,19 @@ func (g *BindGroupLayout) Release() {
 		return
 	}
 
+	// if this is shared, we should not be able to release it manually
+	if g.shared {
+		return
+	}
+
+	// we manually release this object, remove the finalizer, no
+	// need to run release on gc again
+	runtime.SetFinalizer(g, nil)
+
+	g.release()
+}
+
+func (g *BindGroupLayout) release() {
 	// pointer to the ref field
 	ptr := (*unsafe.Pointer)(unsafe.Pointer(&g.ref))
 
@@ -292,8 +469,13 @@ func (g *BindGroupLayout) Release() {
 	}
 }
 
+func (g *BindGroupLayout) markShared() {
+	g.shared = true
+}
+
 type CommandBuffer struct {
-	ref C.WGPUCommandBuffer
+	ref    C.WGPUCommandBuffer
+	shared bool
 }
 
 func (g *CommandBuffer) IsValid() bool {
@@ -305,6 +487,19 @@ func (g *CommandBuffer) Release() {
 		return
 	}
 
+	// if this is shared, we should not be able to release it manually
+	if g.shared {
+		return
+	}
+
+	// we manually release this object, remove the finalizer, no
+	// need to run release on gc again
+	runtime.SetFinalizer(g, nil)
+
+	g.release()
+}
+
+func (g *CommandBuffer) release() {
 	// pointer to the ref field
 	ptr := (*unsafe.Pointer)(unsafe.Pointer(&g.ref))
 
@@ -317,8 +512,13 @@ func (g *CommandBuffer) Release() {
 	}
 }
 
+func (g *CommandBuffer) markShared() {
+	g.shared = true
+}
+
 type ComputePipeline struct {
-	ref C.WGPUComputePipeline
+	ref    C.WGPUComputePipeline
+	shared bool
 }
 
 func (g *ComputePipeline) IsValid() bool {
@@ -330,6 +530,19 @@ func (g *ComputePipeline) Release() {
 		return
 	}
 
+	// if this is shared, we should not be able to release it manually
+	if g.shared {
+		return
+	}
+
+	// we manually release this object, remove the finalizer, no
+	// need to run release on gc again
+	runtime.SetFinalizer(g, nil)
+
+	g.release()
+}
+
+func (g *ComputePipeline) release() {
 	// pointer to the ref field
 	ptr := (*unsafe.Pointer)(unsafe.Pointer(&g.ref))
 
@@ -342,8 +555,13 @@ func (g *ComputePipeline) Release() {
 	}
 }
 
+func (g *ComputePipeline) markShared() {
+	g.shared = true
+}
+
 type Device struct {
-	ref C.WGPUDevice
+	ref    C.WGPUDevice
+	shared bool
 }
 
 func (g *Device) IsValid() bool {
@@ -355,6 +573,19 @@ func (g *Device) Release() {
 		return
 	}
 
+	// if this is shared, we should not be able to release it manually
+	if g.shared {
+		return
+	}
+
+	// we manually release this object, remove the finalizer, no
+	// need to run release on gc again
+	runtime.SetFinalizer(g, nil)
+
+	g.release()
+}
+
+func (g *Device) release() {
 	// pointer to the ref field
 	ptr := (*unsafe.Pointer)(unsafe.Pointer(&g.ref))
 
@@ -367,8 +598,13 @@ func (g *Device) Release() {
 	}
 }
 
+func (g *Device) markShared() {
+	g.shared = true
+}
+
 type Instance struct {
-	ref C.WGPUInstance
+	ref    C.WGPUInstance
+	shared bool
 }
 
 func (g *Instance) IsValid() bool {
@@ -380,6 +616,19 @@ func (g *Instance) Release() {
 		return
 	}
 
+	// if this is shared, we should not be able to release it manually
+	if g.shared {
+		return
+	}
+
+	// we manually release this object, remove the finalizer, no
+	// need to run release on gc again
+	runtime.SetFinalizer(g, nil)
+
+	g.release()
+}
+
+func (g *Instance) release() {
 	// pointer to the ref field
 	ptr := (*unsafe.Pointer)(unsafe.Pointer(&g.ref))
 
@@ -392,8 +641,13 @@ func (g *Instance) Release() {
 	}
 }
 
+func (g *Instance) markShared() {
+	g.shared = true
+}
+
 type PipelineLayout struct {
-	ref C.WGPUPipelineLayout
+	ref    C.WGPUPipelineLayout
+	shared bool
 }
 
 func (g *PipelineLayout) IsValid() bool {
@@ -405,6 +659,19 @@ func (g *PipelineLayout) Release() {
 		return
 	}
 
+	// if this is shared, we should not be able to release it manually
+	if g.shared {
+		return
+	}
+
+	// we manually release this object, remove the finalizer, no
+	// need to run release on gc again
+	runtime.SetFinalizer(g, nil)
+
+	g.release()
+}
+
+func (g *PipelineLayout) release() {
 	// pointer to the ref field
 	ptr := (*unsafe.Pointer)(unsafe.Pointer(&g.ref))
 
@@ -417,8 +684,13 @@ func (g *PipelineLayout) Release() {
 	}
 }
 
+func (g *PipelineLayout) markShared() {
+	g.shared = true
+}
+
 type QuerySet struct {
-	ref C.WGPUQuerySet
+	ref    C.WGPUQuerySet
+	shared bool
 }
 
 func (g *QuerySet) IsValid() bool {
@@ -430,6 +702,19 @@ func (g *QuerySet) Release() {
 		return
 	}
 
+	// if this is shared, we should not be able to release it manually
+	if g.shared {
+		return
+	}
+
+	// we manually release this object, remove the finalizer, no
+	// need to run release on gc again
+	runtime.SetFinalizer(g, nil)
+
+	g.release()
+}
+
+func (g *QuerySet) release() {
 	// pointer to the ref field
 	ptr := (*unsafe.Pointer)(unsafe.Pointer(&g.ref))
 
@@ -442,8 +727,13 @@ func (g *QuerySet) Release() {
 	}
 }
 
+func (g *QuerySet) markShared() {
+	g.shared = true
+}
+
 type RenderBundle struct {
-	ref C.WGPURenderBundle
+	ref    C.WGPURenderBundle
+	shared bool
 }
 
 func (g *RenderBundle) IsValid() bool {
@@ -455,6 +745,19 @@ func (g *RenderBundle) Release() {
 		return
 	}
 
+	// if this is shared, we should not be able to release it manually
+	if g.shared {
+		return
+	}
+
+	// we manually release this object, remove the finalizer, no
+	// need to run release on gc again
+	runtime.SetFinalizer(g, nil)
+
+	g.release()
+}
+
+func (g *RenderBundle) release() {
 	// pointer to the ref field
 	ptr := (*unsafe.Pointer)(unsafe.Pointer(&g.ref))
 
@@ -467,8 +770,13 @@ func (g *RenderBundle) Release() {
 	}
 }
 
+func (g *RenderBundle) markShared() {
+	g.shared = true
+}
+
 type RenderBundleEncoder struct {
-	ref C.WGPURenderBundleEncoder
+	ref    C.WGPURenderBundleEncoder
+	shared bool
 }
 
 func (g *RenderBundleEncoder) IsValid() bool {
@@ -480,6 +788,19 @@ func (g *RenderBundleEncoder) Release() {
 		return
 	}
 
+	// if this is shared, we should not be able to release it manually
+	if g.shared {
+		return
+	}
+
+	// we manually release this object, remove the finalizer, no
+	// need to run release on gc again
+	runtime.SetFinalizer(g, nil)
+
+	g.release()
+}
+
+func (g *RenderBundleEncoder) release() {
 	// pointer to the ref field
 	ptr := (*unsafe.Pointer)(unsafe.Pointer(&g.ref))
 
@@ -492,8 +813,13 @@ func (g *RenderBundleEncoder) Release() {
 	}
 }
 
+func (g *RenderBundleEncoder) markShared() {
+	g.shared = true
+}
+
 type RenderPipeline struct {
-	ref C.WGPURenderPipeline
+	ref    C.WGPURenderPipeline
+	shared bool
 }
 
 func (g *RenderPipeline) IsValid() bool {
@@ -505,6 +831,19 @@ func (g *RenderPipeline) Release() {
 		return
 	}
 
+	// if this is shared, we should not be able to release it manually
+	if g.shared {
+		return
+	}
+
+	// we manually release this object, remove the finalizer, no
+	// need to run release on gc again
+	runtime.SetFinalizer(g, nil)
+
+	g.release()
+}
+
+func (g *RenderPipeline) release() {
 	// pointer to the ref field
 	ptr := (*unsafe.Pointer)(unsafe.Pointer(&g.ref))
 
@@ -517,8 +856,13 @@ func (g *RenderPipeline) Release() {
 	}
 }
 
+func (g *RenderPipeline) markShared() {
+	g.shared = true
+}
+
 type Sampler struct {
-	ref C.WGPUSampler
+	ref    C.WGPUSampler
+	shared bool
 }
 
 func (g *Sampler) IsValid() bool {
@@ -530,6 +874,19 @@ func (g *Sampler) Release() {
 		return
 	}
 
+	// if this is shared, we should not be able to release it manually
+	if g.shared {
+		return
+	}
+
+	// we manually release this object, remove the finalizer, no
+	// need to run release on gc again
+	runtime.SetFinalizer(g, nil)
+
+	g.release()
+}
+
+func (g *Sampler) release() {
 	// pointer to the ref field
 	ptr := (*unsafe.Pointer)(unsafe.Pointer(&g.ref))
 
@@ -542,8 +899,13 @@ func (g *Sampler) Release() {
 	}
 }
 
+func (g *Sampler) markShared() {
+	g.shared = true
+}
+
 type ShaderModule struct {
-	ref C.WGPUShaderModule
+	ref    C.WGPUShaderModule
+	shared bool
 }
 
 func (g *ShaderModule) IsValid() bool {
@@ -555,6 +917,19 @@ func (g *ShaderModule) Release() {
 		return
 	}
 
+	// if this is shared, we should not be able to release it manually
+	if g.shared {
+		return
+	}
+
+	// we manually release this object, remove the finalizer, no
+	// need to run release on gc again
+	runtime.SetFinalizer(g, nil)
+
+	g.release()
+}
+
+func (g *ShaderModule) release() {
 	// pointer to the ref field
 	ptr := (*unsafe.Pointer)(unsafe.Pointer(&g.ref))
 
@@ -567,8 +942,13 @@ func (g *ShaderModule) Release() {
 	}
 }
 
+func (g *ShaderModule) markShared() {
+	g.shared = true
+}
+
 type TextureView struct {
-	ref C.WGPUTextureView
+	ref    C.WGPUTextureView
+	shared bool
 }
 
 func (g *TextureView) IsValid() bool {
@@ -580,6 +960,19 @@ func (g *TextureView) Release() {
 		return
 	}
 
+	// if this is shared, we should not be able to release it manually
+	if g.shared {
+		return
+	}
+
+	// we manually release this object, remove the finalizer, no
+	// need to run release on gc again
+	runtime.SetFinalizer(g, nil)
+
+	g.release()
+}
+
+func (g *TextureView) release() {
 	// pointer to the ref field
 	ptr := (*unsafe.Pointer)(unsafe.Pointer(&g.ref))
 
@@ -590,4 +983,8 @@ func (g *TextureView) Release() {
 	if ref != nil && atomic.CompareAndSwapPointer(ptr, ref, nil) {
 		C.wgpuTextureViewRelease(C.WGPUTextureView(ref))
 	}
+}
+
+func (g *TextureView) markShared() {
+	g.shared = true
 }
