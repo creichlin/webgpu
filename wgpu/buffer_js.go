@@ -25,6 +25,10 @@ func (g *Buffer) GetMappedRange(offset, size uint) []byte {
 	return dst
 }
 
+func (p *Buffer) GetSize() uint64 {
+	return uint64(p.jsValue.Get("size").Int())
+}
+
 func (g *Buffer) TryMapAsync(mode MapMode, offset uint64, size uint64, callback BufferMapCallback) (err error) {
 	defer handleJsException(&err)
 
