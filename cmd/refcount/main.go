@@ -38,20 +38,18 @@ var nativeTmpl = template.Must(template.New("").Parse(`
 	}
 
 	func (g *{{ .Name }}) release() {
-		// pointer to the ref field
-		ptr := (*unsafe.Pointer)(unsafe.Pointer(&g.ref))
-
-		// get current ref value
-		ref := atomic.LoadPointer(ptr)
-
-		// set ref to nil and release instance
-		if ref != nil && atomic.CompareAndSwapPointer(ptr, ref, nil) {
+		// exchange the pointer with nil
+		ref := atomic.SwapPointer((*unsafe.Pointer)(unsafe.Pointer(&g.ref)), nil)
+		if ref != nil {
+			// release the pointer if we got a non-nil value
 			C.wgpu{{ .Name }}Release(C.WGPU{{ .Name }}(ref))
 
 			{{- if .WithDev }}
-			// release of device is guarded by ref
-			C.wgpuDeviceRelease(g.device)
-			g.device = nil
+			// do the same for the device reference
+			dev := atomic.SwapPointer((*unsafe.Pointer)(unsafe.Pointer(&g.device)), nil)
+			if dev != nil {
+				C.wgpuDeviceRelease(C.WGPUDevice(dev))
+			}
 			{{- end }}
 		}
 	}

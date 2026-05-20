@@ -43,18 +43,16 @@ func (g *Buffer) Release() {
 }
 
 func (g *Buffer) release() {
-	// pointer to the ref field
-	ptr := (*unsafe.Pointer)(unsafe.Pointer(&g.ref))
-
-	// get current ref value
-	ref := atomic.LoadPointer(ptr)
-
-	// set ref to nil and release instance
-	if ref != nil && atomic.CompareAndSwapPointer(ptr, ref, nil) {
+	// exchange the pointer with nil
+	ref := atomic.SwapPointer((*unsafe.Pointer)(unsafe.Pointer(&g.ref)), nil)
+	if ref != nil {
+		// release the pointer if we got a non-nil value
 		C.wgpuBufferRelease(C.WGPUBuffer(ref))
-		// release of device is guarded by ref
-		C.wgpuDeviceRelease(g.device)
-		g.device = nil
+		// do the same for the device reference
+		dev := atomic.SwapPointer((*unsafe.Pointer)(unsafe.Pointer(&g.device)), nil)
+		if dev != nil {
+			C.wgpuDeviceRelease(C.WGPUDevice(dev))
+		}
 	}
 }
 
@@ -90,18 +88,16 @@ func (g *CommandEncoder) Release() {
 }
 
 func (g *CommandEncoder) release() {
-	// pointer to the ref field
-	ptr := (*unsafe.Pointer)(unsafe.Pointer(&g.ref))
-
-	// get current ref value
-	ref := atomic.LoadPointer(ptr)
-
-	// set ref to nil and release instance
-	if ref != nil && atomic.CompareAndSwapPointer(ptr, ref, nil) {
+	// exchange the pointer with nil
+	ref := atomic.SwapPointer((*unsafe.Pointer)(unsafe.Pointer(&g.ref)), nil)
+	if ref != nil {
+		// release the pointer if we got a non-nil value
 		C.wgpuCommandEncoderRelease(C.WGPUCommandEncoder(ref))
-		// release of device is guarded by ref
-		C.wgpuDeviceRelease(g.device)
-		g.device = nil
+		// do the same for the device reference
+		dev := atomic.SwapPointer((*unsafe.Pointer)(unsafe.Pointer(&g.device)), nil)
+		if dev != nil {
+			C.wgpuDeviceRelease(C.WGPUDevice(dev))
+		}
 	}
 }
 
@@ -137,18 +133,16 @@ func (g *ComputePassEncoder) Release() {
 }
 
 func (g *ComputePassEncoder) release() {
-	// pointer to the ref field
-	ptr := (*unsafe.Pointer)(unsafe.Pointer(&g.ref))
-
-	// get current ref value
-	ref := atomic.LoadPointer(ptr)
-
-	// set ref to nil and release instance
-	if ref != nil && atomic.CompareAndSwapPointer(ptr, ref, nil) {
+	// exchange the pointer with nil
+	ref := atomic.SwapPointer((*unsafe.Pointer)(unsafe.Pointer(&g.ref)), nil)
+	if ref != nil {
+		// release the pointer if we got a non-nil value
 		C.wgpuComputePassEncoderRelease(C.WGPUComputePassEncoder(ref))
-		// release of device is guarded by ref
-		C.wgpuDeviceRelease(g.device)
-		g.device = nil
+		// do the same for the device reference
+		dev := atomic.SwapPointer((*unsafe.Pointer)(unsafe.Pointer(&g.device)), nil)
+		if dev != nil {
+			C.wgpuDeviceRelease(C.WGPUDevice(dev))
+		}
 	}
 }
 
@@ -184,18 +178,16 @@ func (g *Queue) Release() {
 }
 
 func (g *Queue) release() {
-	// pointer to the ref field
-	ptr := (*unsafe.Pointer)(unsafe.Pointer(&g.ref))
-
-	// get current ref value
-	ref := atomic.LoadPointer(ptr)
-
-	// set ref to nil and release instance
-	if ref != nil && atomic.CompareAndSwapPointer(ptr, ref, nil) {
+	// exchange the pointer with nil
+	ref := atomic.SwapPointer((*unsafe.Pointer)(unsafe.Pointer(&g.ref)), nil)
+	if ref != nil {
+		// release the pointer if we got a non-nil value
 		C.wgpuQueueRelease(C.WGPUQueue(ref))
-		// release of device is guarded by ref
-		C.wgpuDeviceRelease(g.device)
-		g.device = nil
+		// do the same for the device reference
+		dev := atomic.SwapPointer((*unsafe.Pointer)(unsafe.Pointer(&g.device)), nil)
+		if dev != nil {
+			C.wgpuDeviceRelease(C.WGPUDevice(dev))
+		}
 	}
 }
 
@@ -231,18 +223,16 @@ func (g *RenderPassEncoder) Release() {
 }
 
 func (g *RenderPassEncoder) release() {
-	// pointer to the ref field
-	ptr := (*unsafe.Pointer)(unsafe.Pointer(&g.ref))
-
-	// get current ref value
-	ref := atomic.LoadPointer(ptr)
-
-	// set ref to nil and release instance
-	if ref != nil && atomic.CompareAndSwapPointer(ptr, ref, nil) {
+	// exchange the pointer with nil
+	ref := atomic.SwapPointer((*unsafe.Pointer)(unsafe.Pointer(&g.ref)), nil)
+	if ref != nil {
+		// release the pointer if we got a non-nil value
 		C.wgpuRenderPassEncoderRelease(C.WGPURenderPassEncoder(ref))
-		// release of device is guarded by ref
-		C.wgpuDeviceRelease(g.device)
-		g.device = nil
+		// do the same for the device reference
+		dev := atomic.SwapPointer((*unsafe.Pointer)(unsafe.Pointer(&g.device)), nil)
+		if dev != nil {
+			C.wgpuDeviceRelease(C.WGPUDevice(dev))
+		}
 	}
 }
 
@@ -278,18 +268,16 @@ func (g *Surface) Release() {
 }
 
 func (g *Surface) release() {
-	// pointer to the ref field
-	ptr := (*unsafe.Pointer)(unsafe.Pointer(&g.ref))
-
-	// get current ref value
-	ref := atomic.LoadPointer(ptr)
-
-	// set ref to nil and release instance
-	if ref != nil && atomic.CompareAndSwapPointer(ptr, ref, nil) {
+	// exchange the pointer with nil
+	ref := atomic.SwapPointer((*unsafe.Pointer)(unsafe.Pointer(&g.ref)), nil)
+	if ref != nil {
+		// release the pointer if we got a non-nil value
 		C.wgpuSurfaceRelease(C.WGPUSurface(ref))
-		// release of device is guarded by ref
-		C.wgpuDeviceRelease(g.device)
-		g.device = nil
+		// do the same for the device reference
+		dev := atomic.SwapPointer((*unsafe.Pointer)(unsafe.Pointer(&g.device)), nil)
+		if dev != nil {
+			C.wgpuDeviceRelease(C.WGPUDevice(dev))
+		}
 	}
 }
 
@@ -325,18 +313,16 @@ func (g *Texture) Release() {
 }
 
 func (g *Texture) release() {
-	// pointer to the ref field
-	ptr := (*unsafe.Pointer)(unsafe.Pointer(&g.ref))
-
-	// get current ref value
-	ref := atomic.LoadPointer(ptr)
-
-	// set ref to nil and release instance
-	if ref != nil && atomic.CompareAndSwapPointer(ptr, ref, nil) {
+	// exchange the pointer with nil
+	ref := atomic.SwapPointer((*unsafe.Pointer)(unsafe.Pointer(&g.ref)), nil)
+	if ref != nil {
+		// release the pointer if we got a non-nil value
 		C.wgpuTextureRelease(C.WGPUTexture(ref))
-		// release of device is guarded by ref
-		C.wgpuDeviceRelease(g.device)
-		g.device = nil
+		// do the same for the device reference
+		dev := atomic.SwapPointer((*unsafe.Pointer)(unsafe.Pointer(&g.device)), nil)
+		if dev != nil {
+			C.wgpuDeviceRelease(C.WGPUDevice(dev))
+		}
 	}
 }
 
@@ -371,14 +357,10 @@ func (g *Adapter) Release() {
 }
 
 func (g *Adapter) release() {
-	// pointer to the ref field
-	ptr := (*unsafe.Pointer)(unsafe.Pointer(&g.ref))
-
-	// get current ref value
-	ref := atomic.LoadPointer(ptr)
-
-	// set ref to nil and release instance
-	if ref != nil && atomic.CompareAndSwapPointer(ptr, ref, nil) {
+	// exchange the pointer with nil
+	ref := atomic.SwapPointer((*unsafe.Pointer)(unsafe.Pointer(&g.ref)), nil)
+	if ref != nil {
+		// release the pointer if we got a non-nil value
 		C.wgpuAdapterRelease(C.WGPUAdapter(ref))
 	}
 }
@@ -414,14 +396,10 @@ func (g *BindGroup) Release() {
 }
 
 func (g *BindGroup) release() {
-	// pointer to the ref field
-	ptr := (*unsafe.Pointer)(unsafe.Pointer(&g.ref))
-
-	// get current ref value
-	ref := atomic.LoadPointer(ptr)
-
-	// set ref to nil and release instance
-	if ref != nil && atomic.CompareAndSwapPointer(ptr, ref, nil) {
+	// exchange the pointer with nil
+	ref := atomic.SwapPointer((*unsafe.Pointer)(unsafe.Pointer(&g.ref)), nil)
+	if ref != nil {
+		// release the pointer if we got a non-nil value
 		C.wgpuBindGroupRelease(C.WGPUBindGroup(ref))
 	}
 }
@@ -457,14 +435,10 @@ func (g *BindGroupLayout) Release() {
 }
 
 func (g *BindGroupLayout) release() {
-	// pointer to the ref field
-	ptr := (*unsafe.Pointer)(unsafe.Pointer(&g.ref))
-
-	// get current ref value
-	ref := atomic.LoadPointer(ptr)
-
-	// set ref to nil and release instance
-	if ref != nil && atomic.CompareAndSwapPointer(ptr, ref, nil) {
+	// exchange the pointer with nil
+	ref := atomic.SwapPointer((*unsafe.Pointer)(unsafe.Pointer(&g.ref)), nil)
+	if ref != nil {
+		// release the pointer if we got a non-nil value
 		C.wgpuBindGroupLayoutRelease(C.WGPUBindGroupLayout(ref))
 	}
 }
@@ -500,14 +474,10 @@ func (g *CommandBuffer) Release() {
 }
 
 func (g *CommandBuffer) release() {
-	// pointer to the ref field
-	ptr := (*unsafe.Pointer)(unsafe.Pointer(&g.ref))
-
-	// get current ref value
-	ref := atomic.LoadPointer(ptr)
-
-	// set ref to nil and release instance
-	if ref != nil && atomic.CompareAndSwapPointer(ptr, ref, nil) {
+	// exchange the pointer with nil
+	ref := atomic.SwapPointer((*unsafe.Pointer)(unsafe.Pointer(&g.ref)), nil)
+	if ref != nil {
+		// release the pointer if we got a non-nil value
 		C.wgpuCommandBufferRelease(C.WGPUCommandBuffer(ref))
 	}
 }
@@ -543,14 +513,10 @@ func (g *ComputePipeline) Release() {
 }
 
 func (g *ComputePipeline) release() {
-	// pointer to the ref field
-	ptr := (*unsafe.Pointer)(unsafe.Pointer(&g.ref))
-
-	// get current ref value
-	ref := atomic.LoadPointer(ptr)
-
-	// set ref to nil and release instance
-	if ref != nil && atomic.CompareAndSwapPointer(ptr, ref, nil) {
+	// exchange the pointer with nil
+	ref := atomic.SwapPointer((*unsafe.Pointer)(unsafe.Pointer(&g.ref)), nil)
+	if ref != nil {
+		// release the pointer if we got a non-nil value
 		C.wgpuComputePipelineRelease(C.WGPUComputePipeline(ref))
 	}
 }
@@ -586,14 +552,10 @@ func (g *Device) Release() {
 }
 
 func (g *Device) release() {
-	// pointer to the ref field
-	ptr := (*unsafe.Pointer)(unsafe.Pointer(&g.ref))
-
-	// get current ref value
-	ref := atomic.LoadPointer(ptr)
-
-	// set ref to nil and release instance
-	if ref != nil && atomic.CompareAndSwapPointer(ptr, ref, nil) {
+	// exchange the pointer with nil
+	ref := atomic.SwapPointer((*unsafe.Pointer)(unsafe.Pointer(&g.ref)), nil)
+	if ref != nil {
+		// release the pointer if we got a non-nil value
 		C.wgpuDeviceRelease(C.WGPUDevice(ref))
 	}
 }
@@ -629,14 +591,10 @@ func (g *Instance) Release() {
 }
 
 func (g *Instance) release() {
-	// pointer to the ref field
-	ptr := (*unsafe.Pointer)(unsafe.Pointer(&g.ref))
-
-	// get current ref value
-	ref := atomic.LoadPointer(ptr)
-
-	// set ref to nil and release instance
-	if ref != nil && atomic.CompareAndSwapPointer(ptr, ref, nil) {
+	// exchange the pointer with nil
+	ref := atomic.SwapPointer((*unsafe.Pointer)(unsafe.Pointer(&g.ref)), nil)
+	if ref != nil {
+		// release the pointer if we got a non-nil value
 		C.wgpuInstanceRelease(C.WGPUInstance(ref))
 	}
 }
@@ -672,14 +630,10 @@ func (g *PipelineLayout) Release() {
 }
 
 func (g *PipelineLayout) release() {
-	// pointer to the ref field
-	ptr := (*unsafe.Pointer)(unsafe.Pointer(&g.ref))
-
-	// get current ref value
-	ref := atomic.LoadPointer(ptr)
-
-	// set ref to nil and release instance
-	if ref != nil && atomic.CompareAndSwapPointer(ptr, ref, nil) {
+	// exchange the pointer with nil
+	ref := atomic.SwapPointer((*unsafe.Pointer)(unsafe.Pointer(&g.ref)), nil)
+	if ref != nil {
+		// release the pointer if we got a non-nil value
 		C.wgpuPipelineLayoutRelease(C.WGPUPipelineLayout(ref))
 	}
 }
@@ -715,14 +669,10 @@ func (g *QuerySet) Release() {
 }
 
 func (g *QuerySet) release() {
-	// pointer to the ref field
-	ptr := (*unsafe.Pointer)(unsafe.Pointer(&g.ref))
-
-	// get current ref value
-	ref := atomic.LoadPointer(ptr)
-
-	// set ref to nil and release instance
-	if ref != nil && atomic.CompareAndSwapPointer(ptr, ref, nil) {
+	// exchange the pointer with nil
+	ref := atomic.SwapPointer((*unsafe.Pointer)(unsafe.Pointer(&g.ref)), nil)
+	if ref != nil {
+		// release the pointer if we got a non-nil value
 		C.wgpuQuerySetRelease(C.WGPUQuerySet(ref))
 	}
 }
@@ -758,14 +708,10 @@ func (g *RenderBundle) Release() {
 }
 
 func (g *RenderBundle) release() {
-	// pointer to the ref field
-	ptr := (*unsafe.Pointer)(unsafe.Pointer(&g.ref))
-
-	// get current ref value
-	ref := atomic.LoadPointer(ptr)
-
-	// set ref to nil and release instance
-	if ref != nil && atomic.CompareAndSwapPointer(ptr, ref, nil) {
+	// exchange the pointer with nil
+	ref := atomic.SwapPointer((*unsafe.Pointer)(unsafe.Pointer(&g.ref)), nil)
+	if ref != nil {
+		// release the pointer if we got a non-nil value
 		C.wgpuRenderBundleRelease(C.WGPURenderBundle(ref))
 	}
 }
@@ -801,14 +747,10 @@ func (g *RenderBundleEncoder) Release() {
 }
 
 func (g *RenderBundleEncoder) release() {
-	// pointer to the ref field
-	ptr := (*unsafe.Pointer)(unsafe.Pointer(&g.ref))
-
-	// get current ref value
-	ref := atomic.LoadPointer(ptr)
-
-	// set ref to nil and release instance
-	if ref != nil && atomic.CompareAndSwapPointer(ptr, ref, nil) {
+	// exchange the pointer with nil
+	ref := atomic.SwapPointer((*unsafe.Pointer)(unsafe.Pointer(&g.ref)), nil)
+	if ref != nil {
+		// release the pointer if we got a non-nil value
 		C.wgpuRenderBundleEncoderRelease(C.WGPURenderBundleEncoder(ref))
 	}
 }
@@ -844,14 +786,10 @@ func (g *RenderPipeline) Release() {
 }
 
 func (g *RenderPipeline) release() {
-	// pointer to the ref field
-	ptr := (*unsafe.Pointer)(unsafe.Pointer(&g.ref))
-
-	// get current ref value
-	ref := atomic.LoadPointer(ptr)
-
-	// set ref to nil and release instance
-	if ref != nil && atomic.CompareAndSwapPointer(ptr, ref, nil) {
+	// exchange the pointer with nil
+	ref := atomic.SwapPointer((*unsafe.Pointer)(unsafe.Pointer(&g.ref)), nil)
+	if ref != nil {
+		// release the pointer if we got a non-nil value
 		C.wgpuRenderPipelineRelease(C.WGPURenderPipeline(ref))
 	}
 }
@@ -887,14 +825,10 @@ func (g *Sampler) Release() {
 }
 
 func (g *Sampler) release() {
-	// pointer to the ref field
-	ptr := (*unsafe.Pointer)(unsafe.Pointer(&g.ref))
-
-	// get current ref value
-	ref := atomic.LoadPointer(ptr)
-
-	// set ref to nil and release instance
-	if ref != nil && atomic.CompareAndSwapPointer(ptr, ref, nil) {
+	// exchange the pointer with nil
+	ref := atomic.SwapPointer((*unsafe.Pointer)(unsafe.Pointer(&g.ref)), nil)
+	if ref != nil {
+		// release the pointer if we got a non-nil value
 		C.wgpuSamplerRelease(C.WGPUSampler(ref))
 	}
 }
@@ -930,14 +864,10 @@ func (g *ShaderModule) Release() {
 }
 
 func (g *ShaderModule) release() {
-	// pointer to the ref field
-	ptr := (*unsafe.Pointer)(unsafe.Pointer(&g.ref))
-
-	// get current ref value
-	ref := atomic.LoadPointer(ptr)
-
-	// set ref to nil and release instance
-	if ref != nil && atomic.CompareAndSwapPointer(ptr, ref, nil) {
+	// exchange the pointer with nil
+	ref := atomic.SwapPointer((*unsafe.Pointer)(unsafe.Pointer(&g.ref)), nil)
+	if ref != nil {
+		// release the pointer if we got a non-nil value
 		C.wgpuShaderModuleRelease(C.WGPUShaderModule(ref))
 	}
 }
@@ -973,14 +903,10 @@ func (g *TextureView) Release() {
 }
 
 func (g *TextureView) release() {
-	// pointer to the ref field
-	ptr := (*unsafe.Pointer)(unsafe.Pointer(&g.ref))
-
-	// get current ref value
-	ref := atomic.LoadPointer(ptr)
-
-	// set ref to nil and release instance
-	if ref != nil && atomic.CompareAndSwapPointer(ptr, ref, nil) {
+	// exchange the pointer with nil
+	ref := atomic.SwapPointer((*unsafe.Pointer)(unsafe.Pointer(&g.ref)), nil)
+	if ref != nil {
+		// release the pointer if we got a non-nil value
 		C.wgpuTextureViewRelease(C.WGPUTextureView(ref))
 	}
 }
