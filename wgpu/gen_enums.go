@@ -2,6 +2,8 @@
 
 package wgpu
 
+import "fmt"
+
 type AdapterType uint32
 
 const AdapterTypeDiscreteGPU AdapterType = 0x00000001
@@ -2000,6 +2002,92 @@ const VertexFormatSint32x3 VertexFormat = 0x00000026
 const VertexFormatSint32x4 VertexFormat = 0x00000027
 const VertexFormatUnorm8x4BGRA VertexFormat = 0x00000029
 
+func (v VertexFormat) ByteSize() uint32 {
+	switch v {
+	case VertexFormatUint8:
+		return 1
+	case VertexFormatUint8x2:
+		return 2
+	case VertexFormatUint8x4:
+		return 4
+	case VertexFormatSint8:
+		return 1
+	case VertexFormatSint8x2:
+		return 2
+	case VertexFormatSint8x4:
+		return 4
+	case VertexFormatUnorm8:
+		return 1
+	case VertexFormatUnorm8x2:
+		return 2
+	case VertexFormatUnorm8x4:
+		return 4
+	case VertexFormatSnorm8:
+		return 1
+	case VertexFormatSnorm8x2:
+		return 2
+	case VertexFormatSnorm8x4:
+		return 4
+	case VertexFormatUint16:
+		return 2
+	case VertexFormatUint16x2:
+		return 4
+	case VertexFormatUint16x4:
+		return 8
+	case VertexFormatSint16:
+		return 2
+	case VertexFormatSint16x2:
+		return 4
+	case VertexFormatSint16x4:
+		return 8
+	case VertexFormatUnorm16:
+		return 2
+	case VertexFormatUnorm16x2:
+		return 4
+	case VertexFormatUnorm16x4:
+		return 8
+	case VertexFormatSnorm16:
+		return 2
+	case VertexFormatSnorm16x2:
+		return 4
+	case VertexFormatSnorm16x4:
+		return 8
+	case VertexFormatFloat16:
+		return 2
+	case VertexFormatFloat16x2:
+		return 4
+	case VertexFormatFloat16x4:
+		return 8
+	case VertexFormatFloat32:
+		return 4
+	case VertexFormatFloat32x2:
+		return 8
+	case VertexFormatFloat32x3:
+		return 12
+	case VertexFormatFloat32x4:
+		return 16
+	case VertexFormatUint32:
+		return 4
+	case VertexFormatUint32x2:
+		return 8
+	case VertexFormatUint32x3:
+		return 12
+	case VertexFormatUint32x4:
+		return 16
+	case VertexFormatSint32:
+		return 4
+	case VertexFormatSint32x2:
+		return 8
+	case VertexFormatSint32x3:
+		return 12
+	case VertexFormatSint32x4:
+		return 16
+	case VertexFormatUnorm8x4BGRA:
+		return 4
+	default:
+		panic(fmt.Errorf(`unknown size: %s`, v))
+	}
+}
 func (v VertexFormat) String() string {
 	switch v {
 	case VertexFormatUint8:
