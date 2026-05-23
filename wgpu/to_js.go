@@ -193,17 +193,23 @@ func (g *RenderPassColorAttachment) toJS() any {
 }
 
 func (g *RenderPassDepthStencilAttachment) toJS() any {
-	return map[string]any{
+	result := map[string]any{
 		"view":              pointerToJS(g.View),
-		"depthLoadOp":       enumToJS(g.DepthLoadOp),
-		"depthStoreOp":      enumToJS(g.DepthStoreOp),
 		"depthClearValue":   g.DepthClearValue,
-		"depthReadOnly":     g.DepthReadOnly,
-		"stencilLoadOp":     enumToJS(g.StencilLoadOp),
-		"stencilStoreOp":    enumToJS(g.StencilStoreOp),
 		"stencilClearValue": g.StencilClearValue,
+		"depthReadOnly":     g.DepthReadOnly,
 		"stencilReadOnly":   g.StencilReadOnly,
 	}
+	// https://www.w3.org/TR/webgpu/#abstract-opdef-gpurenderpassdepthstencilattachment-gpurenderpassdepthstencilattachment-valid-usage
+	if !g.DepthReadOnly {
+		result["depthLoadOp"] = enumToJS(g.DepthLoadOp)
+		result["depthStoreOp"] = enumToJS(g.DepthStoreOp)
+	}
+	if !g.StencilReadOnly {
+		result["stencilLoadOp"] = enumToJS(g.StencilLoadOp)
+		result["stencilStoreOp"] = enumToJS(g.StencilStoreOp)
+	}
+	return result
 }
 
 func (g *RenderPipelineDescriptor) toJS() any {

@@ -9,8 +9,6 @@ import (
 )
 
 func (g *Adapter) RequestDevice(descriptor *DeviceDescriptor) (*Device, error) {
-	fmt.Println(pointerToJS(descriptor))
-	descriptor.toJS()
 	promise := g.jsValue.Call("requestDevice", pointerToJS(descriptor))
 
 	device, ok := jsx.Await(promise)
