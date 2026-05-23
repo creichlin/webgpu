@@ -109,7 +109,7 @@ func (g StencilFaceState) toJS() any {
 // https://gpuweb.github.io/gpuweb/#dictdef-gpudepthstencilstate
 type DepthStencilState struct {
 	Format              TextureFormat
-	DepthWriteEnabled   bool
+	DepthWriteEnabled   OptionalBool
 	DepthCompare        CompareFunction
 	StencilFront        StencilFaceState
 	StencilBack         StencilFaceState
@@ -123,7 +123,11 @@ type DepthStencilState struct {
 func (g DepthStencilState) toJS() any {
 	result := make(map[string]any)
 	result["format"] = enumToJS(g.Format)
-	result["depthWriteEnabled"] = g.DepthWriteEnabled
+	if g.DepthWriteEnabled == OptionalBoolTrue {
+		result["depthWriteEnabled"] = true
+	} else if g.DepthWriteEnabled == OptionalBoolFalse {
+		result["depthWriteEnabled"] = false
+	}
 	result["depthCompare"] = enumToJS(g.DepthCompare)
 	result["stencilFront"] = g.StencilFront.toJS()
 	result["stencilBack"] = g.StencilBack.toJS()
