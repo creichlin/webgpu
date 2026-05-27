@@ -7,6 +7,9 @@ import (
 	"strings"
 )
 
+// #include <stdlib.h>
+import "C"
+
 /*
 #include <wgpu.h>
 */
@@ -17,9 +20,8 @@ import (
 )
 
 type errorCallback struct {
-	handle
 	callers [1]uintptr
-	err     error
+	errStr  *C.char
 }
 
 func acquireErrorCallback() *errorCallback {
@@ -34,17 +36,22 @@ func acquireErrorCallback() *errorCallback {
 	// get the location of the caller for error reporting
 	runtime.Callers(2, cb.callers[:])
 
-	if cb.handle == (handle{}) {
-		// create a stable handle we can use to identify the callback
-		// in c-land.
-		cb.handle = newHandle(cb)
+	if cb.errStr == nil {
+		cb.errStr = (*C.char)(C.malloc(16 * 1024))
 
-		// if the error callback gets cleaned up, we need to release
-		// the c-handle too
-		runtime.AddCleanup(cb, handle.Delete, cb.handle)
+		// if this instance gets cleaned up, we need to release
+		// the error memory too
+		runtime.AddCleanup(cb, cfree, cb.errStr)
 	}
 
+	// clear string by setting the first byte to zero
+	*cb.errStr = 0
+
 	return cb
+}
+
+func cfree(ch *C.char) {
+	C.free(unsafe.Pointer(ch))
 }
 
 func (v *errorCallback) Done() {
@@ -61,7 +68,15 @@ func (v *errorCallback) Done() {
 	allocErrorCallbackValue.Put(v)
 }
 
-func (v *errorCallback) Handle(_ ErrorType, message string) {
+func (v *errorCallback) ToPointer() *C.char {
+	return v.errStr
+}
+
+func (v *errorCallback) ToError() error {
+	if *v.errStr == 0 {
+		return nil
+	}
+
 	frames := runtime.CallersFrames(v.callers[:])
 	frame, _ := frames.Next()
 
@@ -72,14 +87,15 @@ func (v *errorCallback) Handle(_ ErrorType, message string) {
 		context = context[idx+1:]
 	}
 
-	v.err = Error{Context: context, Wrapped: errors.New(message)}
+	// convert the message to a string
+	message := C.GoString(v.errStr)
+
+	return Error{
+		Context: context,
+		Wrapped: errors.New(message),
+	}
 }
 
 //export gowebgpu_error_callback_go
 func gowebgpu_error_callback_go(_type C.WGPUErrorType, message C.WGPUStringView, userdata unsafe.Pointer) {
-	handle := lookupHandle(userdata)
-	ec, ok := handle.Value().(*errorCallback)
-	if ok {
-		ec.Handle(ErrorType(_type), C.GoStringN(message.data, C.int(message.length)))
-	}
 }

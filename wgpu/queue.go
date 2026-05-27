@@ -3,37 +3,8 @@
 package wgpu
 
 /*
-
-#include <stdlib.h>
-#include <wgpu.h>
-
-extern void gowebgpu_error_callback_c(enum WGPUPopErrorScopeStatus status, WGPUErrorType type, WGPUStringView message, void * userdata, void * userdata2);
+#include "wgpu_go_wrappers.h"
 extern void gowebgpu_queue_work_done_callback_c(WGPUQueueWorkDoneStatus status, void * userdata);
-
-static inline void gowebgpu_queue_write_buffer(WGPUQueue queue, WGPUBuffer buffer, uint64_t bufferOffset, void const * data, size_t size, WGPUDevice device, void * error_userdata) {
-	wgpuDevicePushErrorScope(device, WGPUErrorFilter_Validation);
-	wgpuQueueWriteBuffer(queue, buffer, bufferOffset, data, size);
-
-	WGPUPopErrorScopeCallbackInfo const err_cb = {
-		.callback = gowebgpu_error_callback_c,
-		.userdata1 = error_userdata,
-	};
-
-	wgpuDevicePopErrorScope(device, err_cb);
-}
-
-static inline void gowebgpu_queue_write_texture(WGPUQueue queue, WGPUTexelCopyTextureInfo const * destination, void const * data, size_t dataSize, WGPUTexelCopyBufferLayout const * dataLayout, WGPUExtent3D const * writeSize, WGPUDevice device, void * error_userdata) {
-	wgpuDevicePushErrorScope(device, WGPUErrorFilter_Validation);
-	wgpuQueueWriteTexture(queue, destination, data, dataSize, dataLayout, writeSize);
-
-	WGPUPopErrorScopeCallbackInfo const err_cb = {
-		.callback = gowebgpu_error_callback_c,
-		.userdata1 = error_userdata,
-	};
-
-	wgpuDevicePopErrorScope(device, err_cb);
-}
-
 */
 import "C"
 import (
@@ -89,30 +60,30 @@ func (p *Queue) TryWriteBuffer(buffer *Buffer, bufferOffset uint64, data []byte)
 
 	size := len(data)
 	if size == 0 {
-		C.gowebgpu_queue_write_buffer(
+		C.go_wgpuQueueWriteBuffer(
+			p.device,
+			errh.ToPointer(),
 			p.ref,
 			buffer.ref,
 			C.uint64_t(bufferOffset),
 			nil,
 			0,
-			p.device,
-			errh.ToPointer(),
 		)
 
-		return errh.err
+		return errh.ToError()
 	}
 
-	C.gowebgpu_queue_write_buffer(
+	C.go_wgpuQueueWriteBuffer(
+		p.device,
+		errh.ToPointer(),
 		p.ref,
 		buffer.ref,
 		C.uint64_t(bufferOffset),
 		unsafe.Pointer(&data[0]),
 		C.size_t(size),
-		p.device,
-		errh.ToPointer(),
 	)
 
-	return errh.err
+	return errh.ToError()
 }
 
 func (p *Queue) TryWriteTexture(destination *TexelCopyTextureInfo, data []byte, dataLayout *TexelCopyBufferLayout, writeSize *Extent3D) error {
@@ -155,30 +126,30 @@ func (p *Queue) TryWriteTexture(destination *TexelCopyTextureInfo, data []byte, 
 
 	size := len(data)
 	if size == 0 {
-		C.gowebgpu_queue_write_texture(
+		C.go_wgpuQueueWriteTexture(
+			p.device,
+			errh.ToPointer(),
 			p.ref,
 			&dst,
 			nil,
 			0,
 			&layout,
 			&writeExtent,
-			p.device,
-			errh.ToPointer(),
 		)
 
-		return errh.err
+		return errh.ToError()
 	}
 
-	C.gowebgpu_queue_write_texture(
+	C.go_wgpuQueueWriteTexture(
+		p.device,
+		errh.ToPointer(),
 		p.ref,
 		&dst,
 		unsafe.Pointer(&data[0]),
 		C.size_t(size),
 		&layout,
 		&writeExtent,
-		p.device,
-		errh.ToPointer(),
 	)
 
-	return errh.err
+	return errh.ToError()
 }

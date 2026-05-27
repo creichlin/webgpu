@@ -3,38 +3,8 @@
 package wgpu
 
 /*
-
-#include <stdlib.h>
-#include <wgpu.h>
-
-extern void gowebgpu_error_callback_c(enum WGPUPopErrorScopeStatus status, WGPUErrorType type, WGPUStringView message, void * userdata, void * userdata2);
-
+#include "wgpu_go_wrappers.h"
 extern void gowebgpu_buffer_map_callback_c(WGPUMapAsyncStatus status, WGPUStringView message, void *userdata, void *userdata2);
-
-static inline void gowebgpu_buffer_map_async(WGPUBuffer buffer, WGPUMapMode mode, size_t offset, size_t size, WGPUBufferMapCallbackInfo callback, WGPUDevice device, void * error_userdata) {
-	wgpuDevicePushErrorScope(device, WGPUErrorFilter_Validation);
-	wgpuBufferMapAsync(buffer, mode, offset, size, callback);
-
-	WGPUPopErrorScopeCallbackInfo const err_cb = {
-		.callback = gowebgpu_error_callback_c,
-		.userdata1 = error_userdata,
-	};
-
-	wgpuDevicePopErrorScope(device, err_cb);
-}
-
-static inline void gowebgpu_buffer_unmap(WGPUBuffer buffer, WGPUDevice device, void * error_userdata) {
-	wgpuDevicePushErrorScope(device, WGPUErrorFilter_Validation);
-	wgpuBufferUnmap(buffer);
-
-	WGPUPopErrorScopeCallbackInfo const err_cb = {
-		.callback = gowebgpu_error_callback_c,
-		.userdata1 = error_userdata,
-	};
-
-	wgpuDevicePopErrorScope(device, err_cb);
-}
-
 */
 import "C"
 import (
@@ -75,7 +45,9 @@ func (p *Buffer) TryMapAsync(mode MapMode, offset uint64, size uint64, callback 
 	errh := acquireErrorCallback()
 	defer errh.Done()
 
-	C.gowebgpu_buffer_map_async(
+	C.go_wgpuBufferMapAsync(
+		p.device,
+		errh.ToPointer(),
 		p.ref,
 		C.WGPUMapMode(mode),
 		C.size_t(offset),
@@ -84,22 +56,20 @@ func (p *Buffer) TryMapAsync(mode MapMode, offset uint64, size uint64, callback 
 			callback:  C.WGPUBufferMapCallback(C.gowebgpu_buffer_map_callback_c),
 			userdata1: callbackHandle.ToPointer(),
 		},
-		p.device,
-		errh.ToPointer(),
 	)
 
-	return errh.err
+	return errh.ToError()
 }
 
 func (p *Buffer) TryUnmap() error {
 	errh := acquireErrorCallback()
 	defer errh.Done()
 
-	C.gowebgpu_buffer_unmap(
-		p.ref,
+	C.go_wgpuBufferUnmap(
 		p.device,
 		errh.ToPointer(),
+		p.ref,
 	)
 
-	return errh.err
+	return errh.ToError()
 }

@@ -26,15 +26,6 @@ void gowebgpu_device_lost_callback_c(WGPUDeviceLostReason reason, char const * m
   gowebgpu_device_lost_callback_go(reason, message, userdata);
 }
 
-void gowebgpu_error_callback_c(enum WGPUPopErrorScopeStatus status, WGPUErrorType type, WGPUStringView message, void * userdata, void * userdata2) {
-  if (type == WGPUErrorType_NoError) {
-    return;
-  }
-
-  extern void gowebgpu_error_callback_go(WGPUErrorType type, WGPUStringView message, void * userdata);
-  gowebgpu_error_callback_go(type, message, userdata);
-}
-
 void gowebgpu_queue_work_done_callback_c(WGPUQueueWorkDoneStatus status, void * userdata) {
   extern void gowebgpu_queue_work_done_callback_go(WGPUQueueWorkDoneStatus status, void * userdata);
   gowebgpu_queue_work_done_callback_go(status, userdata);

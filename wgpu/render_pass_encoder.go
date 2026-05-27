@@ -3,24 +3,7 @@
 package wgpu
 
 /*
-
-#include <stdlib.h>
-#include <wgpu.h>
-
-extern void gowebgpu_error_callback_c(enum WGPUPopErrorScopeStatus status, WGPUErrorType type, WGPUStringView message, void * userdata, void * userdata2);
-
-static inline void gowebgpu_render_pass_encoder_end(WGPURenderPassEncoder renderPassEncoder, WGPUDevice device, void * error_userdata) {
-	wgpuDevicePushErrorScope(device, WGPUErrorFilter_Validation);
-	wgpuRenderPassEncoderEnd(renderPassEncoder);
-
-	WGPUPopErrorScopeCallbackInfo const err_cb = {
-		.callback = gowebgpu_error_callback_c,
-		.userdata1 = error_userdata,
-	};
-
-	wgpuDevicePopErrorScope(device, err_cb);
-}
-
+#include "wgpu_go_wrappers.h"
 */
 import "C"
 import (
@@ -68,16 +51,16 @@ func (p *RenderPassEncoder) TryEnd() error {
 	errh := acquireErrorCallback()
 	defer errh.Done()
 
-	C.gowebgpu_render_pass_encoder_end(
-		p.ref,
+	C.go_wgpuRenderPassEncoderEnd(
 		p.device,
 		errh.ToPointer(),
+		p.ref,
 	)
 
 	// also release the render pass at this point
 	p.Release()
 
-	return errh.err
+	return errh.ToError()
 }
 
 func (p *RenderPassEncoder) EndOcclusionQuery() {

@@ -7,6 +7,11 @@ func (p *Buffer) MapAsync(mode MapMode, offset uint64, size uint64, callback Buf
 }
 
 func (p *Buffer) Unmap() { err := p.TryUnmap(); panicIf(err, "Buffer.Unmap failed") }
+func (p *CommandEncoder) BeginRenderPass(descriptor *RenderPassDescriptor) *RenderPassEncoder {
+	r0, err := p.TryBeginRenderPass(descriptor)
+	panicIf(err, "CommandEncoder.BeginRenderPass failed")
+	return r0
+}
 
 func (p *CommandEncoder) ClearBuffer(buffer *Buffer, offset uint64, size uint64) {
 	err := p.TryClearBuffer(buffer, offset, size)
@@ -59,7 +64,6 @@ func (p *CommandEncoder) ResolveQuerySet(querySet *QuerySet, firstQuery uint32, 
 	panicIf(err, "CommandEncoder.ResolveQuerySet failed")
 }
 func (p *ComputePassEncoder) End() { err := p.TryEnd(); panicIf(err, "ComputePassEncoder.End failed") }
-
 func (g *Device) CreateBindGroup(descriptor *BindGroupDescriptor) *BindGroup {
 	r0, err := g.TryCreateBindGroup(descriptor)
 	panicIf(err, "Device.CreateBindGroup failed")

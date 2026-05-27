@@ -2,26 +2,7 @@
 
 package wgpu
 
-/*
-
-#include <stdlib.h>
-#include <wgpu.h>
-
-extern void gowebgpu_error_callback_c(enum WGPUPopErrorScopeStatus status, WGPUErrorType type, WGPUStringView message, void * userdata, void * userdata2);
-
-static inline void gowebgpu_compute_pass_encoder_end(WGPUComputePassEncoder computePassEncoder, WGPUDevice device, void * error_userdata) {
-	wgpuDevicePushErrorScope(device, WGPUErrorFilter_Validation);
-	wgpuComputePassEncoderEnd(computePassEncoder);
-
-	WGPUPopErrorScopeCallbackInfo const err_cb = {
-		.callback = gowebgpu_error_callback_c,
-		.userdata1 = error_userdata,
-	};
-
-	wgpuDevicePopErrorScope(device, err_cb);
-}
-
-*/
+// #include "wgpu_go_wrappers.h"
 import "C"
 import (
 	"unsafe"
@@ -43,8 +24,8 @@ func (p *ComputePassEncoder) TryEnd() error {
 	errh := acquireErrorCallback()
 	defer errh.Done()
 
-	C.gowebgpu_compute_pass_encoder_end(p.ref, p.device, errh.ToPointer())
-	return errh.err
+	C.go_wgpuComputePassEncoderEnd(p.device, errh.ToPointer(), p.ref)
+	return errh.ToError()
 }
 
 func (p *ComputePassEncoder) EndPipelineStatisticsQuery() {
@@ -52,13 +33,7 @@ func (p *ComputePassEncoder) EndPipelineStatisticsQuery() {
 }
 
 func (p *ComputePassEncoder) InsertDebugMarker(markerLabel string) {
-	markerLabelStr := C.CString(markerLabel)
-	defer C.free(unsafe.Pointer(markerLabelStr))
-
-	C.wgpuComputePassEncoderInsertDebugMarker(p.ref, C.WGPUStringView{
-		data:   markerLabelStr,
-		length: C.WGPU_STRLEN,
-	})
+	C.wgpuComputePassEncoderInsertDebugMarker(p.ref, toStringView(markerLabel))
 }
 
 func (p *ComputePassEncoder) PopDebugGroup() {
@@ -66,13 +41,7 @@ func (p *ComputePassEncoder) PopDebugGroup() {
 }
 
 func (p *ComputePassEncoder) PushDebugGroup(groupLabel string) {
-	groupLabelStr := C.CString(groupLabel)
-	defer C.free(unsafe.Pointer(groupLabelStr))
-
-	C.wgpuComputePassEncoderPushDebugGroup(p.ref, C.WGPUStringView{
-		data:   groupLabelStr,
-		length: C.WGPU_STRLEN,
-	})
+	C.wgpuComputePassEncoderPushDebugGroup(p.ref, toStringView(groupLabel))
 }
 
 func (p *ComputePassEncoder) SetBindGroup(groupIndex uint32, group *BindGroup, dynamicOffsets []uint32) {

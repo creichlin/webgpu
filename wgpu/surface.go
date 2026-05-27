@@ -3,27 +3,8 @@
 package wgpu
 
 /*
-
 #include <stdlib.h>
-#include <wgpu.h>
-
-extern void gowebgpu_error_callback_c(enum WGPUPopErrorScopeStatus status, WGPUErrorType type, WGPUStringView message, void * userdata, void * userdata2);
-
-static inline WGPUSurfaceTexture gowebgpu_surface_get_current_texture(WGPUSurface surface, WGPUDevice device, void * error_userdata) {
-	WGPUSurfaceTexture ref;
-	wgpuDevicePushErrorScope(device, WGPUErrorFilter_Validation);
-	wgpuSurfaceGetCurrentTexture(surface, &ref);
-
-	WGPUPopErrorScopeCallbackInfo const err_cb = {
-		.callback = gowebgpu_error_callback_c,
-		.userdata1 = error_userdata,
-	};
-
-	wgpuDevicePopErrorScope(device, err_cb);
-
-	return ref;
-}
-
+#include "wgpu_go_wrappers.h"
 */
 import "C"
 import (
@@ -133,17 +114,19 @@ func (g *Surface) TryGetCurrentTexture() (SurfaceTexture, error) {
 	errh := acquireErrorCallback()
 	defer errh.Done()
 
-	surfaceTexture := C.gowebgpu_surface_get_current_texture(
-		g.ref,
+	var surfaceTexture C.WGPUSurfaceTexture
+	C.go_wgpuSurfaceGetCurrentTexture(
 		g.device,
 		errh.ToPointer(),
+		g.ref,
+		&surfaceTexture,
 	)
-	if errh.err != nil {
+	if err := errh.ToError(); err != nil {
 		if surfaceTexture.texture != nil {
 			C.wgpuTextureRelease(surfaceTexture.texture)
 		}
 
-		return SurfaceTexture{}, errh.err
+		return SurfaceTexture{}, err
 	}
 
 	status := SurfaceGetCurrentTextureStatus(surfaceTexture.status)

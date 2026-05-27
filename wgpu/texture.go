@@ -5,30 +5,16 @@ package wgpu
 /*
 
 #include <stdlib.h>
-#include <wgpu.h>
+#include "wgpu_go_wrappers.h"
 
-extern void gowebgpu_error_callback_c(enum WGPUPopErrorScopeStatus status, WGPUErrorType type, WGPUStringView message, void * userdata, void * userdata2);
+#cgo noescape wgpuTextureViewRelease
+#cgo nocallback wgpuTextureViewRelease
 
-static inline WGPUTextureView gowebgpu_texture_create_view(WGPUTexture texture, WGPUTextureViewDescriptor const * descriptor, WGPUDevice device, void * error_userdata) {
-	WGPUTextureView ref = NULL;
-	wgpuDevicePushErrorScope(device, WGPUErrorFilter_Validation);
-	ref = wgpuTextureCreateView(texture, descriptor);
-
-	WGPUPopErrorScopeCallbackInfo const err_cb = {
-		.callback = gowebgpu_error_callback_c,
-		.userdata1 = error_userdata,
-	};
-
-	wgpuDevicePopErrorScope(device, err_cb);
-
-	return ref;
-}
+#cgo noescape go_wgpuTextureCreateView
+#cgo nocallback go_wgpuTextureCreateView
 
 */
 import "C"
-import (
-	"unsafe"
-)
 
 func (g *Texture) TryCreateView(descriptor *TextureViewDescriptor) (*TextureView, error) {
 	var desc *C.WGPUTextureViewDescriptor
@@ -45,26 +31,22 @@ func (g *Texture) TryCreateView(descriptor *TextureViewDescriptor) (*TextureView
 		}
 
 		if descriptor.Label != "" {
-			label := C.CString(descriptor.Label)
-			defer C.free(unsafe.Pointer(label))
-
-			desc.label.data = label
-			desc.label.length = C.WGPU_STRLEN
+			desc.label = toStringView(descriptor.Label)
 		}
 	}
 
 	errh := acquireErrorCallback()
 	defer errh.Done()
 
-	ref := C.gowebgpu_texture_create_view(
-		g.ref,
-		desc,
+	ref := C.go_wgpuTextureCreateView(
 		g.device,
 		errh.ToPointer(),
+		g.ref,
+		desc,
 	)
-	if errh.err != nil {
+	if err := errh.ToError(); err != nil {
 		C.wgpuTextureViewRelease(ref)
-		return nil, errh.err
+		return nil, err
 	}
 
 	return releaseOnGC(&TextureView{ref: ref}), nil

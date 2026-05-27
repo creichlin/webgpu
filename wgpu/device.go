@@ -3,177 +3,7 @@
 package wgpu
 
 /*
-
-#include <stdlib.h>
-#include <wgpu.h>
-
-extern void gowebgpu_error_callback_c(enum WGPUPopErrorScopeStatus status, WGPUErrorType type, WGPUStringView message, void * userdata, void * userdata2);
-
-static inline WGPUBindGroup gowebgpu_device_create_bind_group(WGPUDevice device, WGPUBindGroupDescriptor const * descriptor, void * error_userdata) {
-	WGPUBindGroup ref = NULL;
-	wgpuDevicePushErrorScope(device, WGPUErrorFilter_Validation);
-	ref = wgpuDeviceCreateBindGroup(device, descriptor);
-
-	WGPUPopErrorScopeCallbackInfo const err_cb = {
-		.callback = gowebgpu_error_callback_c,
-		.userdata1 = error_userdata,
-	};
-
-	wgpuDevicePopErrorScope(device, err_cb);
-
-	return ref;
-}
-
-static inline WGPUBindGroupLayout gowebgpu_device_create_bind_group_layout(WGPUDevice device, WGPUBindGroupLayoutDescriptor const * descriptor, void * error_userdata) {
-	WGPUBindGroupLayout ref = NULL;
-	wgpuDevicePushErrorScope(device, WGPUErrorFilter_Validation);
-	ref = wgpuDeviceCreateBindGroupLayout(device, descriptor);
-
-	WGPUPopErrorScopeCallbackInfo const err_cb = {
-		.callback = gowebgpu_error_callback_c,
-		.userdata1 = error_userdata,
-	};
-
-	wgpuDevicePopErrorScope(device, err_cb);
-
-	return ref;
-}
-
-static inline WGPUBuffer gowebgpu_device_create_buffer(WGPUDevice device, WGPUBufferDescriptor const * descriptor, void * error_userdata) {
-	WGPUBuffer ref = NULL;
-	wgpuDevicePushErrorScope(device, WGPUErrorFilter_Validation);
-	ref = wgpuDeviceCreateBuffer(device, descriptor);
-
-	WGPUPopErrorScopeCallbackInfo const err_cb = {
-		.callback = gowebgpu_error_callback_c,
-		.userdata1 = error_userdata,
-	};
-
-	wgpuDevicePopErrorScope(device, err_cb);
-
-	return ref;
-}
-
-static inline WGPUCommandEncoder gowebgpu_device_create_command_encoder(WGPUDevice device, WGPUCommandEncoderDescriptor const * descriptor, void * error_userdata) {
-	WGPUCommandEncoder ref = NULL;
-	wgpuDevicePushErrorScope(device, WGPUErrorFilter_Validation);
-	ref = wgpuDeviceCreateCommandEncoder(device, descriptor);
-
-	WGPUPopErrorScopeCallbackInfo const err_cb = {
-		.callback = gowebgpu_error_callback_c,
-		.userdata1 = error_userdata,
-	};
-
-	wgpuDevicePopErrorScope(device, err_cb);
-
-	return ref;
-}
-
-static inline WGPUComputePipeline gowebgpu_device_create_compute_pipeline(WGPUDevice device, WGPUComputePipelineDescriptor const * descriptor, void * error_userdata) {
-	WGPUComputePipeline ref = NULL;
-	wgpuDevicePushErrorScope(device, WGPUErrorFilter_Validation);
-	ref = wgpuDeviceCreateComputePipeline(device, descriptor);
-
-	WGPUPopErrorScopeCallbackInfo const err_cb = {
-		.callback = gowebgpu_error_callback_c,
-		.userdata1 = error_userdata,
-	};
-
-	wgpuDevicePopErrorScope(device, err_cb);
-
-	return ref;
-}
-
-static inline WGPUPipelineLayout gowebgpu_device_create_pipeline_layout(WGPUDevice device, WGPUPipelineLayoutDescriptor const * descriptor, void * error_userdata) {
-	WGPUPipelineLayout ref = NULL;
-	wgpuDevicePushErrorScope(device, WGPUErrorFilter_Validation);
-	ref = wgpuDeviceCreatePipelineLayout(device, descriptor);
-
-	WGPUPopErrorScopeCallbackInfo const err_cb = {
-		.callback = gowebgpu_error_callback_c,
-		.userdata1 = error_userdata,
-	};
-
-	wgpuDevicePopErrorScope(device, err_cb);
-
-	return ref;
-}
-
-static inline WGPUQuerySet gowebgpu_device_create_query_set(WGPUDevice device, WGPUQuerySetDescriptor const * descriptor, void * error_userdata) {
-	WGPUQuerySet ref = NULL;
-	wgpuDevicePushErrorScope(device, WGPUErrorFilter_Validation);
-	ref = wgpuDeviceCreateQuerySet(device, descriptor);
-
-	WGPUPopErrorScopeCallbackInfo const err_cb = {
-		.callback = gowebgpu_error_callback_c,
-		.userdata1 = error_userdata,
-	};
-
-	wgpuDevicePopErrorScope(device, err_cb);
-
-	return ref;
-}
-
-static inline WGPURenderPipeline gowebgpu_device_create_render_pipeline(WGPUDevice device, WGPURenderPipelineDescriptor const * descriptor, void * error_userdata) {
-	WGPURenderPipeline ref = NULL;
-	wgpuDevicePushErrorScope(device, WGPUErrorFilter_Validation);
-	ref = wgpuDeviceCreateRenderPipeline(device, descriptor);
-
-	WGPUPopErrorScopeCallbackInfo const err_cb = {
-		.callback = gowebgpu_error_callback_c,
-		.userdata1 = error_userdata,
-	};
-
-	wgpuDevicePopErrorScope(device, err_cb);
-
-	return ref;
-}
-
-static inline WGPUSampler gowebgpu_device_create_sampler(WGPUDevice device, WGPUSamplerDescriptor const * descriptor, void * error_userdata) {
-	WGPUSampler ref = NULL;
-	wgpuDevicePushErrorScope(device, WGPUErrorFilter_Validation);
-	ref = wgpuDeviceCreateSampler(device, descriptor);
-
-	WGPUPopErrorScopeCallbackInfo const err_cb = {
-		.callback = gowebgpu_error_callback_c,
-		.userdata1 = error_userdata,
-	};
-
-	wgpuDevicePopErrorScope(device, err_cb);
-
-	return ref;
-}
-
-static inline WGPUShaderModule gowebgpu_device_create_shader_module(WGPUDevice device, WGPUShaderModuleDescriptor const * descriptor, void * error_userdata) {
-	WGPUShaderModule ref = NULL;
-	wgpuDevicePushErrorScope(device, WGPUErrorFilter_Validation);
-	ref = wgpuDeviceCreateShaderModule(device, descriptor);
-
-	WGPUPopErrorScopeCallbackInfo const err_cb = {
-		.callback = gowebgpu_error_callback_c,
-		.userdata1 = error_userdata,
-	};
-
-	wgpuDevicePopErrorScope(device, err_cb);
-
-	return ref;
-}
-
-static inline WGPUTexture gowebgpu_device_create_texture(WGPUDevice device, WGPUTextureDescriptor const * descriptor, void * error_userdata) {
-	WGPUTexture ref = NULL;
-	wgpuDevicePushErrorScope(device, WGPUErrorFilter_Validation);
-	ref = wgpuDeviceCreateTexture(device, descriptor);
-
-	WGPUPopErrorScopeCallbackInfo const err_cb = {
-		.callback = gowebgpu_error_callback_c,
-		.userdata1 = error_userdata,
-	};
-
-	wgpuDevicePopErrorScope(device, err_cb);
-
-	return ref;
-}
-
+#include "wgpu_go_wrappers.h"
 */
 import "C"
 import (
@@ -232,14 +62,15 @@ func (g *Device) TryCreateBindGroup(descriptor *BindGroupDescriptor) (*BindGroup
 	errh := acquireErrorCallback()
 	defer errh.Done()
 
-	ref := C.gowebgpu_device_create_bind_group(
+	ref := C.go_wgpuDeviceCreateBindGroup(
+		g.ref,
+		errh.ToPointer(),
 		g.ref,
 		desc,
-		errh.ToPointer(),
 	)
-	if errh.err != nil {
+	if err := errh.ToError(); err != nil {
 		C.wgpuBindGroupRelease(ref)
-		return nil, errh.err
+		return nil, err
 	}
 
 	return releaseOnGC(&BindGroup{ref: ref}), nil
@@ -333,14 +164,15 @@ func (g *Device) TryCreateBindGroupLayout(descriptor *BindGroupLayoutDescriptor)
 	errh := acquireErrorCallback()
 	defer errh.Done()
 
-	ref := C.gowebgpu_device_create_bind_group_layout(
+	ref := C.go_wgpuDeviceCreateBindGroupLayout(
+		g.ref,
+		errh.ToPointer(),
 		g.ref,
 		&desc,
-		errh.ToPointer(),
 	)
-	if errh.err != nil {
+	if err := errh.ToError(); err != nil {
 		C.wgpuBindGroupLayoutRelease(ref)
-		return nil, errh.err
+		return nil, err
 	}
 
 	return releaseOnGC(&BindGroupLayout{ref: ref}), nil
@@ -366,14 +198,15 @@ func (g *Device) TryCreateBuffer(descriptor *BufferDescriptor) (*Buffer, error) 
 	errh := acquireErrorCallback()
 	defer errh.Done()
 
-	ref := C.gowebgpu_device_create_buffer(
+	ref := C.go_wgpuDeviceCreateBuffer(
+		g.ref,
+		errh.ToPointer(),
 		g.ref,
 		&desc,
-		errh.ToPointer(),
 	)
-	if errh.err != nil {
+	if err := errh.ToError(); err != nil {
 		C.wgpuBufferRelease(ref)
-		return nil, errh.err
+		return nil, err
 	}
 
 	return releaseOnGC(&Buffer{device: g.addRef(), ref: ref}), nil
@@ -398,14 +231,15 @@ func (g *Device) TryCreateCommandEncoder(descriptor *CommandEncoderDescriptor) (
 	errh := acquireErrorCallback()
 	defer errh.Done()
 
-	ref := C.gowebgpu_device_create_command_encoder(
+	ref := C.go_wgpuDeviceCreateCommandEncoder(
+		g.ref,
+		errh.ToPointer(),
 		g.ref,
 		desc,
-		errh.ToPointer(),
 	)
-	if errh.err != nil {
+	if err := errh.ToError(); err != nil {
 		C.wgpuCommandEncoderRelease(ref)
-		return nil, errh.err
+		return nil, err
 	}
 
 	return releaseOnGC(&CommandEncoder{device: g.addRef(), ref: ref}), nil
@@ -455,14 +289,15 @@ func (g *Device) TryCreateComputePipeline(descriptor *ComputePipelineDescriptor)
 	errh := acquireErrorCallback()
 	defer errh.Done()
 
-	ref := C.gowebgpu_device_create_compute_pipeline(
+	ref := C.go_wgpuDeviceCreateComputePipeline(
+		g.ref,
+		errh.ToPointer(),
 		g.ref,
 		&desc,
-		errh.ToPointer(),
 	)
-	if errh.err != nil {
+	if err := errh.ToError(); err != nil {
 		C.wgpuComputePipelineRelease(ref)
-		return nil, errh.err
+		return nil, err
 	}
 
 	return releaseOnGC(&ComputePipeline{ref: ref}), nil
@@ -527,14 +362,15 @@ func (g *Device) TryCreatePipelineLayout(descriptor *PipelineLayoutDescriptor) (
 	errh := acquireErrorCallback()
 	defer errh.Done()
 
-	ref := C.gowebgpu_device_create_pipeline_layout(
+	ref := C.go_wgpuDeviceCreatePipelineLayout(
+		g.ref,
+		errh.ToPointer(),
 		g.ref,
 		&desc,
-		errh.ToPointer(),
 	)
-	if errh.err != nil {
+	if err := errh.ToError(); err != nil {
 		C.wgpuPipelineLayoutRelease(ref)
-		return nil, errh.err
+		return nil, err
 	}
 
 	return releaseOnGC(&PipelineLayout{ref: ref}), nil
@@ -559,14 +395,15 @@ func (g *Device) TryCreateQuerySet(descriptor *QuerySetDescriptor) (*QuerySet, e
 	errh := acquireErrorCallback()
 	defer errh.Done()
 
-	ref := C.gowebgpu_device_create_query_set(
+	ref := C.go_wgpuDeviceCreateQuerySet(
+		g.ref,
+		errh.ToPointer(),
 		g.ref,
 		&desc,
-		errh.ToPointer(),
 	)
-	if errh.err != nil {
+	if err := errh.ToError(); err != nil {
 		C.wgpuQuerySetRelease(ref)
-		return nil, errh.err
+		return nil, err
 	}
 
 	return releaseOnGC(&QuerySet{ref: ref}), nil
@@ -876,14 +713,15 @@ func (g *Device) TryCreateRenderPipeline(descriptor *RenderPipelineDescriptor) (
 	errh := acquireErrorCallback()
 	defer errh.Done()
 
-	ref := C.gowebgpu_device_create_render_pipeline(
+	ref := C.go_wgpuDeviceCreateRenderPipeline(
+		g.ref,
+		errh.ToPointer(),
 		g.ref,
 		&desc,
-		errh.ToPointer(),
 	)
-	if errh.err != nil {
+	if err := errh.ToError(); err != nil {
 		C.wgpuRenderPipelineRelease(ref)
-		return nil, errh.err
+		return nil, err
 	}
 
 	return releaseOnGC(&RenderPipeline{ref: ref}), nil
@@ -918,14 +756,15 @@ func (g *Device) TryCreateSampler(descriptor *SamplerDescriptor) (*Sampler, erro
 	errh := acquireErrorCallback()
 	defer errh.Done()
 
-	ref := C.gowebgpu_device_create_sampler(
+	ref := C.go_wgpuDeviceCreateSampler(
+		g.ref,
+		errh.ToPointer(),
 		g.ref,
 		desc,
-		errh.ToPointer(),
 	)
-	if errh.err != nil {
+	if err := errh.ToError(); err != nil {
 		C.wgpuSamplerRelease(ref)
-		return nil, errh.err
+		return nil, err
 	}
 
 	return releaseOnGC(&Sampler{ref: ref}), nil
@@ -1052,14 +891,15 @@ func (g *Device) TryCreateShaderModule(descriptor *ShaderModuleDescriptor) (*Sha
 	errh := acquireErrorCallback()
 	defer errh.Done()
 
-	ref := C.gowebgpu_device_create_shader_module(
+	ref := C.go_wgpuDeviceCreateShaderModule(
+		g.ref,
+		errh.ToPointer(),
 		g.ref,
 		&desc,
-		errh.ToPointer(),
 	)
-	if errh.err != nil {
+	if err := errh.ToError(); err != nil {
 		C.wgpuShaderModuleRelease(ref)
-		return nil, errh.err
+		return nil, err
 	}
 
 	return releaseOnGC(&ShaderModule{ref: ref}), nil
@@ -1094,14 +934,15 @@ func (g *Device) TryCreateTexture(descriptor *TextureDescriptor) (*Texture, erro
 	errh := acquireErrorCallback()
 	defer errh.Done()
 
-	ref := C.gowebgpu_device_create_texture(
+	ref := C.go_wgpuDeviceCreateTexture(
+		g.ref,
+		errh.ToPointer(),
 		g.ref,
 		&desc,
-		errh.ToPointer(),
 	)
-	if errh.err != nil {
+	if err := errh.ToError(); err != nil {
 		C.wgpuTextureRelease(ref)
-		return nil, errh.err
+		return nil, err
 	}
 
 	return releaseOnGC(&Texture{device: g.addRef(), ref: ref}), nil

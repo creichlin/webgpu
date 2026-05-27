@@ -4,9 +4,10 @@ import (
 	"strconv"
 )
 
-//go:generate sh -c "cd ../cmd/enums && go run . -i ../../wgpu/lib/linux/arm64/ -o ../../wgpu/gen_enums.go -pkg wgpu"
+//go:generate sh -ec "cd ../cmd/enums && go run . -i ../../wgpu/lib/linux/arm64/ -o ../../wgpu/gen_enums.go -pkg wgpu"
 //go:generate go run ../cmd/refcount Adapter BindGroup BindGroupLayout CommandBuffer ComputePipeline Device Instance PipelineLayout QuerySet RenderBundle RenderBundleEncoder RenderPipeline Sampler ShaderModule TextureView +Queue +Buffer +CommandEncoder +Texture +ComputePassEncoder +RenderPassEncoder +Surface
-//go:generate sh -c "cd .. && go run ./cmd/wrappers"
+//go:generate sh -ec "cd .. && go run ./cmd/wrappers"
+//go:generate sh -ec "cd .. && go run ./cmd/cgohints -i wgpu"
 
 // This file contains common types and constants
 

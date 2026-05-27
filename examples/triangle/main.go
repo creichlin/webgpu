@@ -153,6 +153,12 @@ func (s *State) Render() error {
 		return nil
 	}
 
+	defer func() {
+		if nextTexture != nil {
+			nextTexture.Release()
+		}
+	}()
+
 	view, err := nextTexture.TryCreateView(nil)
 	if err != nil {
 		return err
@@ -190,6 +196,8 @@ func (s *State) Render() error {
 
 	s.queue.Submit(cmdBuffer)
 	s.surface.Present()
+
+	nextTexture = nil
 
 	return nil
 }
