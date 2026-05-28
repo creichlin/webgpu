@@ -2,9 +2,7 @@
 
 package wgpu
 
-/*
-#include "wgpu_go_wrappers.h"
-*/
+// #include "wgpu_go_wrappers.h"
 import "C"
 import (
 	"errors"
@@ -19,19 +17,15 @@ type ComputePassDescriptor struct {
 }
 
 func (p *CommandEncoder) BeginComputePass(descriptor *ComputePassDescriptor) *ComputePassEncoder {
-	var desc *C.WGPUComputePassDescriptor
+	var desc C.WGPUComputePassDescriptor
 
-	if descriptor != nil && descriptor.Label != "" {
-		label := C.CString(descriptor.Label)
-		defer C.free(unsafe.Pointer(label))
-
-		desc = allocWGPUComputePassDescriptor.GetZeroed()
-		defer allocWGPUComputePassDescriptor.Put(desc)
-
-		desc.label = C.WGPUStringView{data: label, length: C.WGPU_STRLEN}
+	if descriptor != nil {
+		label := stringViewOf(descriptor.Label)
+		defer label.Release()
+		desc.label = label.ToC()
 	}
 
-	ref := C.wgpuCommandEncoderBeginComputePass(p.ref, desc)
+	ref := C.wgpuCommandEncoderBeginComputePass(p.ref, &desc)
 	if ref == nil {
 		err := errors.New("failed to acquire ComputePassEncoder")
 		panic(wrap(err, ""))
@@ -42,17 +36,12 @@ func (p *CommandEncoder) BeginComputePass(descriptor *ComputePassDescriptor) *Co
 }
 
 func (p *CommandEncoder) TryBeginRenderPass(descriptor *RenderPassDescriptor) (*RenderPassEncoder, error) {
-	var desc *C.WGPURenderPassDescriptor = allocWGPURenderPassDescriptor.GetZeroed()
-	defer allocWGPURenderPassDescriptor.Put(desc)
+	var desc C.WGPURenderPassDescriptor
 
 	if descriptor != nil {
-		if descriptor.Label != "" {
-			label := C.CString(descriptor.Label)
-			defer C.free(unsafe.Pointer(label))
-
-			desc.label.data = label
-			desc.label.length = C.WGPU_STRLEN
-		}
+		label := stringViewOf(descriptor.Label)
+		defer label.Release()
+		desc.label = label.ToC()
 
 		colorAttachmentCount := len(descriptor.ColorAttachments)
 		if colorAttachmentCount > 0 {
@@ -110,7 +99,7 @@ func (p *CommandEncoder) TryBeginRenderPass(descriptor *RenderPassDescriptor) (*
 	errh := acquireErrorCallback()
 	defer errh.Done()
 
-	ref := C.go_wgpuCommandEncoderBeginRenderPass(p.device, errh.ToPointer(), p.ref, desc)
+	ref := C.go_wgpuCommandEncoderBeginRenderPass(p.device, errh.ToPointer(), p.ref, &desc)
 	if err := errh.ToError(); err != nil {
 		return nil, err
 	}
@@ -346,6 +335,9 @@ func (p *CommandEncoder) TryFinish(descriptor *CommandBufferDescriptor) (*Comman
 }
 
 func (p *CommandEncoder) TryInsertDebugMarker(markerLabel string) error {
+	label := stringViewOf(markerLabel)
+	defer label.Release()
+
 	errh := acquireErrorCallback()
 	defer errh.Done()
 
@@ -353,17 +345,10 @@ func (p *CommandEncoder) TryInsertDebugMarker(markerLabel string) error {
 		p.device,
 		errh.ToPointer(),
 		p.ref,
-		toStringView(markerLabel),
+		label.ToC(),
 	)
 
 	return errh.ToError()
-}
-
-func toStringView(str string) C.WGPUStringView {
-	return C.WGPUStringView{
-		data:   (*C.char)(unsafe.Pointer(unsafe.StringData(str))),
-		length: C.size_t(len(str)),
-	}
 }
 
 func (p *CommandEncoder) TryPopDebugGroup() error {
@@ -383,11 +368,15 @@ func (p *CommandEncoder) TryPushDebugGroup(groupLabel string) error {
 	errh := acquireErrorCallback()
 	defer errh.Done()
 
+	label := stringViewOf(groupLabel)
+	defer label.Release()
+	labelC := label.ToC()
+
 	C.go_wgpuCommandEncoderPushDebugGroup(
 		p.device,
 		errh.ToPointer(),
 		p.ref,
-		toStringView(groupLabel),
+		labelC,
 	)
 
 	return errh.ToError()

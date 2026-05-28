@@ -30,9 +30,9 @@ func (g *Texture) TryCreateView(descriptor *TextureViewDescriptor) (*TextureView
 			aspect:          C.WGPUTextureAspect(descriptor.Aspect),
 		}
 
-		if descriptor.Label != "" {
-			desc.label = toStringView(descriptor.Label)
-		}
+		label := stringViewOf(descriptor.Label)
+		defer label.Release()
+		desc.label = label.ToC()
 	}
 
 	errh := acquireErrorCallback()

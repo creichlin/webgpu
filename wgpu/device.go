@@ -2,26 +2,20 @@
 
 package wgpu
 
-/*
-#include "wgpu_go_wrappers.h"
-*/
+// #include "wgpu_go_wrappers.h"
 import "C"
 import (
 	"unsafe"
 )
 
 func (g *Device) TryCreateBindGroup(descriptor *BindGroupDescriptor) (*BindGroup, error) {
-	var desc *C.WGPUBindGroupDescriptor = allocWGPUBindGroupDescriptor.GetZeroed()
-	defer allocWGPUBindGroupDescriptor.Put(desc)
+	var desc C.WGPUBindGroupDescriptor
 
 	if descriptor != nil {
-		if descriptor.Label != "" {
-			label := C.CString(descriptor.Label)
-			defer C.free(unsafe.Pointer(label))
 
-			desc.label.data = label
-			desc.label.length = C.WGPU_STRLEN
-		}
+		label := stringViewOf(descriptor.Label)
+		defer label.Release()
+		desc.label = label.ToC()
 
 		if descriptor.Layout != nil {
 			desc.layout = descriptor.Layout.ref
@@ -66,7 +60,7 @@ func (g *Device) TryCreateBindGroup(descriptor *BindGroupDescriptor) (*BindGroup
 		g.ref,
 		errh.ToPointer(),
 		g.ref,
-		desc,
+		&desc,
 	)
 	if err := errh.ToError(); err != nil {
 		C.wgpuBindGroupRelease(ref)
@@ -213,19 +207,12 @@ func (g *Device) TryCreateBuffer(descriptor *BufferDescriptor) (*Buffer, error) 
 }
 
 func (g *Device) TryCreateCommandEncoder(descriptor *CommandEncoderDescriptor) (*CommandEncoder, error) {
-	var desc *C.WGPUCommandEncoderDescriptor
+	var desc C.WGPUCommandEncoderDescriptor
 
 	if descriptor != nil && descriptor.Label != "" {
-		label := C.CString(descriptor.Label)
-		defer C.free(unsafe.Pointer(label))
-
-		desc = allocWGPUCommandEncoderDescriptor.GetZeroed()
-		defer allocWGPUCommandEncoderDescriptor.Put(desc)
-
-		desc.label = C.WGPUStringView{
-			data:   label,
-			length: C.WGPU_STRLEN,
-		}
+		label := stringViewOf(descriptor.Label)
+		defer label.Release()
+		desc.label = label.ToC()
 	}
 
 	errh := acquireErrorCallback()
@@ -235,7 +222,7 @@ func (g *Device) TryCreateCommandEncoder(descriptor *CommandEncoderDescriptor) (
 		g.ref,
 		errh.ToPointer(),
 		g.ref,
-		desc,
+		&desc,
 	)
 	if err := errh.ToError(); err != nil {
 		C.wgpuCommandEncoderRelease(ref)

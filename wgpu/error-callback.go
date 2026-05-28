@@ -1,18 +1,12 @@
 package wgpu
 
-import "C"
 import (
 	"errors"
 	"runtime"
 	"strings"
 )
 
-// #include <stdlib.h>
-import "C"
-
-/*
-#include <wgpu.h>
-*/
+// #include "wgpu_go_wrappers.h"
 import "C"
 
 import (

@@ -2,12 +2,7 @@
 
 package wgpu
 
-/*
-
-#include <stdlib.h>
-#include <wgpu.h>
-
-*/
+// #include "wgpu_go_wrappers.h"
 import "C"
 
 func (g *ComputePipeline) GetBindGroupLayout(groupIndex uint32) *BindGroupLayout {

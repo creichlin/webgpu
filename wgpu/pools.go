@@ -1,7 +1,5 @@
 package wgpu
 
-import "C"
-
 /*
 #include <wgpu.h>
 */
@@ -9,11 +7,6 @@ import "C"
 import "sync"
 
 var allocErrorCallbackValue = makeTypedPool[errorCallback]()
-
-var allocWGPUBindGroupDescriptor = makeTypedPool[C.WGPUBindGroupDescriptor]()
-var allocWGPUCommandEncoderDescriptor = makeTypedPool[C.WGPUCommandEncoderDescriptor]()
-var allocWGPURenderPassDescriptor = makeTypedPool[C.WGPURenderPassDescriptor]()
-var allocWGPUComputePassDescriptor = makeTypedPool[C.WGPUComputePassDescriptor]()
 
 type typedPool[T any] sync.Pool
 

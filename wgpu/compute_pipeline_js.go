@@ -2,7 +2,7 @@
 
 package wgpu
 
-// ComputePipelineDescriptor as described:
+// ComputePipeline Descriptor as described:
 // https://gpuweb.github.io/gpuweb/#dictdef-gpucomputepipelinedescriptor
 type ComputePipelineDescriptor struct {
 	Layout  *PipelineLayout

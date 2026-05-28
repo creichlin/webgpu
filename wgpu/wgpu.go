@@ -112,13 +112,13 @@ func (g *Device) addRef() C.WGPUDevice {
 
 type releaser interface{ release() }
 
-func releaseNow[T releaser](value T) {
-	value.release()
+func releaseOnGC[T releaser](value T) T {
+	runtime.SetFinalizer(value, releaseNow)
+	return value
 }
 
-func releaseOnGC[T releaser](value T) T {
-	runtime.SetFinalizer(value, releaseNow[T])
-	return value
+func releaseNow(value releaser) {
+	value.release()
 }
 
 // cBool converts the given Go bool to a C.WGPUBool.

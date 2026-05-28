@@ -33,7 +33,10 @@ func (p *ComputePassEncoder) EndPipelineStatisticsQuery() {
 }
 
 func (p *ComputePassEncoder) InsertDebugMarker(markerLabel string) {
-	C.wgpuComputePassEncoderInsertDebugMarker(p.ref, toStringView(markerLabel))
+	label := stringViewOf(markerLabel)
+	defer label.Release()
+
+	C.wgpuComputePassEncoderInsertDebugMarker(p.ref, label.ToC())
 }
 
 func (p *ComputePassEncoder) PopDebugGroup() {
@@ -41,7 +44,10 @@ func (p *ComputePassEncoder) PopDebugGroup() {
 }
 
 func (p *ComputePassEncoder) PushDebugGroup(groupLabel string) {
-	C.wgpuComputePassEncoderPushDebugGroup(p.ref, toStringView(groupLabel))
+	label := stringViewOf(groupLabel)
+	defer label.Release()
+
+	C.wgpuComputePassEncoderPushDebugGroup(p.ref, label.ToC())
 }
 
 func (p *ComputePassEncoder) SetBindGroup(groupIndex uint32, group *BindGroup, dynamicOffsets []uint32) {
