@@ -9,6 +9,10 @@ type stringView struct {
 }
 
 func stringViewOf(value string) stringView {
+	if value == "" {
+		return stringView{}
+	}
+
 	return stringView{
 		view: C.WGPUStringView{
 			data:   C.CString(value),
@@ -22,5 +26,7 @@ func (v stringView) ToC() C.WGPUStringView {
 }
 
 func (v stringView) Release() {
-	C.free(unsafe.Pointer(v.view.data))
+	if v.view.data {
+		C.free(unsafe.Pointer(v.view.data))
+	}
 }
