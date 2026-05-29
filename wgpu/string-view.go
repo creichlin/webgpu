@@ -26,7 +26,7 @@ func (v stringView) ToC() C.WGPUStringView {
 }
 
 func (v stringView) Release() {
-	if v.view.data {
+	if v.view.data != nil {
 		C.free(unsafe.Pointer(v.view.data))
 	}
 }
