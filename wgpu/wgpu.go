@@ -6,11 +6,17 @@ import (
 	"errors"
 
 	_ "github.com/oliverbestmann/webgpu/libs-android"
+
+	_ "github.com/oliverbestmann/webgpu/libs-darwin"
+
+	_ "github.com/oliverbestmann/webgpu/libs-ios"
+
+	_ "github.com/oliverbestmann/webgpu/libs-linux"
+
+	"runtime"
+
+	_ "github.com/oliverbestmann/webgpu/libs-windows"
 )
-import _ "github.com/oliverbestmann/webgpu/libs-darwin"
-import _ "github.com/oliverbestmann/webgpu/libs-ios"
-import _ "github.com/oliverbestmann/webgpu/libs-linux"
-import _ "github.com/oliverbestmann/webgpu/libs-windows"
 
 /*
 
@@ -31,6 +37,7 @@ import _ "github.com/oliverbestmann/webgpu/libs-windows"
 // Darwin
 #cgo darwin,!ios,amd64 CFLAGS: -I${SRCDIR}/lib/darwin/amd64
 #cgo darwin,!ios,arm64 CFLAGS: -I${SRCDIR}/lib/darwin/arm64
+#cgo darwin,!ios       LDFLAGS: -framework Foundation
 
 // Windows
 #cgo windows,amd64 CFLAGS: -I${SRCDIR}/lib/windows/amd64
@@ -84,9 +91,6 @@ void logCallback_cgo(WGPULogLevel level, char const *msg) {
 
 */
 import "C"
-import (
-	"runtime"
-)
 
 func init() {
 	C.wgpuSetLogCallback(C.WGPULogCallback(C.logCallback_cgo), nil)
