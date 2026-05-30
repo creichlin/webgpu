@@ -4,11 +4,9 @@ package wgpu
 
 // BeginRenderPass as described:
 // https://gpuweb.github.io/gpuweb/#dom-gpucommandencoder-beginrenderpass
-func (g *CommandEncoder) BeginRenderPass(descriptor *RenderPassDescriptor) *RenderPassEncoder {
+func (g *CommandEncoder) TryBeginRenderPass(descriptor *RenderPassDescriptor) (*RenderPassEncoder, error) {
 	jsRenderPass := g.jsValue.Call("beginRenderPass", pointerToJS(descriptor))
-	return &RenderPassEncoder{
-		jsValue: jsRenderPass,
-	}
+	return &RenderPassEncoder{jsValue: jsRenderPass}, nil
 }
 
 // BeginComputePass as described:

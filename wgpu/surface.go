@@ -143,5 +143,3 @@ func (g *Surface) TryGetCurrentTexture() (SurfaceTexture, error) {
 func (g *Surface) Present() {
 	C.wgpuSurfacePresent(g.ref)
 }
-
-var ErrNoSurfaceTexture = errors.New("no surface texture available")

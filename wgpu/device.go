@@ -232,11 +232,6 @@ func (g *Device) TryCreateCommandEncoder(descriptor *CommandEncoderDescriptor) (
 	return releaseOnGC(&CommandEncoder{device: g.addRef(), ref: ref}), nil
 }
 
-type ConstantEntry struct {
-	Key   string
-	Value float64
-}
-
 type ComputePipelineDescriptor struct {
 	Label   string
 	Layout  *PipelineLayout
@@ -288,12 +283,6 @@ func (g *Device) TryCreateComputePipeline(descriptor *ComputePipelineDescriptor)
 	}
 
 	return releaseOnGC(&ComputePipeline{ref: ref}), nil
-}
-
-type PushConstantRange struct {
-	Stages ShaderStage
-	Start  uint32
-	End    uint32
 }
 
 type PipelineLayoutDescriptor struct {
@@ -452,9 +441,6 @@ type FragmentState struct {
 	Module     *ShaderModule
 	EntryPoint string
 	Targets    []ColorTargetState
-
-	// unused in wgpu
-	// Constants  []ConstantEntry
 }
 
 type VertexAttribute struct {
@@ -473,9 +459,6 @@ type VertexState struct {
 	Module     *ShaderModule
 	EntryPoint string
 	Buffers    []VertexBufferLayout
-
-	// unused in wgpu
-	// Constants  []ConstantEntry
 }
 
 type PrimitiveState struct {
