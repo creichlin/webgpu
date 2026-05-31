@@ -1,12 +1,6 @@
 package wgpu
 
-/*
-#include <wgpu.h>
-*/
-import "C"
 import "sync"
-
-var allocErrorCallbackValue = makeTypedPool[errorCallback]()
 
 type typedPool[T any] sync.Pool
 

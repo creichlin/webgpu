@@ -13,6 +13,8 @@ import (
 	"unsafe"
 )
 
+var allocErrorCallbackValue = makeTypedPool[errorCallback]()
+
 type errorCallback struct {
 	callers [1]uintptr
 	errStr  *C.char

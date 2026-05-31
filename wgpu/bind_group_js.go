@@ -68,7 +68,7 @@ func (g StorageTextureBindingLayout) toJS() any {
 
 // ExternalTextureBindingLayout as described:
 type ExternalTextureBindingLayout struct {
-	jsValue js.Value
+	jsValue any
 }
 
 func (g ExternalTextureBindingLayout) toJS() any {
@@ -100,7 +100,7 @@ func (g BindGroupLayoutEntry) toJS() any {
 		result["texture"] = g.Texture.toJS()
 	case g.StorageTexture != StorageTextureBindingLayout{}:
 		result["storageTexture"] = g.StorageTexture.toJS()
-	case !g.ExternalTexture.jsValue.IsUndefined():
+	case !g.ExternalTexture.jsValue.(js.Value).IsUndefined():
 		result["externalTexture"] = g.ExternalTexture.toJS()
 	}
 	return result

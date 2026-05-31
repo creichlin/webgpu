@@ -25,3 +25,8 @@ func (g *Adapter) GetInfo() AdapterInfo {
 func (g *Adapter) GetLimits() Limits {
 	return limitsFromJS(g.jsValue.Get("limits"))
 }
+
+func (g *Adapter) HasFeature(name FeatureName) bool {
+	hasFeature := g.jsValue.Get("features").Call("has", name.String())
+	return hasFeature.Bool()
+}
