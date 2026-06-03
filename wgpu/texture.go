@@ -5,7 +5,7 @@ package wgpu
 /*
 
 #include <stdlib.h>
-#include "wgpu_go_wrappers.h"
+#include "gen_wgpu_wrappers.h"
 
 #cgo noescape wgpuTextureViewRelease
 #cgo nocallback wgpuTextureViewRelease

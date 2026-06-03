@@ -3,7 +3,7 @@
 package wgpu
 
 /*
-#include "wgpu_go_wrappers.h"
+#include "gen_wgpu_wrappers.h"
 extern void gowebgpu_queue_work_done_callback_c(WGPUQueueWorkDoneStatus status, void * userdata);
 */
 import "C"

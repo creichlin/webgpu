@@ -6,7 +6,7 @@ import (
 	"strings"
 )
 
-// #include "wgpu_go_wrappers.h"
+// #include "gen_wgpu_wrappers.h"
 import "C"
 
 import (
