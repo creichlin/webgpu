@@ -168,9 +168,9 @@ func (g *TextureViewDescriptor) toJS() js.Value {
 	result.Set("format", enumToJS(g.Format))
 	result.Set("dimension", enumToJS(g.Dimension))
 	result.Set("baseMipLevel", g.BaseMipLevel)
-	result.Set("mipLevelCount", g.MipLevelCount)
+	result.Set("mipLevelCount", uint32ToJS(g.MipLevelCount))
 	result.Set("baseArrayLayer", g.BaseArrayLayer)
-	result.Set("arrayLayerCount", g.ArrayLayerCount)
+	result.Set("arrayLayerCount", uint32ToJS(g.ArrayLayerCount))
 	result.Set("aspect", enumToJS(g.Aspect))
 	return result
 }
@@ -213,7 +213,7 @@ func (g *TexelCopyBufferInfo) toJS() js.Value {
 	return js.ValueOf(map[string]any{
 		"buffer":       pointerToJS(g.Buffer),
 		"offset":       g.Layout.Offset,
-		"bytesPerRow":  g.Layout.BytesPerRow,
+		"bytesPerRow":  uint32ToJS(g.Layout.BytesPerRow),
 		"rowsPerImage": uint32ToJS(g.Layout.RowsPerImage),
 	})
 }
@@ -230,8 +230,8 @@ func (g *TexelCopyTextureInfo) toJS() js.Value {
 func (g *TexelCopyBufferLayout) toJS() js.Value {
 	return js.ValueOf(map[string]any{
 		"offset":       g.Offset,
-		"bytesPerRow":  g.BytesPerRow,
-		"rowsPerImage": g.RowsPerImage,
+		"bytesPerRow":  uint32ToJS(g.BytesPerRow),
+		"rowsPerImage": uint32ToJS(g.RowsPerImage),
 	})
 }
 

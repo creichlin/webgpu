@@ -30,6 +30,23 @@ apt install -y libegl1-mesa-dev mesa-vulkan-drivers \
     libxkbcommon-dev libwayland-dev
 ```
 
+### WASM
+
+The browser loader must expose the result of `WebAssembly.instantiate` as `globalThis.wasm`. Zero-copy calls to
+`Queue.WriteBuffer` and `Queue.WriteTexture` use `wasm.instance.exports.mem` to access the Go module's memory. Without
+this global, buffer and texture uploads fail with `ReferenceError: wasm is not defined`.
+
+For example, after loading Go's `wasm_exec.js`:
+
+```js
+const go = new Go();
+globalThis.wasm = await WebAssembly.instantiateStreaming(
+  fetch("main.wasm"),
+  go.importObject,
+);
+await go.run(globalThis.wasm.instance);
+```
+
 ### iOS simulator
 
 With `GOOS=ios`, the libraries are for iOS devices on arm64, and for the iOS simulator on amd64 (Intel Macs).

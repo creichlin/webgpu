@@ -80,6 +80,62 @@ func TestBindGroupDescriptorReuse(t *testing.T) {
 	}
 }
 
+func TestUndefinedUint32DescriptorFields(t *testing.T) {
+	view := (&TextureViewDescriptor{
+		MipLevelCount:   3,
+		ArrayLayerCount: 4,
+	}).toJS()
+	if got := view.Get("mipLevelCount").Int(); got != 3 {
+		t.Fatalf("mipLevelCount = %d, want 3", got)
+	}
+	if got := view.Get("arrayLayerCount").Int(); got != 4 {
+		t.Fatalf("arrayLayerCount = %d, want 4", got)
+	}
+
+	// Texture view descriptors are reused, so undefined must also clear values
+	// left by the previous conversion.
+	view = (&TextureViewDescriptor{
+		MipLevelCount:   MipLevelCountUndefined,
+		ArrayLayerCount: ArrayLayerCountUndefined,
+	}).toJS()
+	if !view.Get("mipLevelCount").IsUndefined() {
+		t.Fatalf("mipLevelCount = %v, want undefined", view.Get("mipLevelCount"))
+	}
+	if !view.Get("arrayLayerCount").IsUndefined() {
+		t.Fatalf("arrayLayerCount = %v, want undefined", view.Get("arrayLayerCount"))
+	}
+
+	bufferInfo := (&TexelCopyBufferInfo{Layout: TexelCopyBufferLayout{
+		BytesPerRow:  CopyStrideUndefined,
+		RowsPerImage: CopyStrideUndefined,
+	}}).toJS()
+	if !bufferInfo.Get("bytesPerRow").IsUndefined() {
+		t.Fatalf("bytesPerRow = %v, want undefined", bufferInfo.Get("bytesPerRow"))
+	}
+	if !bufferInfo.Get("rowsPerImage").IsUndefined() {
+		t.Fatalf("rowsPerImage = %v, want undefined", bufferInfo.Get("rowsPerImage"))
+	}
+
+	layout := (&TexelCopyBufferLayout{BytesPerRow: 256, RowsPerImage: 2}).toJS()
+	if got := layout.Get("bytesPerRow").Int(); got != 256 {
+		t.Fatalf("bytesPerRow = %d, want 256", got)
+	}
+	if got := layout.Get("rowsPerImage").Int(); got != 2 {
+		t.Fatalf("rowsPerImage = %d, want 2", got)
+	}
+
+	layout = (&TexelCopyBufferLayout{
+		BytesPerRow:  CopyStrideUndefined,
+		RowsPerImage: CopyStrideUndefined,
+	}).toJS()
+	if !layout.Get("bytesPerRow").IsUndefined() {
+		t.Fatalf("bytesPerRow = %v, want undefined", layout.Get("bytesPerRow"))
+	}
+	if !layout.Get("rowsPerImage").IsUndefined() {
+		t.Fatalf("rowsPerImage = %v, want undefined", layout.Get("rowsPerImage"))
+	}
+}
+
 func TestLabelCacheIsBounded(t *testing.T) {
 	for idx := range 2 * maxLabelStrings {
 		label := strconv.Itoa(idx)
